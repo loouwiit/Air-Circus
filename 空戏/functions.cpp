@@ -66,7 +66,7 @@ void debug()
 
 	//static sf::Vector2f force_old{};
 	//players[0].froce(force_old);
-	players[0].froce(players[0].get_Position() * -1.0f, Time::delta_Time.asMilliseconds() / 1000.f);
+	//players[0].froce(players[0].get_Position() * -1.0f, Time::delta_Time.asMilliseconds() / 1000.f);
 	//force_old = players[0].get_Position() * 1.0f;
 }
 
@@ -205,6 +205,47 @@ void Event::event_Keyboard(Event::KeyEvent& key, bool is_Press)
 		players[0].set_Key(Fighter::Key::E, is_Press);
 		break;
 	}
+	case Key::I:
+	{
+		players[1].set_Key(Fighter::Key::W, is_Press);
+		break;
+	}
+	case Key::K:
+	{
+		players[1].set_Key(Fighter::Key::S, is_Press);
+		break;
+	}
+	case Key::J:
+	{
+		players[1].set_Key(Fighter::Key::A, is_Press);
+		break;
+	}
+	case Key::L:
+	{
+		players[1].set_Key(Fighter::Key::D, is_Press);
+		break;
+	}
+	case Key::U:
+	{
+		players[1].set_Key(Fighter::Key::Q, is_Press);
+		break;
+	}
+	case Key::O:
+	{
+		players[1].set_Key(Fighter::Key::E, is_Press);
+		break;
+	}
+	case Key::H: //[debug]
+	{
+		players[0].set_Position(-10 * Meter, 0 * Meter);
+		players[1].set_Position(10 * Meter, 0 * Meter);
+		break;
+	}
+	case Key::G:
+	{
+		if (is_Press) for (char i = 0; i < Player_Number; i++) players[i].set_Velocity(0, 0);
+		break;
+	}
 	}
 }
 
@@ -213,4 +254,15 @@ void Compute::compute_Player()
 {
 	for (unsigned i = 0; i < Player_Number; i++)
 		players[i].move(Time::delta_Time.asMilliseconds() / 1000.f);
+	for (unsigned i = 0; i < Player_Number; i++)
+	{
+		for (unsigned j = i + 1; j < Player_Number; j++)
+		{
+			players[i].collide(players[j]);
+		}
+		for (unsigned j = 0; j < Buoy_Number; j++)
+		{
+			players[i].collide(buoy[j]);
+		}
+	}
 }

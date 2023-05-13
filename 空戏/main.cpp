@@ -2,7 +2,7 @@
 #include <SFML/Graphics.hpp>
 #include "Fighter.hpp"
 #include "Camera.hpp"
-#include "Substance.hpp"
+#include "Collideable.hpp"
 #include "functions.hpp"
 
 namespace Time
@@ -15,7 +15,7 @@ namespace Time
 sf::RenderWindow window;
 Camera camrea;
 Fighter players[Player_Number];
-Buoy buoy[4];
+Buoy buoy[Buoy_Number];
 
 int main(int argc, char* argv[]);
 void init();
@@ -59,9 +59,6 @@ void init()
 	buoy[1].set_Position(-100 * Meter, +50 * Meter);
 	buoy[2].set_Position(+100 * Meter, -50 * Meter);
 	buoy[3].set_Position(+100 * Meter, +50 * Meter);
-
-	//[debug]
-	players[0].set_Velocity(0, 800.0f);
 }
 
 void event()

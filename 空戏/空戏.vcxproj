@@ -151,13 +151,13 @@
     <ClCompile Include="Fighter.cpp" />
     <ClCompile Include="functions.cpp" />
     <ClCompile Include="main.cpp" />
-    <ClCompile Include="Substance.cpp" />
+    <ClCompile Include="Collideable.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Camera.hpp" />
     <ClInclude Include="Fighter.hpp" />
     <ClInclude Include="functions.hpp" />
-    <ClInclude Include="Substance.hpp" />
+    <ClInclude Include="Collideable.hpp" />
     <ClInclude Include="vector.inl" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />

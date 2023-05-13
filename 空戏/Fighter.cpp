@@ -132,32 +132,24 @@ void Fighter::froce(float x, float y, float time)
 
 void Fighter::move(float delta_Time)
 {
-	if (self_Key[(unsigned)Key::Forward] != self_Key_old[(unsigned)Key::Forward])
+	if (self_Key[(unsigned)Key::Forward])
 	{
-		self_Key_old[(unsigned)Key::Forward] = self_Key[(unsigned)Key::Forward];
-		froce((self_Key_old[(unsigned)Key::Forward] ? +250.f : -250) * self_Rotation_SinCos[1],
-			(self_Key_old[(unsigned)Key::Forward] ? +250.f : -250) * self_Rotation_SinCos[0], delta_Time);
+		froce(+2000 * self_Rotation_SinCos[1], +2000 * self_Rotation_SinCos[0], delta_Time);
 	}
-	if (self_Key[(unsigned)Key::Back] != self_Key_old[(unsigned)Key::Back])
+	if (self_Key[(unsigned)Key::Back])
 	{
-		self_Key_old[(unsigned)Key::Back] = self_Key[(unsigned)Key::Back];
-		froce((self_Key_old[(unsigned)Key::Back] ? -250.f : +250) * self_Rotation_SinCos[1],
-			(self_Key_old[(unsigned)Key::Back] ? -250.f : +250) * self_Rotation_SinCos[0], delta_Time);
+		froce(-2000 * self_Rotation_SinCos[1], -2000 * self_Rotation_SinCos[0], delta_Time);
 	}
-	if (self_Key[(unsigned)Key::Left] != self_Key_old[(unsigned)Key::Left])
+	if (self_Key[(unsigned)Key::Left])
 	{
-		self_Key_old[(unsigned)Key::Left] = self_Key[(unsigned)Key::Left];
-		froce((self_Key_old[(unsigned)Key::Left] ? +250.f : -250) * self_Rotation_SinCos[0],
-			(self_Key_old[(unsigned)Key::Left] ? -250.f : +250) * self_Rotation_SinCos[1], delta_Time);
+		froce(+1000 * self_Rotation_SinCos[0], -1000 * self_Rotation_SinCos[1], delta_Time);
 	}
-	if (self_Key[(unsigned)Key::Right] != self_Key_old[(unsigned)Key::Right])
+	if (self_Key[(unsigned)Key::Right])
 	{
-		self_Key_old[(unsigned)Key::Right] = self_Key[(unsigned)Key::Right];
-		froce((self_Key_old[(unsigned)Key::Right] ? -250.f : +250) * self_Rotation_SinCos[0],
-			(self_Key_old[(unsigned)Key::Right] ? +250.f : -250) * self_Rotation_SinCos[1], delta_Time);
+		froce(-1000 * self_Rotation_SinCos[0], +1000 * self_Rotation_SinCos[1], delta_Time);
 	}
-	if (self_Key[(unsigned)Key::Turn_Left]) rotate(-1.0f * delta_Time);
-	if (self_Key[(unsigned)Key::Turn_Right]) rotate(+1.0f * delta_Time);
+	if (self_Key[(unsigned)Key::Turn_Left]) rotate(-2.0f * delta_Time);
+	if (self_Key[(unsigned)Key::Turn_Right]) rotate(+2.0f * delta_Time);
 
 	self_Position += self_Velocity_old * delta_Time;
 	//self_Velocity += self_Acceleration * delta_Time;
@@ -199,6 +191,23 @@ sf::Texture& Fighter::get_Default_Texture()
 	}
 
 	return Default_Texture;
+}
+
+void Fighter::collide(Fighter& B)
+{
+	if (!is_Collide(B)) return;
+	std::cout << "Fighter::collide:collide at" << self_Position.x << ',' << self_Position.y << '\n';
+}
+
+void Fighter::collide(Buoy& B)
+{
+	if (!is_Collide(B)) return;
+	std::cout << "Fighter::collide:collide at" << self_Position.x << ',' << self_Position.y << '\n';
+}
+
+sf::FloatRect Fighter::get_Collision_Box()
+{
+	return self_Sprite.getGlobalBounds();
 }
 
 void Fighter::draw(sf::RenderTarget& target, sf::RenderStates states) const

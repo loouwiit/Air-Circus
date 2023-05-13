@@ -7,6 +7,7 @@ using std::cout;
 constexpr char endl = '\n';
 constexpr unsigned short FPS = 60;
 constexpr unsigned char Player_Number = 2;
+constexpr unsigned char Buoy_Number = 4;
 constexpr float PIf = (float)(3.14159265358979323846);
 constexpr double PI = 3.14159265358979323846;
 constexpr float PIf2 = (float)(3.14159265358979323846 / 2.0);
@@ -23,6 +24,7 @@ constexpr wchar_t Window_Name[] = L"ø’œ∑";
 
 extern sf::RenderWindow window;
 extern Fighter players[Player_Number];
+extern Buoy buoy[Buoy_Number];
 
 namespace Time
 {

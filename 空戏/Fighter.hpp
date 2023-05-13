@@ -1,6 +1,7 @@
 #pragma once
 #include <iostream>
 #include <SFML/Graphics.hpp>
+#include "Collideable.hpp"
 
 namespace SinCos
 {
@@ -8,7 +9,7 @@ namespace SinCos
 	extern float(*cos)(float);
 }
 
-class Fighter : public sf::Drawable
+class Fighter : public Collideable, public sf::Drawable
 {
 public:
 	enum class Key
@@ -44,6 +45,12 @@ public:
 	void move(float delta_Time);
 
 	static sf::Texture& get_Default_Texture();
+
+	void collide(Fighter& B);
+	void collide(Buoy& B);
+
+	sf::FloatRect get_Collision_Box();
+
 protected:
 	void draw(sf::RenderTarget& target, sf::RenderStates states) const;
 

@@ -1,22 +1,19 @@
 #pragma once
 #include <SFML/Graphics.hpp>
-class Substance : public sf::Drawable
+class Collideable
 {
 public:
-
-
-protected:
-	virtual void draw(sf::RenderTarget& target, sf::RenderStates states) const = 0;
-
-private:
-
+	bool is_Collide(Collideable& B);
+	virtual sf::FloatRect get_Collision_Box() = 0;
 };
 
-class Buoy : public Substance
+class Buoy : public Collideable, public sf::Drawable
 {
 public:
 	Buoy();
 	void set_Position(float x, float y);
+
+	sf::FloatRect get_Collision_Box();
 
 protected:
 	void draw(sf::RenderTarget& target, sf::RenderStates states) const;
