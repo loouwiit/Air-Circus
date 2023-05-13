@@ -62,7 +62,8 @@ private:
 	float self_Rotation = 0;
 	float self_Rotation_SinCos[2] = { 0.0f,1.0f };
 
-	sf::Vector2f self_Acceleration{};
+	//sf::Vector2f self_Acceleration{};
 	sf::Vector2f self_Velocity{};
+	sf::Vector2f self_Velocity_old{};
 	sf::Vector2f self_Position{};
 };

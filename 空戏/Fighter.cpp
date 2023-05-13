@@ -95,35 +95,39 @@ sf::Vector2f Fighter::get_Position()
 
 void Fighter::set_Velocity(sf::Vector2f velocity)
 {
-	self_Velocity = velocity;
-	self_Acceleration.x = 0;
-	self_Acceleration.y = 0;
+	self_Velocity = self_Velocity_old = velocity;
+	//self_Acceleration.x = 0;
+	//self_Acceleration.y = 0;
 }
 
 void Fighter::set_Velocity(float x, float y)
 {
-	self_Velocity.x = x;
-	self_Velocity.y = y;
-	self_Acceleration.x = 0;
-	self_Acceleration.y = 0;
+	self_Velocity.x = self_Velocity_old.x = x;
+	self_Velocity.y = self_Velocity_old.y = y;
+	//self_Acceleration.x = 0;
+	//self_Acceleration.y = 0;
 }
 
 void Fighter::froce(sf::Vector2f acceleration, float time)
 {
 	float ts = time * time * 0.5f;
 
-	self_Acceleration += acceleration;
+	//self_Acceleration += acceleration;
 	self_Position += acceleration * ts;
+	self_Velocity += acceleration * time;
 }
 
 void Fighter::froce(float x, float y, float time)
 {
 	float ts = time * time * 0.5f;
 
-	self_Acceleration.x += x;
-	self_Acceleration.y += y;
+	//self_Acceleration.x += x;
+	//self_Acceleration.y += y;
 	self_Position.x += x * ts;
 	self_Position.y += y * ts;
+
+	self_Velocity.x += x * time;
+	self_Velocity.y += y * time;
 }
 
 void Fighter::move(float delta_Time)
@@ -155,8 +159,9 @@ void Fighter::move(float delta_Time)
 	if (self_Key[(unsigned)Key::Turn_Left]) rotate(-1.0f * delta_Time);
 	if (self_Key[(unsigned)Key::Turn_Right]) rotate(+1.0f * delta_Time);
 
-	self_Position += self_Velocity * delta_Time;
-	self_Velocity += self_Acceleration * delta_Time;
+	self_Position += self_Velocity_old * delta_Time;
+	//self_Velocity += self_Acceleration * delta_Time;
+	self_Velocity_old = self_Velocity;
 
 	self_Sprite.setPosition(self_Position);
 }

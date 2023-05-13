@@ -64,10 +64,10 @@ void debug()
 
 	//cout << "输入任意字符继续……"; std::cin.ignore();
 
-	static sf::Vector2f force_old{};
-	players[0].froce(force_old);
+	//static sf::Vector2f force_old{};
+	//players[0].froce(force_old);
 	players[0].froce(players[0].get_Position() * -1.0f, Time::delta_Time.asMilliseconds() / 1000.f);
-	force_old = players[0].get_Position() * 1.0f;
+	//force_old = players[0].get_Position() * 1.0f;
 }
 
 //float fsin_d(float x)

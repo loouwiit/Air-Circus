@@ -52,7 +52,7 @@ void init()
 
 	players[0].set_Position(-10 * Meter, 0 * Meter);
 	players[0].set_Color(sf::Color::Red);
-	players[1].set_Position(0 * Meter, 0 * Meter);
+	players[1].set_Position(10 * Meter, 0 * Meter);
 	players[1].set_Color(sf::Color::Blue);
 
 	buoy[0].set_Position(-100 * Meter, -50 * Meter);
