@@ -24,7 +24,8 @@ constexpr wchar_t Window_Name[] = L"ø’œ∑";
 
 extern sf::RenderWindow window;
 extern Fighter players[Player_Number];
-extern Buoy buoy[Buoy_Number];
+extern 
+Buoy buoy[Buoy_Number];
 
 namespace Time
 {
