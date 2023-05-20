@@ -422,9 +422,9 @@ void Compute::compute_Camera()
 		center = (far + near) * 0.5f; //ÖÐµã
 	}
 
-	camrea.set_Size(size);
-	camrea.set_Center(center);
+	camera.set_Size(size);
+	camera.set_Center(center);
 
-	window.setView(camrea.get_View());
+	camera.compute();
 	return;
 }

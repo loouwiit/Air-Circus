@@ -13,7 +13,7 @@ namespace Time
 }
 
 sf::RenderWindow window;
-Camera camrea;
+Camera camera;
 Fighter players[Player_Number];
 Buoy buoy[Buoy_Number];
 
@@ -46,9 +46,9 @@ void init()
 	srand((int)::time(nullptr));
 
 	window.create(sf::VideoMode(1500, 900), Window_Name);
-	camrea.set_Size(250 * Meter, 150 * Meter);
-	camrea.set_Center(0.f, 0.f);
-	window.setView(camrea.get_View());
+	camera.set_Size(250 * Meter, 150 * Meter);
+	camera.set_Center(0.f, 0.f);
+	camera.set_Target(&window);
 
 	players[0].set_Position(-10 * Meter, 0 * Meter);
 	players[0].set_Color(sf::Color::Red);
