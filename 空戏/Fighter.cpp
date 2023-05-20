@@ -166,6 +166,8 @@ void Fighter::change_Velocity(sf::Vector2f delta_Velocity, float time)
 
 	self_Position.x += delta_Velocity.x * time;
 	self_Position.y += delta_Velocity.y * time;
+
+	self_Sprite.setPosition(self_Position);
 }
 
 sf::Texture& Fighter::get_Default_Texture()
