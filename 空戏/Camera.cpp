@@ -56,3 +56,13 @@ sf::Vector2f Camera::get_Center()
 {
 	return self_Target_Center;
 }
+
+void Camera::set_Is_Full(bool flag)
+{
+	self_Is_Full = flag;
+}
+
+bool Camera::is_Full()
+{
+	return self_Is_Full;
+}

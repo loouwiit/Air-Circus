@@ -16,6 +16,7 @@ sf::RenderWindow window;
 Camera camera;
 Fighter players[Player_Number];
 Buoy buoy[Buoy_Number];
+Point position_Point[Position_Point_X_Number * Position_Point_Y_Number];
 
 int main(int argc, char* argv[]);
 void init();
@@ -59,6 +60,12 @@ void init()
 	buoy[1].set_Position(-100 * Meter, +50 * Meter);
 	buoy[2].set_Position(+100 * Meter, -50 * Meter);
 	buoy[3].set_Position(+100 * Meter, +50 * Meter);
+
+	for (int i = 0; i < Position_Point_Y_Number; i++) for (int j = 0; j < Position_Point_X_Number; j++)
+	{
+		position_Point[i * Position_Point_X_Number + j].set_Color(sf::Color::Black);
+		position_Point[i * Position_Point_X_Number + j].set_Position((j - Position_Point_X_Number / 2) * 10 * Meter, (i - Position_Point_Y_Number / 2) * 10 * Meter);
+	}
 }
 
 void event()
@@ -87,8 +94,9 @@ void draw()
 {
 	window.clear(sf::Color::White);
 
-	for (char i = 0; i < Player_Number; i++) window.draw(players[i]);
+	if (!camera.is_Full()) for (unsigned short i = 0; i < Position_Point_X_Number * Position_Point_Y_Number; i++) window.draw(position_Point[i]);
 	for (char i = 0; i < 4; i++) window.draw(buoy[i]);
+	for (char i = 0; i < Player_Number; i++) window.draw(players[i]);
 
 	window.display();
 }

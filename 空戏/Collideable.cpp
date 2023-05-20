@@ -175,3 +175,27 @@ void Buoy::draw(sf::RenderTarget& target, sf::RenderStates states) const
 #endif
 }
 
+Point::Point()
+{
+	self_Renctangle.setSize(sf::Vector2f(20, 20));
+}
+
+void Point::set_Position(float x, float y)
+{
+	self_Renctangle.setPosition(x, y);
+}
+
+void Point::set_Color(unsigned int Color)
+{
+	self_Renctangle.setFillColor(sf::Color(Color));
+}
+
+void Point::set_Color(sf::Color Color)
+{
+	self_Renctangle.setFillColor(Color);
+}
+
+void Point::draw(sf::RenderTarget& target, sf::RenderStates states) const
+{
+	target.draw(self_Renctangle);
+}

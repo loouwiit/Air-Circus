@@ -386,6 +386,7 @@ void Compute::compute_Camera()
 
 	if (is_normal)
 	{
+		camera.set_Is_Full(true);
 		size.x = 250 * Meter;
 		size.y = 150 * Meter;
 		center.x = 0;
@@ -393,6 +394,7 @@ void Compute::compute_Camera()
 	}
 	else
 	{
+		camera.set_Is_Full(false);
 		far.x = players[0].get_Position().x;
 		far.y = players[0].get_Position().y;
 		near.x = players[0].get_Position().x;

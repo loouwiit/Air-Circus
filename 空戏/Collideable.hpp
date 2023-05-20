@@ -49,3 +49,18 @@ private:
 	sf::CircleShape self_Circle;
 };
 
+class Point : public sf::Drawable
+{
+public:
+	Point();
+
+	void set_Position(float x, float y);
+	void set_Color(unsigned int Color);
+	void set_Color(sf::Color Color);
+
+private:
+	void draw(sf::RenderTarget& target, sf::RenderStates states) const;
+
+private:
+	sf::RectangleShape self_Renctangle;
+};

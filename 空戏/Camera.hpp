@@ -15,6 +15,9 @@ public:
 	sf::Vector2f get_Size();
 	sf::Vector2f get_Center();
 
+	void set_Is_Full(bool flag);
+	bool is_Full();
+
 private:
 	sf::Vector2f self_Target_Size;
 	sf::Vector2f self_Target_Center;
@@ -22,4 +25,5 @@ private:
 	sf::Vector2f self_Center;
 	sf::View self_View;
 	sf::RenderTarget* self_Target;
+	bool self_Is_Full = false;
 };
