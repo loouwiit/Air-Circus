@@ -65,7 +65,7 @@ void init()
 	for (int i = 0; i < Position_Point_Y_Number; i++) for (int j = 0; j < Position_Point_X_Number; j++)
 	{
 		position_Point[i * Position_Point_X_Number + j].set_Color(sf::Color::Black);
-		position_Point[i * Position_Point_X_Number + j].set_Position((j - Position_Point_X_Number / 2) * 10 * Meter, (i - Position_Point_Y_Number / 2) * 10 * Meter);
+		position_Point[i * Position_Point_X_Number + j].set_Position(((float)(j - Position_Point_X_Number / 2) * 10 * Meter), (float)((i - Position_Point_Y_Number / 2) * 10 * Meter));
 	}
 }
 
