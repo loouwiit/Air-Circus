@@ -149,6 +149,11 @@ void Event::event(Event& event)
 		event_Keyboard(event.key, false);
 		break;
 	}
+	case Event::Resized:
+	{
+		camera.set_Proportion((float)event.size.height / (float)event.size.width);
+		break;
+	}
 	}
 }
 
@@ -364,15 +369,7 @@ void Compute::compute_Player()
 
 void Compute::compute_Camera()
 {
-	using std::max;
-	using std::min;
-
 	bool is_normal = true;
-
-	sf::Vector2f size;
-	sf::Vector2f center;
-	sf::Vector2f far;
-	sf::Vector2f near;
 
 	for (char i = 0; i < Player_Number; i++) for (char j = i + 1; j < Player_Number; j++)
 	{
@@ -387,13 +384,16 @@ void Compute::compute_Camera()
 	if (is_normal)
 	{
 		camera.set_Is_Full(true);
-		size.x = 250 * Meter;
-		size.y = 150 * Meter;
-		center.x = 0;
-		center.y = 0;
+		camera.set_Position(sf::Vector2f(-200 / 2 * Meter, -120 / 2 * Meter), sf::Vector2f(200 / 2 * Meter, 120 / 2 * Meter));
 	}
 	else
 	{
+		using std::max;
+		using std::min;
+
+		sf::Vector2f far;
+		sf::Vector2f near;
+
 		camera.set_Is_Full(false);
 		far.x = players[0].get_Position().x;
 		far.y = players[0].get_Position().y;
@@ -407,25 +407,27 @@ void Compute::compute_Camera()
 			near.y = min(near.y, players[i].get_Position().y);
 		}
 
-		size = far - near + sf::Vector2f(1000, 1000);
-		size.x /= 16.f;
-		size.y /= 9.f;
-		if (size.x > size.y)
-		{
-			size.y = size.x * 9;
-			size.x = size.x * 16;
-		}
-		else
-		{
-			size.x = size.y * 16;
-			size.y = size.y * 9;
-		}
+		//size = far - near + sf::Vector2f(1000, 1000);
+		//size.x /= 16.f;
+		//size.y /= 9.f;
+		//if (size.x > size.y)
+		//{
+		//	size.y = size.x * 9;
+		//	size.x = size.x * 16;
+		//}
+		//else
+		//{
+		//	size.x = size.y * 16;
+		//	size.y = size.y * 9;
+		//}
+		//
+		//center = (far + near) * 0.5f; //中点
 
-		center = (far + near) * 0.5f; //中点
+		camera.set_Position(near, far);
 	}
 
-	camera.set_Size(size);
-	camera.set_Center(center);
+	//camera.set_Size(size);
+	//camera.set_Center(center);
 
 	camera.compute();
 	return;

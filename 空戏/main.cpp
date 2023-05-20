@@ -47,8 +47,9 @@ void init()
 	srand((int)::time(nullptr));
 
 	window.create(sf::VideoMode(1500, 900), Window_Name);
-	camera.set_Size(250 * Meter, 150 * Meter);
-	camera.set_Center(0.f, 0.f);
+	//camera.set_Size(250 * Meter, 150 * Meter);
+	//camera.set_Center(0.f, 0.f);
+	camera.set_Position(sf::Vector2f(-200 / 2 * Meter, -120 / 2 * Meter), sf::Vector2f(200 / 2 * Meter, 120 / 2 * Meter));
 	camera.set_Target(&window);
 
 	players[0].set_Position(-10 * Meter, 0 * Meter);

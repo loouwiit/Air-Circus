@@ -25,37 +25,51 @@ void Camera::compute()
 	self_Target->setView(self_View);
 }
 
-void Camera::set_Center(float x, float y)
+void Camera::set_Proportion(float Proportion)
 {
-	self_Target_Center.x = x;
-	self_Target_Center.y = y;
+	self_Proportion = Proportion;
+	//printf("Camera::set_Proportion: Proportion set to %f\n", self_Proportion);
+	compute_Target();
 }
 
-void Camera::set_Size(float x, float y)
+void Camera::set_Position(sf::Vector2f LeftTop,sf::Vector2f RightBotton)
 {
-	self_Target_Size.x = x;
-	self_Target_Size.y = y;
+	self_LeftTop = LeftTop;
+	self_RightBotton = RightBotton;
+	compute_Target();
 }
 
-void Camera::set_Center(sf::Vector2f center)
-{
-	self_Target_Center = center;
-}
-
-void Camera::set_Size(sf::Vector2f size)
-{
-	self_Target_Size = size;
-}
-
-sf::Vector2f Camera::get_Size()
-{
-	return self_Target_Size;
-}
-
-sf::Vector2f Camera::get_Center()
-{
-	return self_Target_Center;
-}
+//void Camera::set_Center(float x, float y)
+//{
+//	self_Target_Center.x = x;
+//	self_Target_Center.y = y;
+//}
+//
+//void Camera::set_Size(float x, float y)
+//{
+//	self_Target_Size.x = x;
+//	self_Target_Size.y = y;
+//}
+//
+//void Camera::set_Center(sf::Vector2f center)
+//{
+//	self_Target_Center = center;
+//}
+//
+//void Camera::set_Size(sf::Vector2f size)
+//{
+//	self_Target_Size = size;
+//}
+//
+//sf::Vector2f Camera::get_Size()
+//{
+//	return self_Target_Size;
+//}
+//
+//sf::Vector2f Camera::get_Center()
+//{
+//	return self_Target_Center;
+//}
 
 void Camera::set_Is_Full(bool flag)
 {
@@ -65,4 +79,20 @@ void Camera::set_Is_Full(bool flag)
 bool Camera::is_Full()
 {
 	return self_Is_Full;
+}
+
+void Camera::compute_Target()
+{
+	self_Target_Size.x = self_RightBotton.x - self_LeftTop.x + 1000;
+	self_Target_Size.y = self_RightBotton.y - self_LeftTop.y + 1000;
+	self_Target_Center = (self_RightBotton + self_LeftTop) * 0.5f;
+
+	if (self_Target_Size.y / self_Target_Size.x > self_Proportion)
+	{
+		self_Target_Size.x = self_Target_Size.y / self_Proportion;
+	}
+	else
+	{
+		self_Target_Size.y = self_Target_Size.x * self_Proportion;
+	}
 }
