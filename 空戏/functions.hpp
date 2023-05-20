@@ -2,6 +2,7 @@
 #include <iostream>
 #include <SFML/Graphics.hpp>
 #include "Fighter.hpp"
+#include "Camera.hpp"
 
 using std::cout;
 constexpr char endl = '\n';
@@ -24,8 +25,8 @@ constexpr wchar_t Window_Name[] = L"ø’œ∑";
 
 extern sf::RenderWindow window;
 extern Fighter players[Player_Number];
-extern 
-Buoy buoy[Buoy_Number];
+extern Camera camrea;
+extern Buoy buoy[Buoy_Number];
 
 namespace Time
 {
@@ -64,4 +65,5 @@ namespace Event
 namespace Compute
 {
 	void compute_Player();
+	void compute_Camera();
 }

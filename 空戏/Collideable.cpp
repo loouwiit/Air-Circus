@@ -46,8 +46,8 @@ void Collideable::collide(Collideable& B, float delta_Time)
 		sin = ::sin(theta);
 		cos = ::cos(theta);
 
-		printf("Collieable::colliede:P at (%f,%f) and (%f,%f)\n", get_Position().x, get_Position().y, B.get_Position().x, B.get_Position().y);
-		printf("\t theta is %f, %f in degree\n", theta, theta * 180 / PIf);
+		//printf("Collieable::colliede:P at (%f,%f) and (%f,%f)\n", get_Position().x, get_Position().y, B.get_Position().x, B.get_Position().y);
+		//printf("\t theta is %f, %f in degree\n", theta, theta * 180 / PIf);
 		//printf("\t sin is %f, cos is %f\n", sin, cos);
 	}
 

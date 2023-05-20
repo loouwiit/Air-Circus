@@ -80,6 +80,7 @@ void compute()
 	using namespace Compute;
 
 	compute_Player();
+	compute_Camera();
 }
 
 void draw()

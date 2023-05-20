@@ -361,3 +361,47 @@ void Compute::compute_Player()
 			players[i].collide(players[j], delta_Time.asMilliseconds() / 1000.f);
 		}
 }
+
+void Compute::compute_Camera()
+{
+	using std::max;
+	using std::min;
+
+	sf::Vector2f size;
+	sf::Vector2f center;
+	sf::Vector2f far;
+	sf::Vector2f near;
+
+	far.x = players[0].get_Position().x;
+	far.y = players[0].get_Position().y;
+	near.x = players[0].get_Position().x;
+	near.y = players[0].get_Position().y;
+	for (char i = 1; i < Player_Number; i++)
+	{
+		far.x = max(far.x, players[i].get_Position().x);
+		far.y = max(far.y, players[i].get_Position().y);
+		near.x = min(near.x, players[i].get_Position().x);
+		near.y = min(near.y, players[i].get_Position().y);
+	}
+
+	size = far - near + sf::Vector2f(1000, 1000);
+	size.x /= 16.f;
+	size.y /= 9.f;
+	if (size.x > size.y)
+	{
+		size.y = size.x * 9;
+		size.x = size.x * 16;
+	}
+	else
+	{
+		size.x = size.y * 16;
+		size.y = size.y * 9;
+	}
+
+	center = (far + near) * 0.5f;
+
+	camrea.set_Size(size);
+	camrea.set_Center(center);
+
+	window.setView(camrea.get_View());
+}

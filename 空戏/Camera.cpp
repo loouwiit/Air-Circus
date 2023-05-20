@@ -14,3 +14,13 @@ void Camera::set_Size(float x, float y)
 {
 	self_View.setSize(x, y);
 }
+
+void Camera::set_Center(sf::Vector2f center)
+{
+	self_View.setCenter(center);
+}
+
+void Camera::set_Size(sf::Vector2f size)
+{
+	self_View.setSize(size);
+}
