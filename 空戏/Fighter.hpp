@@ -40,14 +40,12 @@ public:
 	void set_Position(float x, float y);
 	void set_Velocity(sf::Vector2f velocity);
 	void set_Velocity(float x, float y);
+	void change_Velocity(sf::Vector2f delta_Velocity, float time = 0);
 	void froce(sf::Vector2f acceleration, float time = 0);
 	void froce(float x, float y, float time = 0);
 	void move(float delta_Time);
 
 	static sf::Texture& get_Default_Texture();
-
-	void collide(Fighter& B);
-	void collide(Buoy& B);
 
 	sf::FloatRect get_Collision_Box();
 

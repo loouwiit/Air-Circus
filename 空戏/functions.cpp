@@ -34,7 +34,7 @@ void debug()
 	//
 	//srand(rand());
 	//float x = (rand() - 16000) / 1000.0f;
-	//for (unsigned short i = 0; i < 50000; i++) delta += ((::sin(x) + ::cos(x)) - (fsin(x) + fcos(x))) / 50000;
+	//for (unsigned short i = 0; i < 50000; i++) delta += abs((::sin(x) + ::cos(x)) - (fsin(x) + fcos(x))) / 50000;
 	//	cout << "delta:" << delta << endl;
 	//
 	//for (unsigned short i = 0; i < 1000; i++)
@@ -155,6 +155,10 @@ void Event::event(Event& event)
 void Event::event_Mouse(Event::MouseMoveEvent& mouse)
 {
 	//cout << "Event::event_Mouse:mouse move to " << mouse.x << ',' << mouse.y << endl;
+	//cout << "[debug]Event::event_Moouse:" << mouse.x << ',' << mouse.y << ':' << atan2f(mouse.y, mouse.x) << endl;
+
+	//players[0].set_Position(mouse.x , mouse.y);
+	//players[0].set_Velocity(0, 0);
 }
 
 void Event::event_Keyboard(Event::KeyEvent& key, bool is_Press)
@@ -235,7 +239,8 @@ void Event::event_Keyboard(Event::KeyEvent& key, bool is_Press)
 		players[1].set_Key(Fighter::Key::E, is_Press);
 		break;
 	}
-	case Key::H: //[debug]
+#ifdef _DEBUG
+	case Key::H:
 	{
 		players[0].set_Position(-10 * Meter, 0 * Meter);
 		players[1].set_Position(10 * Meter, 0 * Meter);
@@ -246,23 +251,113 @@ void Event::event_Keyboard(Event::KeyEvent& key, bool is_Press)
 		if (is_Press) for (char i = 0; i < Player_Number; i++) players[i].set_Velocity(0, 0);
 		break;
 	}
+	case Key::C:
+	{
+		system("cls");
+		cout << "[debug]Çå³ý¿ØÖÆÌ¨" << endl;
+		break;
+	}
+	case Key::F1:
+	{
+		cout << "[debug]Åö×²²âÊÔ1" << endl;
+		players[0].set_Position(0, 0);
+		players[1].set_Position(500,500);
+		players[0].set_Velocity(100, 100);
+		players[1].set_Velocity(-100, -100);
+		break;
+	}
+	case Key::F2:
+	{
+		cout << "[debug]Åö×²²âÊÔ2" << endl;
+		players[1].set_Position(0, 0);
+		players[0].set_Position(500,500);
+		players[1].set_Velocity(100, 100);
+		players[0].set_Velocity(-100, -100);
+		break;
+	}
+	case Key::F3:
+	{
+		cout << "[debug]Åö×²²âÊÔ3" << endl;
+		players[0].set_Position(0, 500);
+		players[1].set_Position(500,0);
+		players[0].set_Velocity(100, -100);
+		players[1].set_Velocity(-100, 100);
+		break;
+	}
+	case Key::F4:
+	{
+		cout << "[debug]Åö×²²âÊÔ4" << endl;
+		players[1].set_Position(0, 500);
+		players[0].set_Position(500,0);
+		players[1].set_Velocity(100, -100);
+		players[0].set_Velocity(-100, 100);
+		break;
+	}
+	case Key::F5:
+	{
+		cout << "[debug]Åö×²²âÊÔ5" << endl;
+		players[0].set_Position(0, 500);
+		players[1].set_Position(0,0);
+		players[0].set_Velocity(0, -100);
+		players[1].set_Velocity(0, 100);
+		break;
+	}
+	case Key::F6:
+	{
+		cout << "[debug]Åö×²²âÊÔ6" << endl;
+		players[1].set_Position(0, 0);
+		players[0].set_Position(0,500);
+		players[1].set_Velocity(0, 100);
+		players[0].set_Velocity(0, -100);
+		break;
+	}
+	case Key::F7:
+	{
+		cout << "[debug]Åö×²²âÊÔ7" << endl;
+		players[0].set_Position(500, 0);
+		players[1].set_Position(0,0);
+		players[0].set_Velocity(-100, 0);
+		players[1].set_Velocity(100, 0);
+		break;
+	}
+	case Key::F8:
+	{
+		cout << "[debug]Åö×²²âÊÔ8" << endl;
+		players[0].set_Position(-500, 0);
+		players[1].set_Position(0,0);
+		players[0].set_Velocity(100, 0);
+		players[1].set_Velocity(-100, 0);
+		break;
+	}
+	case Key::F9:
+	{
+		if (is_Press) return;
+		cout << "[debug]Åö×²²âÊÔ9" << endl;
+		players[0].set_Position((rand() - RAND_MAX / 2) * 3000.f / RAND_MAX, (rand() - RAND_MAX / 2) * 3000.f / RAND_MAX);
+		players[1].set_Position(0,0);
+		players[0].set_Velocity(players[0].get_Position().x * -1.0f, players[0].get_Position().y * -1.0f);
+		players[1].set_Velocity(players[0].get_Position().x * +1.0f, players[0].get_Position().y * +1.0f);
+		break;
+	}
+#endif
 	}
 }
 
 
 void Compute::compute_Player()
 {
+	using Time::delta_Time;
+
 	for (unsigned i = 0; i < Player_Number; i++)
 		players[i].move(Time::delta_Time.asMilliseconds() / 1000.f);
 	for (unsigned i = 0; i < Player_Number; i++)
-	{
-		for (unsigned j = i + 1; j < Player_Number; j++)
-		{
-			players[i].collide(players[j]);
-		}
 		for (unsigned j = 0; j < Buoy_Number; j++)
 		{
-			players[i].collide(buoy[j]);
+			players[i].collide(buoy[j], delta_Time.asMilliseconds() / 1000.f);
 		}
-	}
+	for (unsigned i = 0; i < Player_Number; i++)
+		for (unsigned j = i + 1; j < Player_Number; j++)
+		{
+			players[i].collide(players[j], delta_Time.asMilliseconds() / 1000.f);
+		}
 }

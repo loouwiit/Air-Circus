@@ -13,6 +13,7 @@ Fighter::Fighter()
 	self_Sprite.setOrigin(get_Default_Texture().getSize().x / 2.0f, get_Default_Texture().getSize().y / 2.0f);
 	self_Sprite.setScale(3.0f, 3.0f);
 	rotate(-PIf / 2);
+	self_Mass = 60;
 }
 
 void Fighter::set_Color(unsigned int Color)
@@ -158,6 +159,15 @@ void Fighter::move(float delta_Time)
 	self_Sprite.setPosition(self_Position);
 }
 
+void Fighter::change_Velocity(sf::Vector2f delta_Velocity, float time)
+{
+	self_Velocity_old += delta_Velocity;
+	self_Velocity += delta_Velocity;
+
+	self_Position.x += delta_Velocity.x * time;
+	self_Position.y += delta_Velocity.y * time;
+}
+
 sf::Texture& Fighter::get_Default_Texture()
 {
 	if (Default_Texture.getSize().x!= 0)
@@ -171,14 +181,20 @@ sf::Texture& Fighter::get_Default_Texture()
 			float x;
 			float y;
 		};
-		constexpr char Point_Number = 8;
+		//constexpr char Point_Number = 8;
 		//constexpr Point Points[Point_Number] = { {32.f,0.f},{63.f,63.f},{46.f,63.f},{46.f,125.f},{18.f,125.f},{18.f,63.f},{0.f,63.f},{32.f,0.f} };
-		constexpr Point Points[Point_Number] = { {127.f,32.f},{63.f,63.f},{63.f,45.f},{0.f,45.f},{0.f,18.f},{63.f,18.f},{63.f,0.f},{127.f,32.f} };
+		//constexpr Point Points[Point_Number] = { {127.f,32.f},{63.f,63.f},{63.f,45.f},{0.f,45.f},{0.f,18.f},{63.f,18.f},{63.f,0.f},{127.f,32.f} };
+
+		//constexpr char Point_Number = 3;
+		//constexpr Point Points[Point_Number] = { {0.f,63.f},{0.f,0.f},{63.f,31.f} };
+		
+		constexpr char Point_Number = 4;
+		constexpr Point Points[Point_Number] = { {0.f,63.f},{0.f,0.f},{63.f,63.f},{63.f,0.f} };
 
 		sf::RenderTexture texture;
 		sf::ConvexShape convex;
 
-		texture.create(128, 64);
+		texture.create(64, 64);
 		texture.clear(sf::Color::Transparent);
 		convex.setPointCount(Point_Number);
 		for (char i = 0; i < Point_Number; i++)
@@ -193,18 +209,6 @@ sf::Texture& Fighter::get_Default_Texture()
 	return Default_Texture;
 }
 
-void Fighter::collide(Fighter& B)
-{
-	if (!is_Collide(B)) return;
-	std::cout << "Fighter::collide:collide at" << self_Position.x << ',' << self_Position.y << '\n';
-}
-
-void Fighter::collide(Buoy& B)
-{
-	if (!is_Collide(B)) return;
-	std::cout << "Fighter::collide:collide at" << self_Position.x << ',' << self_Position.y << '\n';
-}
-
 sf::FloatRect Fighter::get_Collision_Box()
 {
 	return self_Sprite.getGlobalBounds();
@@ -213,4 +217,13 @@ sf::FloatRect Fighter::get_Collision_Box()
 void Fighter::draw(sf::RenderTarget& target, sf::RenderStates states) const
 {
 	target.draw(self_Sprite, states);
+#ifdef _DEBUG
+	static sf::RectangleShape box;
+	box.setPosition(self_Sprite.getGlobalBounds().left, self_Sprite.getGlobalBounds().top);
+	box.setSize(sf::Vector2f(self_Sprite.getGlobalBounds().width, self_Sprite.getGlobalBounds().height));
+	box.setFillColor(sf::Color::Transparent);
+	box.setOutlineColor(self_Sprite.getColor());
+	box.setOutlineThickness(20);
+	target.draw(box);
+#endif
 }
