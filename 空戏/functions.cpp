@@ -367,41 +367,64 @@ void Compute::compute_Camera()
 	using std::max;
 	using std::min;
 
+	bool is_normal = true;
+
 	sf::Vector2f size;
 	sf::Vector2f center;
 	sf::Vector2f far;
 	sf::Vector2f near;
 
-	far.x = players[0].get_Position().x;
-	far.y = players[0].get_Position().y;
-	near.x = players[0].get_Position().x;
-	near.y = players[0].get_Position().y;
-	for (char i = 1; i < Player_Number; i++)
+	for (char i = 0; i < Player_Number; i++) for (char j = i + 1; j < Player_Number; j++)
 	{
-		far.x = max(far.x, players[i].get_Position().x);
-		far.y = max(far.y, players[i].get_Position().y);
-		near.x = min(near.x, players[i].get_Position().x);
-		near.y = min(near.y, players[i].get_Position().y);
+		if (players[i].distance(players[j]) < Near_Distance)
+		{
+			is_normal = false;
+			break;
+			break;
+		}
 	}
 
-	size = far - near + sf::Vector2f(1000, 1000);
-	size.x /= 16.f;
-	size.y /= 9.f;
-	if (size.x > size.y)
+	if (is_normal)
 	{
-		size.y = size.x * 9;
-		size.x = size.x * 16;
+		size.x = 250 * Meter;
+		size.y = 150 * Meter;
+		center.x = 0;
+		center.y = 0;
 	}
 	else
 	{
-		size.x = size.y * 16;
-		size.y = size.y * 9;
-	}
+		far.x = players[0].get_Position().x;
+		far.y = players[0].get_Position().y;
+		near.x = players[0].get_Position().x;
+		near.y = players[0].get_Position().y;
+		for (char i = 1; i < Player_Number; i++)
+		{
+			far.x = max(far.x, players[i].get_Position().x);
+			far.y = max(far.y, players[i].get_Position().y);
+			near.x = min(near.x, players[i].get_Position().x);
+			near.y = min(near.y, players[i].get_Position().y);
+		}
 
-	center = (far + near) * 0.5f;
+		size = far - near + sf::Vector2f(1000, 1000);
+		size.x /= 16.f;
+		size.y /= 9.f;
+		if (size.x > size.y)
+		{
+			size.y = size.x * 9;
+			size.x = size.x * 16;
+		}
+		else
+		{
+			size.x = size.y * 16;
+			size.y = size.y * 9;
+		}
+
+		center = (far + near) * 0.5f; //ÖÐµã
+	}
 
 	camrea.set_Size(size);
 	camrea.set_Center(center);
 
 	window.setView(camrea.get_View());
+	return;
 }

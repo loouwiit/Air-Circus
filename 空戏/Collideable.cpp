@@ -2,10 +2,10 @@
 
 constexpr float PIf = (float)(3.14159265358979323846);
 
-inline float test(sf::Vector2f v)
-{
-	return v.x * v.x + v.y * v.y;
-}
+//inline float test(sf::Vector2f v)
+//{
+//	return v.x * v.x + v.y * v.y;
+//}
 
 float Collideable::get_Mass()
 {
@@ -109,9 +109,24 @@ void Collideable::collide(Collideable& B, float delta_Time)
 	//printf("\tP^2 %f to %f\n", a_Mass * a_Mass * test(a_Velocity) + b_Mass * b_Mass * test(b_Velocity), a_Mass * a_Mass * test(a_New) + b_Mass * b_Mass * test(b_New));
 }
 
+float Collideable::distance(Collideable& B)
+{
+	return sqrt(distance_Square(B));
+}
+
+float Collideable::distance_Square(Collideable& B)
+{
+	return abs(get_Position() - B.get_Position());
+}
+
 bool Collideable::is_Collide(Collideable& B)
 {
 	return this->get_Collision_Box().intersects(B.get_Collision_Box());
+}
+
+float Collideable::abs(sf::Vector2f V)
+{
+	return V.x * V.x + V.y * V.y;
 }
 
 Buoy::Buoy()

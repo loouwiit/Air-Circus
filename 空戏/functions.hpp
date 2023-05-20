@@ -16,6 +16,7 @@ constexpr double PI2 = 3.14159265358979323846 / 2.0;
 constexpr float TAUf = (float)(3.14159265358979323846 * 2.0);
 constexpr double TAU = 3.14159265358979323846 * 2;
 constexpr char Meter = 100;
+constexpr unsigned Near_Distance = 50 * Meter;
 
 #ifdef _DEBUG
 constexpr wchar_t Window_Name[] = L"ø’œ∑_debug";

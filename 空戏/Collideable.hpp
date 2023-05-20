@@ -14,6 +14,8 @@ public:
 	void set_Mass(float Mass);
 
 	void collide(Collideable& B, float delta_Time);
+	float distance(Collideable& B);
+	float distance_Square(Collideable& B);
 
 	bool is_Collide(Collideable& B);
 
@@ -26,6 +28,7 @@ protected:
 	float self_Mass = 0;
 
 private:
+	float abs(sf::Vector2f V);
 };
 
 class Buoy : public Collideable, public sf::Drawable
