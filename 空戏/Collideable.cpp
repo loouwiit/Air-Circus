@@ -175,6 +175,7 @@ void Buoy::draw(sf::RenderTarget& target, sf::RenderStates states) const
 Point::Point()
 {
 	self_Renctangle.setSize(sf::Vector2f(20, 20));
+	self_Renctangle.setOrigin(10, 10);
 }
 
 void Point::set_Position(float x, float y)
