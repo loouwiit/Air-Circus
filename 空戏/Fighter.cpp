@@ -2,6 +2,8 @@
 #include "vector.inl"
 
 constexpr float PIf = (float)(3.14159265358979323846);
+constexpr float PIf2 = (float)(3.14159265358979323846 / 2);
+constexpr float TAUf = (float)(3.14159265358979323846 * 2);
 constexpr char Meter = 100;
 
 sf::Texture Fighter::Default_Texture{};
@@ -35,6 +37,10 @@ float Fighter::get_Rotation()
 void Fighter::set_Rotation(float rotation)
 {
 	self_Rotation = rotation;
+
+	if (self_Rotation > PIf) self_Rotation -= (int)((self_Rotation + PIf) / TAUf) * TAUf;
+	if (self_Rotation < -PIf) self_Rotation += (int)((self_Rotation - PIf) / -TAUf) * TAUf;
+
 	self_Sprite.setRotation(self_Rotation / PIf * 180.f);
 	self_Rotation_SinCos[0] = sin(self_Rotation);
 	self_Rotation_SinCos[1] = cos(self_Rotation);
@@ -43,6 +49,10 @@ void Fighter::set_Rotation(float rotation)
 void Fighter::rotate(float rotation)
 {
 	self_Rotation += rotation;
+
+	if (self_Rotation > PIf) self_Rotation -= (int)((self_Rotation + PIf) / TAUf) * TAUf;
+	if (self_Rotation < -PIf) self_Rotation += (int)((self_Rotation - PIf) / -TAUf) * TAUf;
+
 	self_Sprite.setRotation(self_Rotation / PIf * 180.f);
 	self_Rotation_SinCos[0] = sin(self_Rotation);
 	self_Rotation_SinCos[1] = cos(self_Rotation);
@@ -220,6 +230,29 @@ sf::Texture& Fighter::get_Default_Texture()
 sf::FloatRect Fighter::get_Collision_Box()
 {
 	return self_Sprite.getGlobalBounds();
+}
+
+void Fighter::be_Collided(Collideable& A)
+{
+	if (A.get_My_Child_Class() != Child_Class::Buoy) return;
+	//printf("Fighter::be_Collided: delta: %f, rotation: %f sub: %f\n",
+	//	atan2f(self_Position.y - A.get_Position().y , self_Position.x - A.get_Position().x),
+	//	self_Rotation, abs(atan2f((self_Position.y - A.get_Position().y), (self_Position.x - A.get_Position().x)) -
+	//		self_Rotation));
+	if (abs(abs(atan2f((self_Position.y - A.get_Position().y), (self_Position.x - A.get_Position().x)) -
+		self_Rotation) - PIf) < 0.5)
+	{
+		//Í·Åö ÓÒ×ªPIf2
+		//printf("Fighter::be_Collided: head collide\n");
+		self_Velocity = ::rotate(self_Velocity, -1, 0);
+		self_Velocity_old = ::rotate(self_Velocity_old, -1, 0);
+		rotate(PIf2);
+	}
+}
+
+Fighter::Child_Class Fighter::get_My_Child_Class()
+{
+	return Child_Class::Fighter;
 }
 
 void Fighter::compute(float delta_Time, int now_Time)

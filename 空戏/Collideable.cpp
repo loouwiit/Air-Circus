@@ -102,7 +102,15 @@ void Collideable::collide(Collideable& B, float delta_Time)
 	change_Velocity(a_New - a_Velocity,delta_Time);
 	B.change_Velocity(b_New - b_Velocity, delta_Time);
 
+	this->be_Collided(B);
+	B.be_Collided(*this);
+
 	if (is_Collide(B))
+	{
+		error_Times++;
+		printf("collideable::collide: error %u, collide after collided\n", error_Times);
+		sf::sleep(sf::milliseconds(1000));
+	}
 
 	//printf("\tP^2 %f to %f\n", a_Mass * a_Mass * test(a_Velocity) + b_Mass * b_Mass * test(b_Velocity), a_Mass * a_Mass * test(a_New) + b_Mass * b_Mass * test(b_New));
 }
@@ -167,6 +175,14 @@ void Buoy::draw(sf::RenderTarget& target, sf::RenderStates states) const
 	target.draw(box);
 #endif
 }
+
+Buoy::Child_Class Buoy::get_My_Child_Class()
+{
+	return Child_Class::Buoy;
+}
+
+void Buoy::be_Collided(Collideable& A)
+{}
 
 Point::Point()
 {

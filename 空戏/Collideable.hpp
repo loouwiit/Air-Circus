@@ -11,6 +11,11 @@ namespace SinCos
 class Collideable
 {
 public:
+	enum class Child_Class : signed char
+	{
+		Buoy, Fighter
+	};
+
 	float get_Mass();
 	void set_Mass(float Mass);
 
@@ -24,8 +29,10 @@ public:
 	virtual sf::Vector2f get_Velocity() = 0;
 	virtual sf::FloatRect get_Collision_Box() = 0;
 	virtual void change_Velocity(sf::Vector2f delta_Velocity, float time = 0) = 0;
+	virtual Child_Class get_My_Child_Class() = 0;
 
 protected:
+	virtual void be_Collided(Collideable& A) = 0;
 	float self_Mass = 0;
 
 private:
@@ -45,6 +52,8 @@ public:
 
 protected:
 	void draw(sf::RenderTarget& target, sf::RenderStates states) const;
+	Child_Class get_My_Child_Class();
+	void be_Collided(Collideable& A);
 
 private:
 	sf::CircleShape self_Circle;
