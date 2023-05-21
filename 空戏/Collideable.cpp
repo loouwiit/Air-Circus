@@ -113,22 +113,17 @@ void Collideable::collide(Collideable& B, float delta_Time)
 
 float Collideable::distance(Collideable& B)
 {
-	return sqrt(distance_Square(B));
+	return abs(get_Position() - B.get_Position());
 }
 
 float Collideable::distance_Square(Collideable& B)
 {
-	return abs(get_Position() - B.get_Position());
+	return abss(get_Position() - B.get_Position());
 }
 
 bool Collideable::is_Collide(Collideable& B)
 {
 	return this->get_Collision_Box().intersects(B.get_Collision_Box());
-}
-
-float Collideable::abs(sf::Vector2f V)
-{
-	return V.x * V.x + V.y * V.y;
 }
 
 Buoy::Buoy()

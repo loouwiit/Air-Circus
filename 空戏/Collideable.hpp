@@ -1,5 +1,6 @@
 #pragma once
 #include <SFML/Graphics.hpp>
+#include "vector.inl"
 
 namespace SinCos
 {
@@ -28,7 +29,7 @@ protected:
 	float self_Mass = 0;
 
 private:
-	float abs(sf::Vector2f V);
+	
 };
 
 class Buoy : public Collideable, public sf::Drawable
