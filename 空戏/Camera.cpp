@@ -14,10 +14,10 @@ void Camera::compute()
 {
 	if (self_Center == self_Target_Center && self_Size == self_Target_Size) return;
 
-	if (self_Target_Center.x - self_Center.x < 10) self_Center = self_Target_Center;
+	if (abs(self_Target_Center.x - self_Center.x) < 10) self_Center = self_Target_Center;
 	else self_Center += (self_Target_Center - self_Center) * 0.05f;
 
-	if (self_Target_Size.x - self_Size.x < 10) self_Size = self_Target_Size;
+	if (abs(self_Target_Size.x - self_Size.x) < 10) self_Size = self_Target_Size;
 	else self_Size += (self_Target_Size - self_Size) * 0.05f;
 
 	self_View.setCenter(self_Center);
