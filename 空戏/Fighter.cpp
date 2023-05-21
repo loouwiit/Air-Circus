@@ -231,7 +231,7 @@ void Fighter::compute(float delta_Time, int now_Time)
 		{
 			//Èý»÷
 			set_Velocity(-self_Velocity);
-			printf("Fighter::compute: triple back\n");
+			//printf("Fighter::compute: triple back\n");
 		}
 		else if (is_Key(Key::Back, now_Time, Type::Pass, Type::Click))
 		{
