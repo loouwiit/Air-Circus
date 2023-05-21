@@ -29,7 +29,7 @@ protected:
 	float self_Mass = 0;
 
 private:
-	
+	unsigned error_Times = 0;
 };
 
 class Buoy : public Collideable, public sf::Drawable

@@ -106,7 +106,7 @@ void Collideable::collide(Collideable& B, float delta_Time)
 	change_Velocity(a_New - a_Velocity,delta_Time);
 	B.change_Velocity(b_New - b_Velocity, delta_Time);
 
-	if (is_Collide(B)) printf("collideable::collide: error, collide after collided\n");
+	if (is_Collide(B))
 
 	//printf("\tP^2 %f to %f\n", a_Mass * a_Mass * test(a_Velocity) + b_Mass * b_Mass * test(b_Velocity), a_Mass * a_Mass * test(a_New) + b_Mass * b_Mass * test(b_New));
 }
