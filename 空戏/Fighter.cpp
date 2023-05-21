@@ -149,8 +149,8 @@ void Fighter::move(float delta_Time, int now_Time)
 	compute(delta_Time, now_Time);
 	if (abss(self_Velocity) > 5000000)
 	{
-		change_Velocity(self_Velocity * -0.05f);
-		//printf("Fighter::Move: |Speed| = %f\n", abss(self_Velocity));
+		change_Velocity(self_Velocity * -0.01f);
+		printf("Fighter::Move: |Speed| = %f\n", abss(self_Velocity));
 	}
 
 	if (self_Position.x > +120 * Meter) froce(sf::Vector2f(-5000, 0), delta_Time);
