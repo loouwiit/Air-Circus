@@ -14,7 +14,7 @@ void Camera::compute()
 {
 	if (self_Center == self_Target_Center && self_Size == self_Target_Size) return;
 
-	if (abs(self_Target_Center - self_Center) < 100) self_Center.x = self_Target_Center.x;
+	if (abs(self_Target_Center - self_Center) < 100) self_Center = self_Target_Center;
 	else self_Center += (self_Target_Center - self_Center) * 0.05f;
 
 	if (abs(self_Target_Size - self_Size) < 100) self_Size = self_Target_Size;
