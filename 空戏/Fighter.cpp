@@ -153,10 +153,10 @@ void Fighter::move(float delta_Time, int now_Time)
 		//printf("Fighter::Move: |Speed| = %f\n", abss(self_Velocity));
 	}
 
-	if (self_Position.x > +120 * Meter) froce(sf::Vector2f(-5000, 0), delta_Time);
-	if (self_Position.x < -120 * Meter) froce(sf::Vector2f(+5000, 0), delta_Time);
-	if (self_Position.y > +70 * Meter) froce(sf::Vector2f(0, -5000), delta_Time);
-	if (self_Position.y < -70 * Meter) froce(sf::Vector2f(0, +5000), delta_Time);
+	if (self_Position.x > +120 * Meter) froce(sf::Vector2f(-50.f * (self_Position.x - 120 * Meter), 0), delta_Time);
+	if (self_Position.x < -120 * Meter) froce(sf::Vector2f(-50.f * (self_Position.x + 120 * Meter), 0), delta_Time);
+	if (self_Position.y > +70 * Meter) froce(sf::Vector2f(0, -50.f * (self_Position.y - 70 * Meter)), delta_Time);
+	if (self_Position.y < -70 * Meter) froce(sf::Vector2f(0, -50.f * (self_Position.y + 70 * Meter)), delta_Time);
 
 	self_Position += self_Velocity_old * delta_Time;
 	//self_Velocity += self_Acceleration * delta_Time;
