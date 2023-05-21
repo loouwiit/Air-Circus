@@ -2,6 +2,7 @@
 #include "vector.inl"
 
 constexpr float PIf = (float)(3.14159265358979323846);
+constexpr char Meter = 100;
 
 sf::Texture Fighter::Default_Texture{};
 float(*&Fighter::sin)(float) = SinCos::sin;
@@ -152,6 +153,11 @@ void Fighter::move(float delta_Time, int now_Time)
 		//printf("Fighter::Move: |Speed| = %f\n", abss(self_Velocity));
 	}
 
+	if (self_Position.x > +120 * Meter) froce(sf::Vector2f(-5000, 0), delta_Time);
+	if (self_Position.x < -120 * Meter) froce(sf::Vector2f(+5000, 0), delta_Time);
+	if (self_Position.y > +70 * Meter) froce(sf::Vector2f(0, -5000), delta_Time);
+	if (self_Position.y < -70 * Meter) froce(sf::Vector2f(0, +5000), delta_Time);
+
 	self_Position += self_Velocity_old * delta_Time;
 	//self_Velocity += self_Acceleration * delta_Time;
 	self_Velocity_old = self_Velocity;
@@ -227,11 +233,12 @@ void Fighter::compute(float delta_Time, int now_Time)
 
 	if (is_Key(Key::Back))
 	{
-		if (is_Key(Key::Back, now_Time, Type::Click, Type::Click, Type::Click) && self_Key_Filp[(Key_Base)Key::Back] == true)
+		if (is_Key(Key::Back, now_Time, Type::Click, Type::Click, Type::Click) && now_Time > self_Next_Back_Time)
 		{
 			//Èý»÷
 			set_Velocity(-self_Velocity);
 			//printf("Fighter::compute: triple back\n");
+			self_Next_Back_Time = now_Time + self_Back_Time_Limit;
 		}
 		else if (is_Key(Key::Back, now_Time, Type::Pass, Type::Click))
 		{

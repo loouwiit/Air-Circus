@@ -386,7 +386,7 @@ void Compute::compute_Camera()
 	if (is_normal)
 	{
 		camera.set_Is_Full(true);
-		camera.set_Position(sf::Vector2f(-200 / 2 * Meter, -120 / 2 * Meter), sf::Vector2f(200 / 2 * Meter, 120 / 2 * Meter));
+		camera.set_Position(sf::Vector2f(-240 / 2 * Meter, -140 / 2 * Meter), sf::Vector2f(240 / 2 * Meter, 140 / 2 * Meter));
 	}
 	else
 	{

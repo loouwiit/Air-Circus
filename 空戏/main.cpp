@@ -17,6 +17,7 @@ Camera camera;
 Fighter players[Player_Number];
 Buoy buoy[Buoy_Number];
 Point position_Point[Position_Point_X_Number * Position_Point_Y_Number];
+sf::RectangleShape map_Side;
 
 int main(int argc, char* argv[]);
 void init();
@@ -49,7 +50,7 @@ void init()
 	window.create(sf::VideoMode(1500, 900), Window_Name);
 	//camera.set_Size(250 * Meter, 150 * Meter);
 	//camera.set_Center(0.f, 0.f);
-	camera.set_Position(sf::Vector2f(-200 / 2 * Meter, -120 / 2 * Meter), sf::Vector2f(200 / 2 * Meter, 120 / 2 * Meter));
+	camera.set_Position(sf::Vector2f(-240 / 2 * Meter, -140 / 2 * Meter), sf::Vector2f(240 / 2 * Meter, 140 / 2 * Meter));
 	camera.set_Target(&window);
 
 	players[0].set_Position(-10 * Meter, 0 * Meter);
@@ -67,6 +68,13 @@ void init()
 		position_Point[i * Position_Point_X_Number + j].set_Color(sf::Color::Black);
 		position_Point[i * Position_Point_X_Number + j].set_Position(((float)(j - Position_Point_X_Number / 2) * 10 * Meter), (float)((i - Position_Point_Y_Number / 2) * 10 * Meter));
 	}
+
+	map_Side.setFillColor(sf::Color::Transparent);
+	map_Side.setOutlineColor(sf::Color::Black);
+	map_Side.setOutlineThickness(20);
+	map_Side.setOrigin(120 * Meter, 70 * Meter);
+	map_Side.setPosition(0, 0);
+	map_Side.setSize(sf::Vector2f(240 * Meter, 140 * Meter));
 }
 
 void event()
@@ -96,6 +104,7 @@ void draw()
 	window.clear(sf::Color::White);
 
 	if (!camera.is_Full()) for (unsigned short i = 0; i < Position_Point_X_Number * Position_Point_Y_Number; i++) window.draw(position_Point[i]);
+	else window.draw(map_Side);
 	for (char i = 0; i < 4; i++) window.draw(buoy[i]);
 	for (char i = 0; i < Player_Number; i++) window.draw(players[i]);
 

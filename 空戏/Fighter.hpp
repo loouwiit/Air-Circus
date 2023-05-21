@@ -56,6 +56,7 @@ private:
 	static float(*&cos)(float);
 
 	constexpr static char Key_Number = 8;
+	constexpr static int Default_Back_Time_Limit = 1000;
 
 	enum class Key_Type : Key_Base
 	{
@@ -75,6 +76,8 @@ private:
 													//[Keynumber]:erveryKey
 													//[2]:start_Time and end_Time
 
+	int self_Back_Time_Limit = Default_Back_Time_Limit;
+	int self_Next_Back_Time = 0;
 	float self_Rotation = 0;
 	float self_Rotation_SinCos[2] = { 0.0f,1.0f };
 
