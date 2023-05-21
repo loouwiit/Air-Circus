@@ -168,6 +168,7 @@ void Event::event_Mouse(Event::MouseMoveEvent& mouse)
 
 void Event::event_Keyboard(Event::KeyEvent& key, bool is_Press)
 {
+	using Time::now_Time;
 	using Key = sf::Keyboard;
 	//cout << "Event::event_Keyboard:key " << key.code << ' ' << (is_Press ? "press" : "free") << endl;
 	switch (key.code)
@@ -183,65 +184,65 @@ void Event::event_Keyboard(Event::KeyEvent& key, bool is_Press)
 	{
 		//players[0].set_Velocity(500.f * players[0].get_Cos_Rotate(), 500.f * players[0].get_Sin_Rotate());
 		//players[0].froce(100.f * players[0].get_Cos_Rotate(), 100.f * players[0].get_Sin_Rotate());
-		players[0].set_Key(Fighter::Key::W, is_Press);
+		players[0].set_Key(Fighter::Key::W, is_Press, now_Time.asMilliseconds());
 		break;
 	}
 	case Key::S:
 	{
 		//players[0].set_Velocity({ 0,0 });
-		players[0].set_Key(Fighter::Key::S, is_Press);
+		players[0].set_Key(Fighter::Key::S, is_Press, now_Time.asMilliseconds());
 		break;
 	}
 	case Key::A:
 	{
 		//players[0].rotate(-0.005f * Time::delta_Time.asMilliseconds());
-		players[0].set_Key(Fighter::Key::A, is_Press);
+		players[0].set_Key(Fighter::Key::A, is_Press, now_Time.asMilliseconds());
 		break;
 	}
 	case Key::D:
 	{
 		//players[0].rotate(+0.005f * Time::delta_Time.asMilliseconds());
-		players[0].set_Key(Fighter::Key::D, is_Press);
+		players[0].set_Key(Fighter::Key::D, is_Press, now_Time.asMilliseconds());
 		break;
 	}
 	case Key::Q:
 	{
-		players[0].set_Key(Fighter::Key::Q, is_Press);
+		players[0].set_Key(Fighter::Key::Q, is_Press, now_Time.asMilliseconds());
 		break;
 	}
 	case Key::E:
 	{
-		players[0].set_Key(Fighter::Key::E, is_Press);
+		players[0].set_Key(Fighter::Key::E, is_Press, now_Time.asMilliseconds());
 		break;
 	}
 	case Key::I:
 	{
-		players[1].set_Key(Fighter::Key::W, is_Press);
+		players[1].set_Key(Fighter::Key::W, is_Press, now_Time.asMilliseconds());
 		break;
 	}
 	case Key::K:
 	{
-		players[1].set_Key(Fighter::Key::S, is_Press);
+		players[1].set_Key(Fighter::Key::S, is_Press, now_Time.asMilliseconds());
 		break;
 	}
 	case Key::J:
 	{
-		players[1].set_Key(Fighter::Key::A, is_Press);
+		players[1].set_Key(Fighter::Key::A, is_Press, now_Time.asMilliseconds());
 		break;
 	}
 	case Key::L:
 	{
-		players[1].set_Key(Fighter::Key::D, is_Press);
+		players[1].set_Key(Fighter::Key::D, is_Press, now_Time.asMilliseconds());
 		break;
 	}
 	case Key::U:
 	{
-		players[1].set_Key(Fighter::Key::Q, is_Press);
+		players[1].set_Key(Fighter::Key::Q, is_Press, now_Time.asMilliseconds());
 		break;
 	}
 	case Key::O:
 	{
-		players[1].set_Key(Fighter::Key::E, is_Press);
+		players[1].set_Key(Fighter::Key::E, is_Press, now_Time.asMilliseconds());
 		break;
 	}
 #ifdef _DEBUG

@@ -29,9 +29,7 @@ public:
 	float get_Sin_Rotate();
 	float get_Cos_Rotate();
 
-	void set_Key(unsigned i, bool flag);
-	bool get_Key(unsigned i);
-	void set_Key(Key i, bool flag);
+	void set_Key(Key i, bool flag, int time);
 	bool get_Key(Key i);
 	
 	sf::Vector2f get_Position();
@@ -62,7 +60,13 @@ private:
 	sf::Sprite self_Sprite{};
 
 	bool self_Key[Key_Number] = { false };
-	bool self_Key_old[Key_Number] = { false };
+	bool self_Key_Old[Key_Number] = { false }; //±æ±ð³¤°´
+
+	int self_Key_Now_Start_Time[Key_Number] = { 0 }; //for the self_Key_Last_Time
+	int self_Key_Last_Time[2][Key_Number][2] = {0};	//time, in milisecond
+													//[2]:single_Last or doubel_Last
+													//[Keynumber]:erveryKey
+													//[2]:start_Time and end_Time
 
 	float self_Rotation = 0;
 	float self_Rotation_SinCos[2] = { 0.0f,1.0f };
@@ -71,4 +75,6 @@ private:
 	sf::Vector2f self_Velocity{};
 	sf::Vector2f self_Velocity_old{};
 	sf::Vector2f self_Position{};
+
+	void compute(float delta_Time);
 };
