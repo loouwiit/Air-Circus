@@ -12,7 +12,8 @@ namespace SinCos
 class Fighter : public Collideable, public sf::Drawable
 {
 public:
-	enum class Key
+	using Key_Base = unsigned char;
+	enum class Key : Key_Base
 	{
 		W = 0, S, A, D, Q, E,
 		Forward = W, Back, Left, Right, Turn_Left, Turn_Right
@@ -29,7 +30,7 @@ public:
 	float get_Sin_Rotate();
 	float get_Cos_Rotate();
 
-	void set_Key(Key i, bool flag, int time);
+	void set_Key(Key i, bool flag, int now_Time);
 	bool get_Key(Key i);
 	
 	sf::Vector2f get_Position();
@@ -41,7 +42,7 @@ public:
 	void change_Velocity(sf::Vector2f delta_Velocity, float time = 0);
 	void froce(sf::Vector2f acceleration, float time = 0);
 	void froce(float x, float y, float time = 0);
-	void move(float delta_Time);
+	void move(float delta_Time, int now_Time);
 
 	static sf::Texture& get_Default_Texture();
 
@@ -54,13 +55,19 @@ private:
 	static float(*&sin)(float);
 	static float(*&cos)(float);
 
-	constexpr static char Key_Number = 6;
+	constexpr static char Key_Number = 8;
+
+	enum class Key_Type : Key_Base
+	{
+		None, Pass, Press, Click, On, Off
+	};
 
 	static sf::Texture Default_Texture;
 	sf::Sprite self_Sprite{};
 
 	bool self_Key[Key_Number] = { false };
-	bool self_Key_Old[Key_Number] = { false }; //辨别长按
+	bool self_Key_Old[Key_Number] = { false }; //辨别长按中的每一次
+	bool self_Key_Filp[Key_Number] = { false };//辨别是否变换
 
 	int self_Key_Now_Start_Time[Key_Number] = { 0 }; //for the self_Key_Last_Time
 	int self_Key_Last_Time[2][Key_Number][2] = {0};	//time, in milisecond
@@ -76,5 +83,6 @@ private:
 	sf::Vector2f self_Velocity_old{};
 	sf::Vector2f self_Position{};
 
-	void compute(float delta_Time);
+	void compute(float delta_Time, int now_Time);
+	bool is_Key(Key key, int now_Time = 0, Key_Type T1 = Key_Type::On, Key_Type T2 = Key_Type::None, Key_Type T3 = Key_Type::None);
 };

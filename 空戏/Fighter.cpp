@@ -64,37 +64,36 @@ void Fighter::set_Position(float x, float y)
 	self_Sprite.setPosition(self_Position);
 }
 
-void Fighter::set_Key(Key i, bool flag, int time)
+void Fighter::set_Key(Key i, bool flag, int now_Time)
 {
-	using u = unsigned;
+	if (flag == self_Key_Old[(Key_Base)i]) return; // 相同，记过了
 
-	if (flag == self_Key_Old[(u)i]) return; // 相同，记过了
+	self_Key[(Key_Base)i] = flag;
+	self_Key_Old[(Key_Base)i] = flag;
+	self_Key_Filp[(Key_Base)i] = true;
 
-	self_Key[(u)i] = flag;
-	self_Key_Old[(u)i] = flag;
-
-	if (time == 0) return; //没有意义，直接返回
+	if (now_Time == 0) return; //没有意义，直接返回
 	if (flag)
 	{
 		//pressed
-		self_Key_Now_Start_Time[(u)i] = time;
+		self_Key_Now_Start_Time[(Key_Base)i] = now_Time;
 	}
 	else
 	{
 		//release
-		self_Key_Last_Time[1][(u)i][0] = self_Key_Last_Time[0][(u)i][0];
-		self_Key_Last_Time[1][(u)i][1] = self_Key_Last_Time[0][(u)i][1]; //退一
+		self_Key_Last_Time[1][(Key_Base)i][0] = self_Key_Last_Time[0][(Key_Base)i][0];
+		self_Key_Last_Time[1][(Key_Base)i][1] = self_Key_Last_Time[0][(Key_Base)i][1]; //退一
 
-		self_Key_Last_Time[0][(u)i][0] = self_Key_Now_Start_Time[(u)i]; //写一
-		self_Key_Last_Time[0][(u)i][1] = time;
+		self_Key_Last_Time[0][(Key_Base)i][0] = self_Key_Now_Start_Time[(Key_Base)i]; //写一
+		self_Key_Last_Time[0][(Key_Base)i][1] = now_Time;
 
-		//printf("Fighter::set_Key: key %d relesed, press time: %d, last time %d\n", (u)i, self_Key_Last_Time[0][(u)i][1] - self_Key_Last_Time[0][(u)i][0], self_Key_Last_Time[0][(u)i][0] - self_Key_Last_Time[1][(u)i][0]);
+		//printf("Fighter::set_Key: key %d relesed, press time: %d, last time %d\n", (Key_Base)i, self_Key_Last_Time[0][(Key_Base)i][1] - self_Key_Last_Time[0][(Key_Base)i][0], self_Key_Last_Time[0][(Key_Base)i][0] - self_Key_Last_Time[1][(Key_Base)i][0]);
 	}
 }
 
 bool Fighter::get_Key(Key i)
 {
-	return self_Key[(unsigned)i];
+	return self_Key[(Key_Base)i];
 }
 
 sf::Vector2f Fighter::get_Velocity()
@@ -144,9 +143,14 @@ void Fighter::froce(float x, float y, float time)
 	self_Velocity.y += y * time;
 }
 
-void Fighter::move(float delta_Time)
+void Fighter::move(float delta_Time, int now_Time)
 {
-	compute(delta_Time);
+	compute(delta_Time, now_Time);
+	if (abss(self_Velocity) > 5000000)
+	{
+		change_Velocity(self_Velocity * -0.05f);
+		//printf("Fighter::Move: |Speed| = %f\n", abss(self_Velocity));
+	}
 
 	self_Position += self_Velocity_old * delta_Time;
 	//self_Velocity += self_Acceleration * delta_Time;
@@ -212,34 +216,147 @@ sf::FloatRect Fighter::get_Collision_Box()
 	return self_Sprite.getGlobalBounds();
 }
 
-void Fighter::compute(float delta_Time)
+void Fighter::compute(float delta_Time, int now_Time)
 {
-	using u = unsigned;
+	using Type = Key_Type;
 
-	if (self_Key[(u)Key::Forward])
+	if (is_Key(Key::Forward))
 	{
 		froce(+2000 * self_Rotation_SinCos[1], +2000 * self_Rotation_SinCos[0], delta_Time);
 	}
 
-	if (self_Key[(u)Key::Back])
+	if (is_Key(Key::Back))
 	{
-		//if (self_Key_Last_Time[0][(u)Key::Back][1]< )
-		froce(-2000 * self_Rotation_SinCos[1], -2000 * self_Rotation_SinCos[0], delta_Time);
+		if (is_Key(Key::Back, now_Time, Type::Click, Type::Click, Type::Click) && self_Key_Filp[(Key_Base)Key::Back] == true)
+		{
+			//三击
+			set_Velocity(-self_Velocity);
+			printf("Fighter::compute: triple back\n");
+		}
+		else if (is_Key(Key::Back, now_Time, Type::Pass, Type::Click))
+		{
+			//上次是点 减速
+			froce(self_Velocity * -5.0f, delta_Time);
+			//printf("Fighter::compute: double back\n");
+		}
+		else
+		{
+			//其他 后退
+			froce(-500 * self_Rotation_SinCos[1], -500 * self_Rotation_SinCos[0], delta_Time);
+		}
 	}
 
-	if (self_Key[(u)Key::Left])
+	if (self_Key[(Key_Base)Key::Left])
 	{
-		froce(+1000 * self_Rotation_SinCos[0], -1000 * self_Rotation_SinCos[1], delta_Time);
+		rotate(-2.0f * delta_Time);
 	}
 
-	if (self_Key[(u)Key::Right])
+	if (self_Key[(Key_Base)Key::Right])
 	{
-		froce(-1000 * self_Rotation_SinCos[0], +1000 * self_Rotation_SinCos[1], delta_Time);
+		rotate(+2.0f * delta_Time);
 	}
 
-	if (self_Key[(u)Key::Turn_Left]) rotate(-2.0f * delta_Time);
+	if (self_Key[(Key_Base)Key::Turn_Left])
+	{
+		froce(+500 * self_Rotation_SinCos[0], -500 * self_Rotation_SinCos[1], delta_Time);
+	}
 
-	if (self_Key[(u)Key::Turn_Right]) rotate(+2.0f * delta_Time);
+	if (self_Key[(Key_Base)Key::Turn_Right])
+	{
+		froce(-500 * self_Rotation_SinCos[0], +500 * self_Rotation_SinCos[1], delta_Time);
+	}
+
+
+	std::fill(self_Key_Filp, self_Key_Filp + Key_Number, false);
+}
+
+bool Fighter::is_Key(Key key,int now_Time, Key_Type T1, Key_Type T2, Key_Type T3)
+{
+	switch (T1)
+	{
+	case Fighter::Key_Type::Press:
+		if (self_Key[(Key_Base)key] == false) return false;
+		if (now_Time - self_Key_Now_Start_Time[(Key_Base)key] < 400) return false;//非长按
+		break;
+
+	case Fighter::Key_Type::Click:
+		if (self_Key[(Key_Base)key] == false) return false;
+		if (now_Time - self_Key_Now_Start_Time[(Key_Base)key] > 400) return false;//非点按
+		break;
+
+	case Fighter::Key_Type::On:
+		if (self_Key[(Key_Base)key] == false) return false;
+		break;
+
+	case Fighter::Key_Type::Off:
+		if (self_Key[(Key_Base)key] == true) return false;
+		else return false; //既然off了就不用后续判断了
+
+	default:
+	case Fighter::Key_Type::None:
+		return true; //既然none了就不用后续判断了 此时函数恒成立
+
+	case Fighter::Key_Type::Pass:
+		break;
+	}
+
+	switch (T2)
+	{
+	case Fighter::Key_Type::Press:
+		if (self_Key_Now_Start_Time[(Key_Base)key] - self_Key_Last_Time[0][(Key_Base)key][1] > 1000) return false; //超时
+		if (self_Key_Last_Time[0][(Key_Base)key][1] - self_Key_Last_Time[0][(Key_Base)key][0] < 400) return false;//非长按
+		break;
+
+	case Fighter::Key_Type::Click:
+		if (self_Key_Now_Start_Time[(Key_Base)key] - self_Key_Last_Time[0][(Key_Base)key][1] > 1000) return false; //超时
+		if (self_Key_Last_Time[0][(Key_Base)key][1] - self_Key_Last_Time[0][(Key_Base)key][0] > 400) return false;//非点按
+		break;
+
+	case Fighter::Key_Type::On:
+		if (self_Key_Now_Start_Time[(Key_Base)key] - self_Key_Last_Time[0][(Key_Base)key][1] > 1000) return false; //超时
+		break;
+
+	case Fighter::Key_Type::Off:
+		if (self_Key_Now_Start_Time[(Key_Base)key] - self_Key_Last_Time[0][(Key_Base)key][1] < 1000) return false; //近时
+		else return true;
+
+	default:
+	case Fighter::Key_Type::None:
+		return true;
+
+	case Fighter::Key_Type::Pass:
+		break;
+	}
+
+	switch (T3)
+	{
+	case Fighter::Key_Type::Press:
+		if (self_Key_Last_Time[0][(Key_Base)key][0] - self_Key_Last_Time[1][(Key_Base)key][1] > 1000)return false; //超时
+		if (self_Key_Last_Time[1][(Key_Base)key][1] - self_Key_Last_Time[1][(Key_Base)key][0] > 400) return false;//非点按
+		break;
+
+	case Fighter::Key_Type::Click:
+		if (self_Key_Last_Time[0][(Key_Base)key][0] - self_Key_Last_Time[1][(Key_Base)key][1] > 1000)return false; //超时
+		if (self_Key_Last_Time[1][(Key_Base)key][1] - self_Key_Last_Time[1][(Key_Base)key][0] > 400) return false;//非点按
+		break;
+
+	case Fighter::Key_Type::On:
+		if (self_Key_Last_Time[0][(Key_Base)key][0] - self_Key_Last_Time[1][(Key_Base)key][1] > 1000)return false; //超时
+		break;
+
+	case Fighter::Key_Type::Off:
+		if (self_Key_Last_Time[0][(Key_Base)key][0] - self_Key_Last_Time[1][(Key_Base)key][1] < 1000)return false; //近时
+		else return true;
+
+	default:
+	case Fighter::Key_Type::None:
+		return true;
+
+	case Fighter::Key_Type::Pass:
+		break;
+	}
+
+	return true;
 }
 
 void Fighter::draw(sf::RenderTarget& target, sf::RenderStates states) const

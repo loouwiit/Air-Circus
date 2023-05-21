@@ -353,9 +353,10 @@ void Event::event_Keyboard(Event::KeyEvent& key, bool is_Press)
 void Compute::compute_Player()
 {
 	using Time::delta_Time;
+	using Time::now_Time;
 
 	for (unsigned i = 0; i < Player_Number; i++)
-		players[i].move(Time::delta_Time.asMilliseconds() / 1000.f);
+		players[i].move(Time::delta_Time.asMilliseconds() / 1000.f, now_Time.asMilliseconds());
 	for (unsigned i = 0; i < Player_Number; i++)
 		for (unsigned j = 0; j < Buoy_Number; j++)
 		{

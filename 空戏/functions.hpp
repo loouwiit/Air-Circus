@@ -19,6 +19,7 @@ constexpr char Meter = 100;
 constexpr unsigned Near_Distance = 50 * Meter;
 constexpr short Position_Point_X_Number = 20;
 constexpr short Position_Point_Y_Number = 10;
+constexpr unsigned Max_Player_Speed = 10000;
 
 #ifdef _DEBUG
 constexpr wchar_t Window_Name[] = L"ø’œ∑_debug";
