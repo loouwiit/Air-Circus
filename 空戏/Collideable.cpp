@@ -53,10 +53,8 @@ void Collideable::collide(Collideable& B, float delta_Time)
 
 	//base
 	{
-		a_Base_Velocity.x = +a_Velocity.x * cos - a_Velocity.y * sin;
-		a_Base_Velocity.y = +a_Velocity.x * sin + a_Velocity.y * cos;
-		b_Base_Velocity.x = +b_Velocity.x * cos - b_Velocity.y * sin;
-		b_Base_Velocity.y = +b_Velocity.x * sin + b_Velocity.y * cos;
+		a_Base_Velocity = rotate(a_Velocity, sin, cos);
+		b_Base_Velocity = rotate(b_Velocity, sin, cos);
 	}
 
 	a_New_Base.y = a_Base_Velocity.y;
@@ -97,10 +95,8 @@ void Collideable::collide(Collideable& B, float delta_Time)
 
 	//New
 	{
-		a_New.x = +a_New_Base.x * cos + a_New_Base.y * sin;
-		a_New.y = -a_New_Base.x * sin + a_New_Base.y * cos;
-		b_New.x = +b_New_Base.x * cos + b_New_Base.y * sin;
-		b_New.y = -b_New_Base.x * sin + b_New_Base.y * cos;
+		a_New = rotate(a_New_Base, -sin, cos);
+		b_New = rotate(b_New_Base, -sin, cos);
 	}
 
 	change_Velocity(a_New - a_Velocity,delta_Time);

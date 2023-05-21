@@ -18,3 +18,11 @@ inline float abs(sf::Vector2f V)
 {
 	return sqrt(V.x * V.x + V.y * V.y);
 }
+
+inline sf::Vector2f rotate(sf::Vector2f V, float sin, float cos)
+{
+	sf::Vector2f out;
+	out.x = V.x * cos - V.y * sin;
+	out.y = V.x * sin + V.y * cos;
+	return out;
+}
