@@ -21,7 +21,6 @@ public:
 
 	Fighter();
 
-	void set_Color(unsigned int Color);
 	void set_Color(sf::Color Color);
 
 	float get_Rotation();

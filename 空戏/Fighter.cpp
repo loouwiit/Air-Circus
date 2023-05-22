@@ -19,11 +19,6 @@ Fighter::Fighter()
 	self_Mass = 60;
 }
 
-void Fighter::set_Color(unsigned int Color)
-{
-	self_Sprite.setColor(sf::Color(Color));
-}
-
 void Fighter::set_Color(sf::Color Color)
 {
 	self_Sprite.setColor(Color);
