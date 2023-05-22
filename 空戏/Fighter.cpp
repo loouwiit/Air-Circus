@@ -229,19 +229,30 @@ sf::FloatRect Fighter::get_Collision_Box()
 
 void Fighter::be_Collided(Collideable& A)
 {
-	if (A.get_My_Child_Class() != Child_Class::Buoy) return;
+	//if (A.get_My_Child_Class() != Child_Class::Buoy) return;
 	//printf("Fighter::be_Collided: delta: %f, rotation: %f sub: %f\n",
 	//	atan2f(self_Position.y - A.get_Position().y , self_Position.x - A.get_Position().x),
 	//	self_Rotation, abs(atan2f((self_Position.y - A.get_Position().y), (self_Position.x - A.get_Position().x)) -
 	//		self_Rotation));
-	if (abs(abs(atan2f((self_Position.y - A.get_Position().y), (self_Position.x - A.get_Position().x)) -
-		self_Rotation) - PIf) < 0.5)
+	switch (A.get_My_Child_Class())
 	{
-		//头碰 右转PIf2
-		//printf("Fighter::be_Collided: head collide\n");
-		self_Velocity = ::rotate(self_Velocity, -1, 0);
-		self_Velocity_old = ::rotate(self_Velocity_old, -1, 0);
-		rotate(PIf2);
+	case Collideable::Child_Class::Buoy:
+	{
+		if (abs(abs(atan2f((self_Position.y - A.get_Position().y), (self_Position.x - A.get_Position().x)) -
+			self_Rotation) - PIf) < 0.5)
+		{
+			//头碰 右转PIf2
+			//printf("Fighter::be_Collided: head collide\n");
+			self_Velocity = ::rotate(self_Velocity, -1, 0);
+			self_Velocity_old = ::rotate(self_Velocity_old, -1, 0);
+			rotate(PIf2);
+
+			((Buoy*)&A)->be_Touched();
+		}
+		break;
+	}
+	default:
+		break;
 	}
 }
 

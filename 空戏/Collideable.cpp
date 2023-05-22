@@ -178,6 +178,12 @@ void Buoy::set_Active(bool flag)
 		self_Circle.setFillColor(Default_Color);
 }
 
+void Buoy::be_Touched()
+{
+	set_Active(false);
+	self_Next_Buoy->set_Active(true);
+}
+
 void Buoy::set_Color(sf::Color default_Color, sf::Color active_Color)
 {
 	Default_Color = default_Color;
@@ -204,13 +210,7 @@ Buoy::Child_Class Buoy::get_My_Child_Class()
 }
 
 void Buoy::be_Collided(Collideable& A)
-{
-	if (A.get_My_Child_Class() == Child_Class::Fighter)
-	{
-		set_Active(false);
-		self_Next_Buoy->set_Active(true);
-	}
-}
+{}
 
 Point::Point()
 {
