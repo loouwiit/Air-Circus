@@ -241,13 +241,24 @@ void Fighter::be_Collided(Collideable& A)
 		if (abs(abs(atan2f((self_Position.y - A.get_Position().y), (self_Position.x - A.get_Position().x)) -
 			self_Rotation) - PIf) < 0.5)
 		{
-			//头碰 右转PIf2
-			//printf("Fighter::be_Collided: head collide\n");
-			self_Velocity = ::rotate(self_Velocity, -1, 0);
-			self_Velocity_old = ::rotate(self_Velocity_old, -1, 0);
-			rotate(PIf2);
+			//头碰
+			if (is_Key(Key::Forward))
+			{
+				//W按下 右转PIf2
+				self_Velocity = ::rotate(self_Velocity, -1, 0);
+				self_Velocity_old = ::rotate(self_Velocity_old, -1, 0);
+				rotate(PIf2);
+			}
 
 			((Buoy*)&A)->be_Touched();
+
+			break;
+		}
+		else
+		{
+			//非头碰 但是慢
+			if (abss(self_Velocity )< 600000) ((Buoy*)&A)->be_Touched();
+			break;
 		}
 		break;
 	}
