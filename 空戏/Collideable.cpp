@@ -176,10 +176,13 @@ void Buoy::set_Active(bool flag)
 		self_Circle.setFillColor(Active_Color);
 	else
 		self_Circle.setFillColor(Default_Color);
+
+	is_Active = flag;
 }
 
 void Buoy::be_Touched()
 {
+	if (is_Active == false) return;
 	set_Active(false);
 	self_Next_Buoy->set_Active(true);
 }
