@@ -59,9 +59,15 @@ void init()
 	players[1].set_Color(sf::Color::Blue);
 
 	buoy[0].set_Position(-100 * Meter, -50 * Meter);
-	buoy[1].set_Position(-100 * Meter, +50 * Meter);
-	buoy[2].set_Position(+100 * Meter, -50 * Meter);
-	buoy[3].set_Position(+100 * Meter, +50 * Meter);
+	buoy[1].set_Position(+100 * Meter, -50 * Meter);
+	buoy[2].set_Position(+100 * Meter, +50 * Meter);
+	buoy[3].set_Position(-100 * Meter, +50 * Meter);
+
+	buoy[3].set_Next_Buoy(&buoy[0]);
+	for (char i = 0; i < 3; i++) buoy[i].set_Next_Buoy(&buoy[i + 1]);
+	Buoy::set_Color(sf::Color::Green, sf::Color::Yellow);
+	buoy[0].set_Active(true);
+	for (char i = 1; i < 4; i++) buoy[i].set_Active(false);
 
 	for (int i = 0; i < Position_Point_Y_Number; i++) for (int j = 0; j < Position_Point_X_Number; j++)
 	{

@@ -1,6 +1,9 @@
 #include "Collideable.hpp"
+#include "Fighter.hpp"
 
 constexpr float PIf = (float)(3.14159265358979323846);
+sf::Color Buoy::Default_Color = sf::Color::Green;
+sf::Color Buoy::Active_Color = sf::Color::Yellow;
 
 //inline float test(sf::Vector2f v)
 //{
@@ -133,7 +136,7 @@ bool Collideable::is_Collide(Collideable& B)
 Buoy::Buoy()
 {
 	self_Circle.setRadius(100.f);
-	self_Circle.setFillColor(sf::Color::Green);
+	self_Circle.setFillColor(Default_Color);
 	self_Circle.setPointCount(20);
 	self_Circle.setOrigin(self_Circle.getRadius(), self_Circle.getRadius());
 	self_Mass = 0;
@@ -162,6 +165,25 @@ sf::FloatRect Buoy::get_Collision_Box()
 void Buoy::change_Velocity(sf::Vector2f delta_Velocity, float time)
 {}
 
+void Buoy::set_Next_Buoy(Buoy* next)
+{
+	self_Next_Buoy = next;
+}
+
+void Buoy::set_Active(bool flag)
+{
+	if (flag)
+		self_Circle.setFillColor(Active_Color);
+	else
+		self_Circle.setFillColor(Default_Color);
+}
+
+void Buoy::set_Color(sf::Color default_Color, sf::Color active_Color)
+{
+	Default_Color = default_Color;
+	Active_Color = active_Color;
+}
+
 void Buoy::draw(sf::RenderTarget& target, sf::RenderStates states) const
 {
 	target.draw(self_Circle);
@@ -182,7 +204,13 @@ Buoy::Child_Class Buoy::get_My_Child_Class()
 }
 
 void Buoy::be_Collided(Collideable& A)
-{}
+{
+	if (A.get_My_Child_Class() == Child_Class::Fighter)
+	{
+		set_Active(false);
+		self_Next_Buoy->set_Active(true);
+	}
+}
 
 Point::Point()
 {

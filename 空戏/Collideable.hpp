@@ -50,13 +50,23 @@ public:
 	sf::FloatRect get_Collision_Box();
 	void change_Velocity(sf::Vector2f delta_Velocity, float time = 0);
 
+	void set_Next_Buoy(Buoy* next);
+	void set_Active(bool flag);
+
+	static void set_Color(sf::Color default_Color, sf::Color active_Color);
+
 protected:
 	void draw(sf::RenderTarget& target, sf::RenderStates states) const;
 	Child_Class get_My_Child_Class();
 	void be_Collided(Collideable& A);
 
 private:
+	static sf::Color Default_Color;
+	static sf::Color Active_Color;
+
 	sf::CircleShape self_Circle;
+	bool is_Active = false;
+	Buoy* self_Next_Buoy = nullptr;
 };
 
 class Point : public sf::Drawable
