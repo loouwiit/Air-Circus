@@ -1,5 +1,6 @@
 #pragma once
 #include <SFML/Graphics.hpp>
+#include "Camera.hpp"
 #include "vector.inl"
 
 namespace SinCos
@@ -43,6 +44,8 @@ class Buoy : public Collideable, public sf::Drawable
 {
 public:
 	Buoy();
+	~Buoy();
+
 	void set_Position(float x, float y);
 	sf::Vector2f get_Position();
 
@@ -55,6 +58,7 @@ public:
 	void be_Touched();
 
 	static void set_Color(sf::Color default_Color, sf::Color active_Color);
+	static void set_Camera(Camera* camera);
 
 protected:
 	void draw(sf::RenderTarget& target, sf::RenderStates states) const;
@@ -64,10 +68,12 @@ protected:
 private:
 	static sf::Color Default_Color;
 	static sf::Color Active_Color;
+	static Camera* self_Camera;
 
 	sf::CircleShape self_Circle;
+	sf::CircleShape* self_Track;
 	bool is_Active = false;
-	Buoy* self_Next_Buoy = nullptr;
+	Buoy* self_Next_Buoy = nullptr; //draw 是 const 函数，不能对自己进行更改。所以使用指针
 };
 
 class Point : public sf::Drawable

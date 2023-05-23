@@ -4,6 +4,7 @@
 constexpr float PIf = (float)(3.14159265358979323846);
 sf::Color Buoy::Default_Color = sf::Color::Green;
 sf::Color Buoy::Active_Color = sf::Color::Yellow;
+Camera* Buoy::self_Camera = nullptr;
 
 //inline float test(sf::Vector2f v)
 //{
@@ -140,6 +141,18 @@ Buoy::Buoy()
 	self_Circle.setPointCount(20);
 	self_Circle.setOrigin(self_Circle.getRadius(), self_Circle.getRadius());
 	self_Mass = 0;
+
+	self_Track = new sf::CircleShape;
+	self_Track->setRadius(35);
+	self_Track->setFillColor(Default_Color);
+	self_Track->setPointCount(3);
+	self_Track->setOrigin(self_Track->getRadius(), self_Track->getRadius());
+}
+
+Buoy::~Buoy()
+{
+	delete self_Track;
+	self_Track = nullptr;
 }
 
 void Buoy::set_Position(float x, float y)
@@ -173,9 +186,15 @@ void Buoy::set_Next_Buoy(Buoy* next)
 void Buoy::set_Active(bool flag)
 {
 	if (flag)
+	{
 		self_Circle.setFillColor(Active_Color);
+		self_Track->setFillColor(Active_Color);
+	}
 	else
+	{
 		self_Circle.setFillColor(Default_Color);
+		self_Track->setFillColor(Default_Color);
+	}
 
 	is_Active = flag;
 }
@@ -193,18 +212,36 @@ void Buoy::set_Color(sf::Color default_Color, sf::Color active_Color)
 	Active_Color = active_Color;
 }
 
+void Buoy::set_Camera(Camera* camera)
+{
+	self_Camera = camera;
+}
+
 void Buoy::draw(sf::RenderTarget& target, sf::RenderStates states) const
 {
-	target.draw(self_Circle);
+	if (self_Camera->intersects(self_Circle.getGlobalBounds()))
+	{
+		target.draw(self_Circle);
 #ifdef _DEBUG
-	static sf::RectangleShape box;
-	box.setPosition(self_Circle.getGlobalBounds().left, self_Circle.getGlobalBounds().top);
-	box.setSize(sf::Vector2f(self_Circle.getGlobalBounds().width, self_Circle.getGlobalBounds().height));
-	box.setFillColor(sf::Color::Transparent);
-	box.setOutlineColor(self_Circle.getFillColor());
-	box.setOutlineThickness(20);
-	target.draw(box);
+		static sf::RectangleShape box;
+		box.setPosition(self_Circle.getGlobalBounds().left, self_Circle.getGlobalBounds().top);
+		box.setSize(sf::Vector2f(self_Circle.getGlobalBounds().width, self_Circle.getGlobalBounds().height));
+		box.setFillColor(sf::Color::Transparent);
+		box.setOutlineColor(self_Circle.getFillColor());
+		box.setOutlineThickness(20);
+		target.draw(box);
 #endif
+	}
+	if (!self_Camera->contains(self_Circle.getPosition()))
+	{
+		sf::Vector2f center = self_Camera->get_Center();
+		sf::Vector2f vector = self_Circle.getPosition() - center;
+		vector /= 20.f;
+
+		self_Track->setPosition(center + vector);
+
+		target.draw(*self_Track);
+	}
 }
 
 Buoy::Child_Class Buoy::get_My_Child_Class()

@@ -32,6 +32,21 @@ void Camera::set_Proportion(float Proportion)
 	compute_Target();
 }
 
+sf::Vector2f Camera::get_Center()
+{
+	return self_Center;
+}
+
+bool Camera::intersects(sf::FloatRect Rect)
+{
+	return sf::FloatRect(self_Center - self_Size * 0.5f, self_Size).intersects(Rect);
+}
+
+bool Camera::contains(sf::Vector2f V)
+{
+	return sf::FloatRect(self_Center - self_Size * 0.5f, self_Size).contains(V);
+}
+
 void Camera::set_Position(sf::Vector2f LeftTop,sf::Vector2f RightBotton)
 {
 	self_LeftTop = LeftTop;

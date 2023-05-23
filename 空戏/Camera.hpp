@@ -12,13 +12,9 @@ public:
 	void set_Proportion(float Proportion);
 	void set_Position(sf::Vector2f LeftTop, sf::Vector2f RightBotton);
 
-	//void set_Center(float x,float y);
-	//void set_Size(float x,float y);
-	//void set_Center(sf::Vector2f center);
-	//void set_Size(sf::Vector2f size);
-	//
-	//sf::Vector2f get_Size();
-	//sf::Vector2f get_Center();
+	bool intersects(sf::FloatRect Rect);
+	bool contains(sf::Vector2f V);
+	sf::Vector2f get_Center();
 
 	void set_Is_Full(bool flag);
 	bool is_Full();
