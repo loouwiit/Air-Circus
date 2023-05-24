@@ -15,6 +15,7 @@ public:
 	bool intersects(sf::FloatRect Rect);
 	bool contains(sf::Vector2f V);
 	sf::Vector2f get_Center();
+	sf::Vector2f get_Size();
 
 	void set_Is_Full(bool flag);
 	bool is_Full();

@@ -42,6 +42,11 @@ bool Camera::intersects(sf::FloatRect Rect)
 	return sf::FloatRect(self_Center - self_Size * 0.5f, self_Size).intersects(Rect);
 }
 
+sf::Vector2f Camera::get_Size()
+{
+	return self_Size;
+}
+
 bool Camera::contains(sf::Vector2f V)
 {
 	return sf::FloatRect(self_Center - self_Size * 0.5f, self_Size).contains(V);

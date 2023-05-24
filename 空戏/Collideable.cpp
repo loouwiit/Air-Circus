@@ -235,8 +235,10 @@ void Buoy::draw(sf::RenderTarget& target, sf::RenderStates states) const
 	if (!self_Camera->contains(self_Circle.getPosition()))
 	{
 		sf::Vector2f center = self_Camera->get_Center();
+		sf::Vector2f size = self_Camera->get_Size() * 0.5f - sf::Vector2f(100,100); //±ß½ç
 		sf::Vector2f vector = self_Circle.getPosition() - center;
-		vector /= 20.f;
+		float tan = vector.y / vector.x;
+		vector *= sqrt(std::min(abss(sf::Vector2f(size.x, size.x * tan)), abss((sf::Vector2f(size.y / tan, size.y)))) / abss(vector));
 
 		self_Track->setPosition(center + vector);
 
