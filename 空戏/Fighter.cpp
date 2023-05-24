@@ -301,8 +301,6 @@ void Fighter::be_Collided(Collideable& A)
 	default:
 		break;
 	}
-
-	printf("[debug]score: %d\n", self_Score);
 }
 
 Fighter::Child_Class Fighter::get_My_Child_Class()
