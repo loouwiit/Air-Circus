@@ -22,6 +22,8 @@ public:
 	Fighter();
 
 	void set_Color(sf::Color Color);
+	void set_Score(int score);
+	int get_Score();
 
 	float get_Rotation();
 	void set_Rotation(float rotation);
@@ -76,6 +78,8 @@ private:
 													//[2]:single_Last or doubel_Last
 													//[Keynumber]:erveryKey
 													//[2]:start_Time and end_Time
+
+	int self_Score = 0;
 
 	int self_Back_Time_Limit = Default_Back_Time_Limit;
 	int self_Next_Back_Time = 0;

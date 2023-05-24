@@ -199,11 +199,13 @@ void Buoy::set_Active(bool flag)
 	is_Active = flag;
 }
 
-void Buoy::be_Touched()
+bool Buoy::be_Touched()
 {
-	if (is_Active == false) return;
+	if (is_Active == false) return false;
 	set_Active(false);
 	self_Next_Buoy->set_Active(true);
+
+	return true;
 }
 
 void Buoy::set_Color(sf::Color default_Color, sf::Color active_Color)

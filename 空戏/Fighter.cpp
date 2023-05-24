@@ -24,6 +24,16 @@ void Fighter::set_Color(sf::Color Color)
 	self_Sprite.setColor(Color);
 }
 
+int Fighter::get_Score()
+{
+	return self_Score;
+}
+
+void Fighter::set_Score(int score)
+{
+	self_Score = score;
+}
+
 float Fighter::get_Rotation()
 {
 	return self_Rotation;
@@ -250,14 +260,16 @@ void Fighter::be_Collided(Collideable& A)
 				rotate(PIf2);
 			}
 
-			((Buoy*)&A)->be_Touched();
-
+			if (((Buoy*)&A)->be_Touched()) self_Score++;
 			break;
 		}
 		else
 		{
 			//非头碰 但是慢
-			if (abss(self_Velocity )< 600000) ((Buoy*)&A)->be_Touched();
+			if (abss(self_Velocity) < 600000)
+			{
+				if (((Buoy*)&A)->be_Touched()) self_Score++;
+			}
 			break;
 		}
 		break;

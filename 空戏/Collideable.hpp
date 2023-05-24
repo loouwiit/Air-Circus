@@ -55,7 +55,7 @@ public:
 
 	void set_Next_Buoy(Buoy* next);
 	void set_Active(bool flag);
-	void be_Touched();
+	bool be_Touched();
 
 	static void set_Color(sf::Color default_Color, sf::Color active_Color);
 	static void set_Camera(Camera* camera);
