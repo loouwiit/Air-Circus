@@ -39,6 +39,11 @@ float Fighter::get_Rotation()
 	return self_Rotation;
 }
 
+void Fighter::set_Touch_Score(int score)
+{
+	self_Touch_Score = score;
+}
+
 void Fighter::set_Rotation(float rotation)
 {
 	self_Rotation = rotation;
@@ -49,6 +54,11 @@ void Fighter::set_Rotation(float rotation)
 	self_Sprite.setRotation(self_Rotation / PIf * 180.f);
 	self_Rotation_SinCos[0] = sin(self_Rotation);
 	self_Rotation_SinCos[1] = cos(self_Rotation);
+}
+
+int Fighter::get_Touch_Score()
+{
+	return self_Touch_Score;
 }
 
 void Fighter::rotate(float rotation)
@@ -274,9 +284,25 @@ void Fighter::be_Collided(Collideable& A)
 		}
 		break;
 	}
+	case Collideable::Child_Class::Fighter:
+	{
+		Fighter& fighter = *((Fighter*)&A); // 强制类型转换
+		if (abs(fighter.get_Rotation() - self_Rotation) < 0.7)
+		{
+			//同向
+			if (atan2f((fighter.get_Position() - self_Position).y, (fighter.get_Position() - self_Position).x) - self_Rotation < 0.7)
+			{
+				//且后者
+				self_Score += fighter.get_Touch_Score();
+			}
+		}
+		break;
+	}
 	default:
 		break;
 	}
+
+	printf("[debug]score: %d\n", self_Score);
 }
 
 Fighter::Child_Class Fighter::get_My_Child_Class()
