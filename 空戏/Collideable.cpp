@@ -145,7 +145,7 @@ Buoy::Buoy()
 	self_Track = new sf::CircleShape;
 	self_Track->setRadius(35);
 	self_Track->setFillColor(Default_Color);
-	self_Track->setPointCount(3);
+	self_Track->setPointCount(10);
 	self_Track->setOrigin(self_Track->getRadius(), self_Track->getRadius());
 }
 
