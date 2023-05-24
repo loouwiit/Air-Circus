@@ -55,6 +55,8 @@ public:
 
 	void set_Next_Buoy(Buoy* next);
 	void set_Active(bool flag);
+	void set_Touch_Score(int score);
+	int get_Touch_Score();
 	bool be_Touched();
 
 	static void set_Color(sf::Color default_Color, sf::Color active_Color);
@@ -74,6 +76,7 @@ private:
 	sf::CircleShape* self_Track;
 	bool is_Active = false;
 	Buoy* self_Next_Buoy = nullptr; //draw 是 const 函数，不能对自己进行更改。所以使用指针
+	int self_Touch_Score = 10;
 };
 
 class Point : public sf::Drawable

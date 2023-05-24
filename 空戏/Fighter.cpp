@@ -260,7 +260,7 @@ void Fighter::be_Collided(Collideable& A)
 				rotate(PIf2);
 			}
 
-			if (((Buoy*)&A)->be_Touched()) self_Score++;
+			if (((Buoy*)&A)->be_Touched()) self_Score += ((Buoy*)&A)->get_Touch_Score();
 			break;
 		}
 		else
@@ -268,7 +268,7 @@ void Fighter::be_Collided(Collideable& A)
 			//非头碰 但是慢
 			if (abss(self_Velocity) < 600000)
 			{
-				if (((Buoy*)&A)->be_Touched()) self_Score++;
+				if (((Buoy*)&A)->be_Touched()) self_Score += ((Buoy*)&A)->get_Touch_Score();
 			}
 			break;
 		}

@@ -199,6 +199,16 @@ void Buoy::set_Active(bool flag)
 	is_Active = flag;
 }
 
+void Buoy::set_Touch_Score(int score)
+{
+	self_Touch_Score = score;
+}
+
+int Buoy::get_Touch_Score()
+{
+	return self_Touch_Score;
+}
+
 bool Buoy::be_Touched()
 {
 	if (is_Active == false) return false;
