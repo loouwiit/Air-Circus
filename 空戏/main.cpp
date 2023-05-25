@@ -18,6 +18,7 @@ Fighter players[Player_Number];
 Buoy buoy[Buoy_Number];
 Point position_Point[Position_Point_X_Number * Position_Point_Y_Number];
 sf::RectangleShape map_Side;
+Boom boom;
 
 int main(int argc, char* argv[]);
 void init();
@@ -52,6 +53,8 @@ void init()
 	//camera.set_Center(0.f, 0.f);
 	camera.set_Position(sf::Vector2f(-240 / 2 * Meter, -140 / 2 * Meter), sf::Vector2f(240 / 2 * Meter, 140 / 2 * Meter));
 	camera.set_Target(&window);
+
+	Collideable::set_Boom(&boom);
 
 	players[0].set_Position(-10 * Meter, 0 * Meter);
 	players[0].set_Color(sf::Color::Red);
@@ -106,6 +109,7 @@ void compute()
 
 	compute_Player();
 	compute_Camera();
+	boom.compute(Time::now_Time.asMilliseconds());
 }
 
 void draw()
@@ -116,6 +120,7 @@ void draw()
 	else window.draw(map_Side);
 	for (char i = 0; i < 4; i++) window.draw(buoy[i]);
 	for (char i = 0; i < Player_Number; i++) window.draw(players[i]);
+	window.draw(boom);
 
 	window.display();
 }

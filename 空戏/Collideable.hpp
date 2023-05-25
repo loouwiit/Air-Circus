@@ -9,6 +9,23 @@ namespace SinCos
 	extern float(*cos)(float);
 }
 
+class Boom : public sf::Drawable
+{
+public:
+	~Boom();
+	void add_Boom(sf::Vector2f Position, sf::Texture* texture, int now_Time, unsigned continue_Time, sf::Vector2f scale = sf::Vector2f(1, 1), sf::Color color = sf::Color::White);
+	void compute(int now_Time);
+
+protected:
+	void draw(sf::RenderTarget& target, sf::RenderStates states) const;
+
+private:
+	unsigned self_Sprites_Number = 0;
+	sf::Sprite* self_Sprite = nullptr;
+	int* self_Boom_End_Time = nullptr;
+	bool* self_Boom_Actived = nullptr;
+};
+
 class Collideable
 {
 public:
@@ -20,11 +37,13 @@ public:
 	float get_Mass();
 	void set_Mass(float Mass);
 
-	void collide(Collideable& B, float delta_Time);
+	void collide(Collideable& B, float delta_Time, int now_Time);
 	float distance(Collideable& B);
 	float distance_Square(Collideable& B);
 
 	bool is_Collide(Collideable& B);
+
+	static void set_Boom(Boom* boom);
 
 	virtual sf::Vector2f get_Position() = 0;
 	virtual sf::Vector2f get_Velocity() = 0;
@@ -33,8 +52,9 @@ public:
 	virtual Child_Class get_My_Child_Class() = 0;
 
 protected:
-	virtual void be_Collided(Collideable& A) = 0;
+	virtual void be_Collided(Collideable& A, int now_Time) = 0;
 	float self_Mass = 0;
+	static Boom* self_Boom_Ptr;
 
 private:
 	unsigned error_Times = 0;
@@ -65,7 +85,7 @@ public:
 protected:
 	void draw(sf::RenderTarget& target, sf::RenderStates states) const;
 	Child_Class get_My_Child_Class();
-	void be_Collided(Collideable& A);
+	void be_Collided(Collideable& A, int now_Time);
 
 private:
 	static sf::Color Default_Color;

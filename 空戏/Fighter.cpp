@@ -247,7 +247,7 @@ sf::FloatRect Fighter::get_Collision_Box()
 	return self_Sprite.getGlobalBounds();
 }
 
-void Fighter::be_Collided(Collideable& A)
+void Fighter::be_Collided(Collideable& A,int now_Time)
 {
 	//if (A.get_My_Child_Class() != Child_Class::Buoy) return;
 	//printf("Fighter::be_Collided: delta: %f, rotation: %f sub: %f\n",
@@ -301,6 +301,8 @@ void Fighter::be_Collided(Collideable& A)
 	default:
 		break;
 	}
+
+	self_Boom_Ptr->add_Boom(self_Position, &get_Default_Texture(), now_Time, 1000, sf::Vector2f(3, 3),self_Sprite.getColor());
 }
 
 Fighter::Child_Class Fighter::get_My_Child_Class()

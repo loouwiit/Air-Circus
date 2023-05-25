@@ -2,6 +2,8 @@
 #include "Fighter.hpp"
 
 constexpr float PIf = (float)(3.14159265358979323846);
+
+Boom* Collideable::self_Boom_Ptr = nullptr;
 sf::Color Buoy::Default_Color = sf::Color::Green;
 sf::Color Buoy::Active_Color = sf::Color::Yellow;
 Camera* Buoy::self_Camera = nullptr;
@@ -21,7 +23,7 @@ void Collideable::set_Mass(float Mass)
 	self_Mass = Mass;
 }
 
-void Collideable::collide(Collideable& B, float delta_Time)
+void Collideable::collide(Collideable& B, float delta_Time, int now_Time)
 {
 	if (!is_Collide(B)) return;
 
@@ -106,8 +108,8 @@ void Collideable::collide(Collideable& B, float delta_Time)
 	change_Velocity(a_New - a_Velocity,delta_Time);
 	B.change_Velocity(b_New - b_Velocity, delta_Time);
 
-	this->be_Collided(B);
-	B.be_Collided(*this);
+	this->be_Collided(B, now_Time);
+	B.be_Collided(*this, now_Time);
 
 	if (is_Collide(B))
 	{
@@ -132,6 +134,11 @@ float Collideable::distance_Square(Collideable& B)
 bool Collideable::is_Collide(Collideable& B)
 {
 	return this->get_Collision_Box().intersects(B.get_Collision_Box());
+}
+
+void Collideable::set_Boom(Boom* boom)
+{
+	self_Boom_Ptr = boom;
 }
 
 Buoy::Buoy()
@@ -263,7 +270,7 @@ Buoy::Child_Class Buoy::get_My_Child_Class()
 	return Child_Class::Buoy;
 }
 
-void Buoy::be_Collided(Collideable& A)
+void Buoy::be_Collided(Collideable& A, int now_Time)
 {}
 
 Point::Point()
@@ -290,4 +297,79 @@ void Point::set_Color(sf::Color Color)
 void Point::draw(sf::RenderTarget& target, sf::RenderStates states) const
 {
 	target.draw(self_Renctangle);
+}
+
+Boom::~Boom()
+{
+	if (self_Sprites_Number != 0)
+	{
+		delete[] self_Sprite;
+		delete[] self_Boom_End_Time;
+		delete[] self_Boom_Actived;
+		self_Sprites_Number = 0;
+	}
+}
+
+void Boom::add_Boom(sf::Vector2f Position, sf::Texture* texture, int now_Time, unsigned continue_Time, sf::Vector2f scale, sf::Color color)
+{
+	unsigned i = 0;
+	while (i < self_Sprites_Number)
+	{
+		if (self_Boom_End_Time[i] < now_Time) break;
+		i++;
+	}
+
+	if (i == self_Sprites_Number)
+	{
+		//不足，需要补充内存
+
+		sf::Sprite* sprite = new sf::Sprite[self_Sprites_Number + 1];
+		int* end_Time = new int[self_Sprites_Number + 1];
+		bool* actived = new bool[self_Sprites_Number + 1];
+
+		for (unsigned j = 0; j < self_Sprites_Number; j++)
+		{
+			sprite[j] = self_Sprite[j];
+			end_Time[j] = self_Boom_End_Time[j];
+			actived[j] = self_Boom_Actived[j];
+		}
+
+		delete[] self_Sprite;
+		delete[] self_Boom_End_Time;
+		delete[] self_Boom_Actived;
+		self_Sprite = sprite;
+		self_Boom_End_Time = end_Time;
+		self_Boom_Actived = actived;
+		self_Sprites_Number++;
+	}
+
+	self_Sprite[i].setTexture(*texture);
+	self_Sprite[i].setOrigin(texture->getSize().x / 2, texture->getSize().y / 2);
+	self_Sprite[i].setColor(sf::Color::White);
+	self_Sprite[i].setPosition(Position);
+	self_Sprite[i].setScale(scale);
+	self_Sprite[i].setColor(color);
+
+	self_Boom_End_Time[i] = now_Time + continue_Time;
+	self_Boom_Actived[i] = true;
+}
+
+void Boom::compute(int now_Time)
+{
+	for (unsigned i = 0; i < self_Sprites_Number; i++)
+	{
+		if (self_Boom_End_Time[i] < now_Time)
+		{
+			self_Sprite[i].setColor(sf::Color::Black);
+			self_Boom_Actived[i] = false;
+		}
+	}
+}
+
+void Boom::draw(sf::RenderTarget& target, sf::RenderStates states) const
+{
+	for (unsigned i = 0; i < self_Sprites_Number; i++)
+	{
+		if (self_Boom_Actived[i]) target.draw(self_Sprite[i]);
+	}
 }

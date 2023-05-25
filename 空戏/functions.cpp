@@ -360,12 +360,12 @@ void Compute::compute_Player()
 	for (unsigned i = 0; i < Player_Number; i++)
 		for (unsigned j = 0; j < Buoy_Number; j++)
 		{
-			players[i].collide(buoy[j], delta_Time.asMilliseconds() / 1000.f);
+			players[i].collide(buoy[j], delta_Time.asMilliseconds() / 1000.f, now_Time.asMilliseconds());
 		}
 	for (unsigned i = 0; i < Player_Number; i++)
 		for (unsigned j = i + 1; j < Player_Number; j++)
 		{
-			players[i].collide(players[j], delta_Time.asMilliseconds() / 1000.f);
+			players[i].collide(players[j], delta_Time.asMilliseconds() / 1000.f, now_Time.asMilliseconds());
 		}
 }
 
