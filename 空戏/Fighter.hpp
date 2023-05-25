@@ -48,6 +48,7 @@ public:
 	void move(float delta_Time, int now_Time);
 
 	static sf::Texture& get_Default_Texture();
+	static sf::Texture& get_Default_Touched_Texture();
 
 	sf::FloatRect get_Collision_Box();
 
@@ -69,6 +70,8 @@ private:
 	};
 
 	static sf::Texture Default_Texture;
+	static sf::Texture Default_Touched_Texture;
+
 	sf::Sprite self_Sprite{};
 
 	bool self_Key[Key_Number] = { false };

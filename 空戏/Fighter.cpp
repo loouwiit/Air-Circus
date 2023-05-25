@@ -7,6 +7,7 @@ constexpr float TAUf = (float)(3.14159265358979323846 * 2);
 constexpr char Meter = 100;
 
 sf::Texture Fighter::Default_Texture{};
+sf::Texture Fighter::Default_Touched_Texture{};
 float(*&Fighter::sin)(float) = SinCos::sin;
 float(*&Fighter::cos)(float) = SinCos::cos;
 
@@ -247,6 +248,42 @@ sf::FloatRect Fighter::get_Collision_Box()
 	return self_Sprite.getGlobalBounds();
 }
 
+sf::Texture& Fighter::get_Default_Touched_Texture()
+{
+	if (Default_Touched_Texture.getSize().x != 0)
+		return Default_Touched_Texture;
+
+	std::cout << "Fighter::get_Default_Touched_Texutre: texture Rendering\n";
+
+	struct Point
+	{
+		float x;
+		float y;
+	};
+
+	constexpr char Point_Number = 4;
+	constexpr Point Points[Point_Number] = { {0.f,63.f},{0.f,0.f},{10.f,0.f},{10.f,63.f} };
+
+	//constexpr char Point_Number = 4;
+	//constexpr Point Points[Point_Number] = { {0.f,63.f},{0.f,0.f},{63.f,63.f},{63.f,0.f} };
+
+	sf::RenderTexture texture;
+	sf::ConvexShape convex;
+
+	texture.create(64, 64);
+	texture.clear(sf::Color::Transparent);
+	convex.setPointCount(Point_Number);
+	for (char i = 0; i < Point_Number; i++)
+		convex.setPoint(i, sf::Vector2f(Points[i].x, Points[i].y));
+	convex.setFillColor(sf::Color::White);
+	texture.draw(convex);
+
+	Default_Touched_Texture = texture.getTexture();
+	Default_Touched_Texture.setSmooth(true);
+
+	return Default_Touched_Texture;
+}
+
 void Fighter::be_Collided(Collideable& A,int now_Time)
 {
 	//if (A.get_My_Child_Class() != Child_Class::Buoy) return;
@@ -290,10 +327,18 @@ void Fighter::be_Collided(Collideable& A,int now_Time)
 		if (abs(fighter.get_Rotation() - self_Rotation) < 0.7)
 		{
 			//同向
-			if (atan2f((fighter.get_Position() - self_Position).y, (fighter.get_Position() - self_Position).x) - self_Rotation < 0.7)
+
+			self_Boom_Ptr->add_Boom(self_Position, &get_Default_Texture(), now_Time, 1000, sf::Vector2f(3, 3), self_Rotation / PIf * 180, self_Sprite.getColor());
+
+			if (abs(atan2f((fighter.get_Position() - self_Position).y, (fighter.get_Position() - self_Position).x) - self_Rotation) < 0.7)
 			{
 				//且后者
 				self_Score += fighter.get_Touch_Score();
+			}
+			else
+			{
+				//前者
+				self_Boom_Ptr->add_Boom(self_Position, &get_Default_Touched_Texture(), now_Time, 1000, sf::Vector2f(10, 10), self_Rotation / PIf * 180, self_Sprite.getColor());
 			}
 		}
 		break;
@@ -302,7 +347,6 @@ void Fighter::be_Collided(Collideable& A,int now_Time)
 		break;
 	}
 
-	self_Boom_Ptr->add_Boom(self_Position, &get_Default_Texture(), now_Time, 1000, sf::Vector2f(3, 3), self_Rotation / PIf * 180, self_Sprite.getColor());
 }
 
 Fighter::Child_Class Fighter::get_My_Child_Class()
