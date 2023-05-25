@@ -363,7 +363,7 @@ void Boom::add_Boom(sf::Vector2f Position, sf::Texture* texture, int now_Time, u
 	}
 
 	self_Sprite[i].setTexture(*texture);
-	self_Sprite[i].setOrigin(texture->getSize().x / 2, texture->getSize().y / 2);
+	self_Sprite[i].setOrigin((float)(texture->getSize().x / 2), (float)(texture->getSize().y / 2));
 	self_Sprite[i].setColor(sf::Color::White);
 	self_Sprite[i].setPosition(Position);
 	self_Sprite[i].setScale(scale);
