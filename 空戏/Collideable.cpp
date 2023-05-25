@@ -299,6 +299,23 @@ void Point::draw(sf::RenderTarget& target, sf::RenderStates states) const
 	target.draw(self_Renctangle);
 }
 
+Boom::Boom()
+{
+	self_Sprites_Number = 4;
+
+	self_Sprite = new sf::Sprite[self_Sprites_Number];
+	self_Boom_End_Time = new int[self_Sprites_Number];
+	self_Boom_Actived = new bool[self_Sprites_Number];
+
+	for (unsigned j = 0; j < self_Sprites_Number; j++)
+	{
+		self_Boom_End_Time[j] = 0;
+		self_Boom_Actived[j] = false;
+	}
+
+	std::cout << "Boom::Boom: boom buffer size = " << self_Sprites_Number << '\n';
+}
+
 Boom::~Boom()
 {
 	if (self_Sprites_Number != 0)
@@ -310,7 +327,7 @@ Boom::~Boom()
 	}
 }
 
-void Boom::add_Boom(sf::Vector2f Position, sf::Texture* texture, int now_Time, unsigned continue_Time, sf::Vector2f scale, sf::Color color)
+void Boom::add_Boom(sf::Vector2f Position, sf::Texture* texture, int now_Time, unsigned continue_Time, sf::Vector2f scale, float rotation, sf::Color color)
 {
 	unsigned i = 0;
 	while (i < self_Sprites_Number)
@@ -341,6 +358,8 @@ void Boom::add_Boom(sf::Vector2f Position, sf::Texture* texture, int now_Time, u
 		self_Boom_End_Time = end_Time;
 		self_Boom_Actived = actived;
 		self_Sprites_Number++;
+
+		std::cout << "Boom::add_Boom: boom buffer size = " << self_Sprites_Number << '\n';
 	}
 
 	self_Sprite[i].setTexture(*texture);
@@ -349,6 +368,7 @@ void Boom::add_Boom(sf::Vector2f Position, sf::Texture* texture, int now_Time, u
 	self_Sprite[i].setPosition(Position);
 	self_Sprite[i].setScale(scale);
 	self_Sprite[i].setColor(color);
+	self_Sprite[i].setRotation(rotation);
 
 	self_Boom_End_Time[i] = now_Time + continue_Time;
 	self_Boom_Actived[i] = true;

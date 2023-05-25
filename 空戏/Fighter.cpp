@@ -302,7 +302,7 @@ void Fighter::be_Collided(Collideable& A,int now_Time)
 		break;
 	}
 
-	self_Boom_Ptr->add_Boom(self_Position, &get_Default_Texture(), now_Time, 1000, sf::Vector2f(3, 3),self_Sprite.getColor());
+	self_Boom_Ptr->add_Boom(self_Position, &get_Default_Texture(), now_Time, 1000, sf::Vector2f(3, 3), self_Rotation / PIf * 180, self_Sprite.getColor());
 }
 
 Fighter::Child_Class Fighter::get_My_Child_Class()

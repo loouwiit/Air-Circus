@@ -12,8 +12,9 @@ namespace SinCos
 class Boom : public sf::Drawable
 {
 public:
+	Boom();
 	~Boom();
-	void add_Boom(sf::Vector2f Position, sf::Texture* texture, int now_Time, unsigned continue_Time, sf::Vector2f scale = sf::Vector2f(1, 1), sf::Color color = sf::Color::White);
+	void add_Boom(sf::Vector2f Position, sf::Texture* texture, int now_Time, unsigned continue_Time, sf::Vector2f scale = sf::Vector2f(1, 1), float rotation = 0.f, sf::Color color = sf::Color::White);
 	void compute(int now_Time);
 
 protected:
