@@ -16,7 +16,7 @@ public:
 	enum class Key : Key_Base
 	{
 		W = 0, S, A, D, Q, E,
-		Forward = W, Back, Left, Right, Turn_Left, Turn_Right
+		Forward = W, Back, Turn_Left, Turn_Right, Left, Right
 	};
 
 	Fighter();

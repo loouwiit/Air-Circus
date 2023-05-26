@@ -399,22 +399,22 @@ void Fighter::compute(float delta_Time, int now_Time)
 		}
 	}
 
-	if (self_Key[(Key_Base)Key::Left])
+	if (self_Key[(Key_Base)Key::Turn_Left])
 	{
 		rotate(-2.0f * delta_Time);
 	}
 
-	if (self_Key[(Key_Base)Key::Right])
+	if (self_Key[(Key_Base)Key::Turn_Right])
 	{
 		rotate(+2.0f * delta_Time);
 	}
 
-	if (self_Key[(Key_Base)Key::Turn_Left])
+	if (self_Key[(Key_Base)Key::Left])
 	{
 		froce(+500 * self_Rotation_SinCos[0], -500 * self_Rotation_SinCos[1], delta_Time);
 	}
 
-	if (self_Key[(Key_Base)Key::Turn_Right])
+	if (self_Key[(Key_Base)Key::Right])
 	{
 		froce(-500 * self_Rotation_SinCos[0], +500 * self_Rotation_SinCos[1], delta_Time);
 	}
