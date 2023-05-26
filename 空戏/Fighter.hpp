@@ -55,7 +55,7 @@ public:
 protected:
 	void draw(sf::RenderTarget& target, sf::RenderStates states) const;
 	Child_Class get_My_Child_Class();
-	void be_Collided(Collideable& A, int now_Time);
+	void be_Collided(Collideable& A, int now_Time, bool is_Self_Determiner);
 
 private:
 	static float(*&sin)(float);

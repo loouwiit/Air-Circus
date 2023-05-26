@@ -284,7 +284,7 @@ const sf::Texture& Fighter::get_Default_Touched_Texture()
 	return Default_Touched_Texture;
 }
 
-void Fighter::be_Collided(Collideable& A,int now_Time)
+void Fighter::be_Collided(Collideable& A, int now_Time, bool is_Self_Determiner)
 {
 	//if (A.get_My_Child_Class() != Child_Class::Buoy) return;
 	//printf("Fighter::be_Collided: delta: %f, rotation: %f sub: %f\n",
@@ -341,7 +341,7 @@ void Fighter::be_Collided(Collideable& A,int now_Time)
 				self_Boom_Ptr->add_Boom(self_Position, &get_Default_Touched_Texture(), now_Time, 1000, sf::Vector2f(10, 10), self_Rotation / PIf * 180, self_Sprite.getColor());
 			}
 		}
-		self_Boom_Ptr->add_Boom(self_Position, &Boom::get_Rand_Collide_Texture(), now_Time, 1000, sf::Vector2f(5, 5));
+		if (is_Self_Determiner) self_Boom_Ptr->add_Boom((self_Position + fighter.get_Position()) * 0.5f, &Boom::get_Rand_Collide_Texture(), now_Time, 1000, sf::Vector2f(5, 5));
 		break;
 	}
 	default:

@@ -58,7 +58,7 @@ public:
 	virtual Child_Class get_My_Child_Class() = 0;
 
 protected:
-	virtual void be_Collided(Collideable& A, int now_Time) = 0;
+	virtual void be_Collided(Collideable& A, int now_Time, bool is_Self_Determiner) = 0;
 	float self_Mass = 0;
 	static Boom* self_Boom_Ptr;
 
@@ -91,7 +91,7 @@ public:
 protected:
 	void draw(sf::RenderTarget& target, sf::RenderStates states) const;
 	Child_Class get_My_Child_Class();
-	void be_Collided(Collideable& A, int now_Time);
+	void be_Collided(Collideable& A, int now_Time, bool is_Self_Determiner);
 
 private:
 	static sf::Color Default_Color;

@@ -109,8 +109,8 @@ void Collideable::collide(Collideable& B, float delta_Time, int now_Time)
 	change_Velocity(a_New - a_Velocity,delta_Time);
 	B.change_Velocity(b_New - b_Velocity, delta_Time);
 
-	this->be_Collided(B, now_Time);
-	B.be_Collided(*this, now_Time);
+	this->be_Collided(B, now_Time, true);
+	B.be_Collided(*this, now_Time, false);
 
 	if (is_Collide(B))
 	{
@@ -271,7 +271,7 @@ Buoy::Child_Class Buoy::get_My_Child_Class()
 	return Child_Class::Buoy;
 }
 
-void Buoy::be_Collided(Collideable& A, int now_Time)
+void Buoy::be_Collided(Collideable& A, int now_Time, bool is_Self_Determiner)
 {}
 
 Point::Point()
