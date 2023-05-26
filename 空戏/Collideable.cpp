@@ -412,7 +412,7 @@ void Boom::compute(int now_Time)
 
 const sf::Texture& Boom::get_Rand_Collide_Texture()
 {
-	std::cout << "Boom::get_Rand_Collide_Texture: texture Randing\n";
+	//std::cout << "Boom::get_Rand_Collide_Texture: texture Randing\n";
 
 	constexpr char Line_Number = 20;
 	static char texture_Index = 0;
