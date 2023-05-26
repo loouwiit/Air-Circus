@@ -378,10 +378,16 @@ void Boom::compute(int now_Time)
 {
 	for (unsigned i = 0; i < self_Sprites_Number; i++)
 	{
+		if (!self_Boom_Actived[i]) continue; //Ìø¹ý
+
 		if (self_Boom_End_Time[i] < now_Time)
 		{
-			self_Sprite[i].setColor(sf::Color::Black);
-			self_Boom_Actived[i] = false;
+
+			sf::Color color = self_Sprite[i].getColor();
+			color.a -= 10;
+			self_Sprite[i].setColor(color);
+
+			if (color.a <= 10) self_Boom_Actived[i] = false;
 		}
 	}
 }
