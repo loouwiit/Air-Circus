@@ -35,6 +35,11 @@ void Fighter::set_Score(int score)
 	self_Score = score;
 }
 
+sf::Color Fighter::get_Color()
+{
+	return self_Sprite.getColor();
+}
+
 float Fighter::get_Rotation()
 {
 	return self_Rotation;
@@ -329,18 +334,24 @@ void Fighter::be_Collided(Collideable& A, int now_Time, bool is_Self_Determiner)
 		if (abs(fighter.get_Rotation() - self_Rotation) < 0.7)
 		{
 			//同向
+			float delta_Rotation = self_Rotation - atan2f(fighter.get_Position().y - self_Position.y, fighter.get_Position().x - self_Position.x);
 
-			self_Boom_Ptr->add_Boom(self_Position, &get_Default_Texture(), now_Time, 1000, sf::Vector2f(3, 3), self_Rotation / PIf * 180, self_Sprite.getColor());
+			if (delta_Rotation > PIf)
+				delta_Rotation -= (int)((delta_Rotation + PIf) / TAUf) * TAUf;
+			if (delta_Rotation < -PIf)
+				delta_Rotation += (int)((delta_Rotation - PIf) / -TAUf) * TAUf;
 
-			if (abs(atan2f((fighter.get_Position() - self_Position).y, (fighter.get_Position() - self_Position).x) - self_Rotation) < 0.7)
+			//printf("[debug]delta_Rotation = %f\n", delta_Rotation);
+
+			if (abs(delta_Rotation) < 0.7)
 			{
-				//且后者
+				//头尾碰
 				self_Score += fighter.get_Touch_Score();
-			}
-			else
-			{
-				//前者
-				self_Boom_Ptr->add_Boom(self_Position, &get_Default_Touched_Texture(), now_Time, 1000, sf::Vector2f(10, 10), self_Rotation / PIf * 180, self_Sprite.getColor());
+				//printf("Fighter::be_Collided: color %s score = %d\n", (get_Color().r == 255 ? "rad" : "blue"), self_Score);
+
+				self_Boom_Ptr->add_Boom(fighter.get_Position(), &get_Default_Touched_Texture(), now_Time, 1000, sf::Vector2f(10, 10), fighter.get_Rotation() / PIf * 180, fighter.get_Color());
+				self_Boom_Ptr->add_Boom(fighter.get_Position(), &get_Default_Texture(), now_Time, 1000, sf::Vector2f(3, 3), fighter.get_Rotation() / PIf * 180, fighter.get_Color());
+				self_Boom_Ptr->add_Boom(self_Position, &get_Default_Texture(), now_Time, 1000, sf::Vector2f(3, 3), self_Rotation / PIf * 180, self_Sprite.getColor());
 			}
 		}
 		if (is_Self_Determiner) self_Boom_Ptr->add_Boom((self_Position + fighter.get_Position()) * 0.5f, &Boom::get_Rand_Collide_Texture(), now_Time, 1000, sf::Vector2f(5, 5));

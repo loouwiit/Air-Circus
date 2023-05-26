@@ -22,6 +22,7 @@ public:
 	Fighter();
 
 	void set_Color(sf::Color Color);
+	sf::Color get_Color();
 	void set_Score(int score);
 	void set_Touch_Score(int score);
 	int get_Score();
