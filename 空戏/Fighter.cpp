@@ -295,6 +295,7 @@ void Fighter::be_Collided(Collideable& A, int now_Time, bool is_Self_Determiner)
 	{
 	case Collideable::Child_Class::Buoy:
 	{
+		Buoy& buoy = *((Buoy*)&A);
 		if (abs(abs(atan2f((self_Position.y - A.get_Position().y), (self_Position.x - A.get_Position().x)) -
 			self_Rotation) - PIf) < 0.5)
 		{
@@ -307,18 +308,19 @@ void Fighter::be_Collided(Collideable& A, int now_Time, bool is_Self_Determiner)
 				rotate(PIf2);
 			}
 
-			if (((Buoy*)&A)->be_Touched()) self_Score += ((Buoy*)&A)->get_Touch_Score();
-			break;
+			if (buoy.be_Touched()) self_Score += buoy.get_Touch_Score();
 		}
 		else
 		{
 			//非头碰 但是慢
 			if (abss(self_Velocity) < 600000)
 			{
-				if (((Buoy*)&A)->be_Touched()) self_Score += ((Buoy*)&A)->get_Touch_Score();
+				if (buoy.be_Touched()) self_Score += buoy.get_Touch_Score();
 			}
-			break;
 		}
+
+		if (is_Self_Determiner) self_Boom_Ptr->add_Boom((self_Position + buoy.get_Position()) * 0.5f, &Boom::get_Rand_Collide_Texture(), now_Time, 1000, sf::Vector2f(5, 5));
+
 		break;
 	}
 	case Collideable::Child_Class::Fighter:
