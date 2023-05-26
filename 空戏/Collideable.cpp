@@ -427,9 +427,9 @@ const sf::Texture& Boom::get_Rand_Collide_Texture()
 	for (char i = 0; i < Line_Number; i++)
 	{
 		//line.setFillColor(sf::Color(rand() % 64 + 192, rand() % 64 + 192, rand() % 64 + 192, rand() % 50 + 100));
-		line.setPosition(rand() % 256, rand() % 256);
-		line.setSize(sf::Vector2f(rand() % 50, 2 + rand() % 10));
-		line.setRotation(rand() % 360);
+		line.setPosition((float)(rand() % 256), (float)(rand() % 256));
+		line.setSize(sf::Vector2f((float)(rand() % 50), (float)(2 + rand() % 10)));
+		line.setRotation((float)(rand() % 360));
 		Default_Collide_Texture[texture_Index].draw(line);
 	}
 	texture_Index++;
