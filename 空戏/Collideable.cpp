@@ -362,7 +362,7 @@ void Boom::add_Boom(sf::Vector2f Position, sf::Texture* texture, int now_Time, u
 		std::cout << "Boom::add_Boom: boom buffer size = " << self_Sprites_Number << '\n';
 	}
 
-	self_Sprite[i].setTexture(*texture);
+	self_Sprite[i].setTexture(*texture, true);
 	self_Sprite[i].setOrigin((float)(texture->getSize().x / 2), (float)(texture->getSize().y / 2));
 	self_Sprite[i].setColor(sf::Color::White);
 	self_Sprite[i].setPosition(Position);
