@@ -202,7 +202,7 @@ void Fighter::change_Velocity(sf::Vector2f delta_Velocity, float time)
 	self_Sprite.setPosition(self_Position);
 }
 
-sf::Texture& Fighter::get_Default_Texture()
+const sf::Texture& Fighter::get_Default_Texture()
 {
 	if (Default_Texture.getSize().x!= 0)
 		return Default_Texture;
@@ -248,7 +248,7 @@ sf::FloatRect Fighter::get_Collision_Box()
 	return self_Sprite.getGlobalBounds();
 }
 
-sf::Texture& Fighter::get_Default_Touched_Texture()
+const sf::Texture& Fighter::get_Default_Touched_Texture()
 {
 	if (Default_Touched_Texture.getSize().x != 0)
 		return Default_Touched_Texture;
@@ -341,6 +341,7 @@ void Fighter::be_Collided(Collideable& A,int now_Time)
 				self_Boom_Ptr->add_Boom(self_Position, &get_Default_Touched_Texture(), now_Time, 1000, sf::Vector2f(10, 10), self_Rotation / PIf * 180, self_Sprite.getColor());
 			}
 		}
+		self_Boom_Ptr->add_Boom(self_Position, &Boom::get_Rand_Collide_Texture(), now_Time, 1000, sf::Vector2f(5, 5));
 		break;
 	}
 	default:

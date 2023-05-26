@@ -12,15 +12,20 @@ namespace SinCos
 class Boom : public sf::Drawable
 {
 public:
-	Boom();
 	~Boom();
-	void add_Boom(sf::Vector2f Position, sf::Texture* texture, int now_Time, unsigned continue_Time, sf::Vector2f scale = sf::Vector2f(1, 1), float rotation = 0.f, sf::Color color = sf::Color::White);
+	void init(unsigned Default_Sprite_Number);
+	void add_Boom(sf::Vector2f Position, const sf::Texture* texture, int now_Time, unsigned continue_Time, sf::Vector2f scale = sf::Vector2f(1, 1), float rotation = 0.f, sf::Color color = sf::Color::White);
 	void compute(int now_Time);
+
+	static const sf::Texture& get_Rand_Collide_Texture();
 
 protected:
 	void draw(sf::RenderTarget& target, sf::RenderStates states) const;
 
 private:
+	static constexpr char Default_Collide_Texture_Number = 6;
+	static sf::RenderTexture Default_Collide_Texture[Default_Collide_Texture_Number];
+
 	unsigned self_Sprites_Number = 0;
 	sf::Sprite* self_Sprite = nullptr;
 	int* self_Boom_End_Time = nullptr;

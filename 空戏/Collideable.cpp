@@ -3,6 +3,7 @@
 
 constexpr float PIf = (float)(3.14159265358979323846);
 
+sf::RenderTexture Boom::Default_Collide_Texture[Default_Collide_Texture_Number];
 Boom* Collideable::self_Boom_Ptr = nullptr;
 sf::Color Buoy::Default_Color = sf::Color::Green;
 sf::Color Buoy::Active_Color = sf::Color::Yellow;
@@ -299,9 +300,17 @@ void Point::draw(sf::RenderTarget& target, sf::RenderStates states) const
 	target.draw(self_Renctangle);
 }
 
-Boom::Boom()
+void Boom::init(unsigned Default_Sprite_Number)
 {
-	self_Sprites_Number = 4;
+	if (self_Sprites_Number != 0)
+	{
+		delete[] self_Sprite;
+		delete[] self_Boom_End_Time;
+		delete[] self_Boom_Actived;
+		self_Sprites_Number = 0;
+	}
+
+	self_Sprites_Number = Default_Sprite_Number;
 
 	self_Sprite = new sf::Sprite[self_Sprites_Number];
 	self_Boom_End_Time = new int[self_Sprites_Number];
@@ -311,6 +320,15 @@ Boom::Boom()
 	{
 		self_Boom_End_Time[j] = 0;
 		self_Boom_Actived[j] = false;
+	}
+
+	if (Default_Collide_Texture[0].getSize().x == 0)
+	{
+		for (char i = 0; i < Default_Collide_Texture_Number; i++)
+		{
+			Default_Collide_Texture[i].create(256, 256);
+			Default_Collide_Texture[i].setSmooth(true);
+		}
 	}
 
 	std::cout << "Boom::Boom: boom buffer size = " << self_Sprites_Number << '\n';
@@ -327,7 +345,7 @@ Boom::~Boom()
 	}
 }
 
-void Boom::add_Boom(sf::Vector2f Position, sf::Texture* texture, int now_Time, unsigned continue_Time, sf::Vector2f scale, float rotation, sf::Color color)
+void Boom::add_Boom(sf::Vector2f Position, const sf::Texture* texture, int now_Time, unsigned continue_Time, sf::Vector2f scale, float rotation, sf::Color color)
 {
 	unsigned i = 0;
 	while (i < self_Sprites_Number)
@@ -392,10 +410,45 @@ void Boom::compute(int now_Time)
 	}
 }
 
+const sf::Texture& Boom::get_Rand_Collide_Texture()
+{
+	std::cout << "Boom::get_Rand_Collide_Texture: texture Randing\n";
+
+	constexpr char Line_Number = 20;
+	static char texture_Index = 0;
+	sf::RectangleShape line;
+
+	if (texture_Index >= Default_Collide_Texture_Number) texture_Index = 0;
+
+	Default_Collide_Texture[texture_Index].clear(sf::Color::Transparent);
+	
+	line.setFillColor(sf::Color::Yellow);
+
+	for (char i = 0; i < Line_Number; i++)
+	{
+		//line.setFillColor(sf::Color(rand() % 64 + 192, rand() % 64 + 192, rand() % 64 + 192, rand() % 50 + 100));
+		line.setPosition(rand() % 256, rand() % 256);
+		line.setSize(sf::Vector2f(rand() % 50, 2 + rand() % 10));
+		line.setRotation(rand() % 360);
+		Default_Collide_Texture[texture_Index].draw(line);
+	}
+	texture_Index++;
+	return Default_Collide_Texture[texture_Index-1].getTexture();
+}
+
 void Boom::draw(sf::RenderTarget& target, sf::RenderStates states) const
 {
 	for (unsigned i = 0; i < self_Sprites_Number; i++)
 	{
 		if (self_Boom_Actived[i]) target.draw(self_Sprite[i]);
+#ifdef _DEBUG
+		static sf::RectangleShape box;
+		box.setPosition(self_Sprite[i].getGlobalBounds().left, self_Sprite[i].getGlobalBounds().top);
+		box.setSize(sf::Vector2f(self_Sprite[i].getGlobalBounds().width, self_Sprite[i].getGlobalBounds().height));
+		box.setFillColor(sf::Color::Transparent);
+		box.setOutlineColor(sf::Color(sf::Color::Cyan.r, sf::Color::Cyan.g, sf::Color::Cyan.b, 50));
+		box.setOutlineThickness(20);
+		target.draw(box);
+#endif
 	}
 }

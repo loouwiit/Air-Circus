@@ -54,6 +54,8 @@ void init()
 	camera.set_Position(sf::Vector2f(-240 / 2 * Meter, -140 / 2 * Meter), sf::Vector2f(240 / 2 * Meter, 140 / 2 * Meter));
 	camera.set_Target(&window);
 
+	boom.init(10);
+
 	Collideable::set_Boom(&boom);
 
 	players[0].set_Position(-10 * Meter, 0 * Meter);
