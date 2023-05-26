@@ -442,13 +442,16 @@ void Boom::draw(sf::RenderTarget& target, sf::RenderStates states) const
 	{
 		if (self_Boom_Actived[i]) target.draw(self_Sprite[i]);
 #ifdef _DEBUG
-		static sf::RectangleShape box;
-		box.setPosition(self_Sprite[i].getGlobalBounds().left, self_Sprite[i].getGlobalBounds().top);
-		box.setSize(sf::Vector2f(self_Sprite[i].getGlobalBounds().width, self_Sprite[i].getGlobalBounds().height));
-		box.setFillColor(sf::Color::Transparent);
-		box.setOutlineColor(sf::Color(sf::Color::Cyan.r, sf::Color::Cyan.g, sf::Color::Cyan.b, 50));
-		box.setOutlineThickness(20);
-		target.draw(box);
+		if (self_Boom_Actived[i])
+		{
+			static sf::RectangleShape box;
+			box.setPosition(self_Sprite[i].getGlobalBounds().left, self_Sprite[i].getGlobalBounds().top);
+			box.setSize(sf::Vector2f(self_Sprite[i].getGlobalBounds().width, self_Sprite[i].getGlobalBounds().height));
+			box.setFillColor(sf::Color::Transparent);
+			box.setOutlineColor(sf::Color(sf::Color::Cyan.r, sf::Color::Cyan.g, sf::Color::Cyan.b, 50));
+			box.setOutlineThickness(20);
+			target.draw(box);
+		}
 #endif
 	}
 }
