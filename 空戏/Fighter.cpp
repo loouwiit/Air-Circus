@@ -19,14 +19,16 @@ Fighter::Fighter()
 	rotate(-PIf / 2);
 	self_Mass = 60;
 
-	self_Path.init(200);
+	self_Path[0].init(100);
+	self_Path[1].init(1);
 }
 
 void Fighter::set_Color(sf::Color Color)
 {
 	self_Sprite.setColor(Color);
 	Color.a = 200;
-	self_Path.set_Color(Color);
+	self_Path[0].set_Color(Color);
+	self_Path[1].set_Color(Color);
 }
 
 int Fighter::get_Score()
@@ -198,11 +200,20 @@ void Fighter::move(float delta_Time, int now_Time)
 	self_Velocity_old = self_Velocity;
 
 	self_Sprite.setPosition(self_Position);
-	//双航迹云
-	//self_Path[0].add_Path(self_Position - 90.0f * sf::Vector2f(self_Rotation_SinCos[1], self_Rotation_SinCos[0]) + sf::Vector2f(-self_Rotation_SinCos[0], self_Rotation_SinCos[1])*50.0f, now_Time, 30, self_Rotation_SinCos[0], self_Rotation_SinCos[1], 10.f);
-	//self_Path[1].add_Path(self_Position - 90.0f * sf::Vector2f(self_Rotation_SinCos[1], self_Rotation_SinCos[0]) - sf::Vector2f(-self_Rotation_SinCos[0], self_Rotation_SinCos[1]) * 50.0f, now_Time, 30, self_Rotation_SinCos[0], self_Rotation_SinCos[1], 10.f);
-	self_Path.add_Path(self_Position - 90.0f * sf::Vector2f(self_Rotation_SinCos[1], self_Rotation_SinCos[0]), now_Time, 30, self_Rotation_SinCos[0], self_Rotation_SinCos[1], 50.f);
-	self_Path.compute(now_Time);
+	if (self_Path_Is_Double)
+	{
+		//双航迹云
+		self_Path[0].add_Path(self_Position - 90.0f * sf::Vector2f(self_Rotation_SinCos[1], self_Rotation_SinCos[0]) + sf::Vector2f(-self_Rotation_SinCos[0], self_Rotation_SinCos[1]) * 60.0f, now_Time, self_Path_Continue_Time, self_Rotation_SinCos[0], self_Rotation_SinCos[1], 15.0f);
+		self_Path[1].add_Path(self_Position - 90.0f * sf::Vector2f(self_Rotation_SinCos[1], self_Rotation_SinCos[0]) - sf::Vector2f(-self_Rotation_SinCos[0], self_Rotation_SinCos[1]) * 60.0f, now_Time, self_Path_Continue_Time, self_Rotation_SinCos[0], self_Rotation_SinCos[1], 15.0f);
+		self_Path[0].compute(now_Time);
+		self_Path[1].compute(now_Time);
+	}
+	else
+	{
+		//单航迹云
+		self_Path->add_Path(self_Position - 90.0f * sf::Vector2f(self_Rotation_SinCos[1], self_Rotation_SinCos[0]), now_Time, self_Path_Continue_Time, self_Rotation_SinCos[0], self_Rotation_SinCos[1], 50.f);
+		self_Path->compute(now_Time);
+	}
 }
 
 void Fighter::change_Velocity(sf::Vector2f delta_Velocity, float time)
@@ -534,8 +545,8 @@ void Fighter::draw(sf::RenderTarget& target, sf::RenderStates states) const
 	target.draw(box);
 #endif
 
-	target.draw(self_Path, states);
-	target.draw(self_Path, states);
+	target.draw(self_Path[0], states);
+	if (self_Path_Is_Double) target.draw(self_Path[1], states);
 }
 
 Path_Line::~Path_Line()
@@ -577,11 +588,37 @@ void Path_Line::set_Color(sf::Color color)
 	self_Color = color;
 }
 
-void Path_Line::add_Path(sf::Vector2f position, int now_Time, int continue_Time, float sin, float cos, float thickness)
+void Path_Line::add_Path(sf::Vector2f position, int now_Time, unsigned continue_Time, float sin, float cos, float thickness)
 {
-#ifdef _DEBUG
-	if (self_Vertex[self_Now_Index].v3.color.a != 0) printf("Path_Line::add_Path: warning, buffer size is too small, alpha is %d\n", self_Vertex[self_Now_Index].v3.color.a);
-#endif
+	if (self_Vertex[self_Now_Index].v3.color.a != 0)
+	{
+		unsigned char alpha = self_Vertex[self_Now_Index].v3.color.a;
+		printf("Path_Line::add_Path: warning, buffer size is too small, %d's alpha is %d\n", self_Now_Index, alpha);
+		if (alpha < 10) alpha = 10;
+		int* time = new int[self_Number + alpha];
+		Quad* vertex = new Quad[self_Number + alpha];
+		self_Last_Vertex = vertex + self_Number - 1; //保证区域连续
+		self_Now_Index = self_Number; //从新创建的区域开始
+		for (unsigned short i = 0; i < self_Number; i++)
+		{
+			time[i] = self_Time[i];
+			vertex[i] = self_Vertex[i];
+		}
+		for (unsigned short i = self_Number; i < self_Number + alpha; i++)
+		{
+			time[i] = 0;
+			vertex[i].v1.color.a = 0;
+			vertex[i].v2.color.a = 0;
+			vertex[i].v3.color.a = 0;
+			vertex[i].v4.color.a = 0;
+		}
+		delete[] self_Time;
+		delete[] self_Vertex;
+		self_Time = time;
+		self_Vertex = vertex;
+		self_Number += alpha;
+		printf("Path_Line::add_Path: new vertex size is %d\n", self_Number);
+	}
 	
 	self_Time[self_Now_Index] = now_Time + continue_Time;
 

@@ -15,7 +15,7 @@ public:
 	~Path_Line();
 	void init(unsigned short line_Number);
 	void set_Color(sf::Color color);
-	void add_Path(sf::Vector2f position, int now_Time, int continue_Time, float sin, float cos, float thickness);
+	void add_Path(sf::Vector2f position, int now_Time, unsigned continue_Time, float sin, float cos, float thickness);
 	void compute(int now_Time);
 
 protected:
@@ -105,7 +105,9 @@ private:
 	static sf::Texture Default_Touched_Texture;
 
 	sf::Sprite self_Sprite{};
-	Path_Line self_Path;
+	Path_Line self_Path[2];
+	bool self_Path_Is_Double = false;
+	unsigned self_Path_Continue_Time = 30000;
 
 	bool self_Key[Key_Number] = { false };
 	bool self_Key_Old[Key_Number] = { false }; //辨别长按中的每一次
