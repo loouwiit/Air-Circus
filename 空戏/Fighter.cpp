@@ -25,7 +25,7 @@ Fighter::Fighter()
 void Fighter::set_Color(sf::Color Color)
 {
 	self_Sprite.setColor(Color);
-	Color.a -= 60;
+	Color.a = 200;
 	self_Path.set_Color(Color);
 }
 
@@ -198,6 +198,9 @@ void Fighter::move(float delta_Time, int now_Time)
 	self_Velocity_old = self_Velocity;
 
 	self_Sprite.setPosition(self_Position);
+	//Ë«º½¼£ÔÆ
+	//self_Path[0].add_Path(self_Position - 90.0f * sf::Vector2f(self_Rotation_SinCos[1], self_Rotation_SinCos[0]) + sf::Vector2f(-self_Rotation_SinCos[0], self_Rotation_SinCos[1])*50.0f, now_Time, 30, self_Rotation_SinCos[0], self_Rotation_SinCos[1], 10.f);
+	//self_Path[1].add_Path(self_Position - 90.0f * sf::Vector2f(self_Rotation_SinCos[1], self_Rotation_SinCos[0]) - sf::Vector2f(-self_Rotation_SinCos[0], self_Rotation_SinCos[1]) * 50.0f, now_Time, 30, self_Rotation_SinCos[0], self_Rotation_SinCos[1], 10.f);
 	self_Path.add_Path(self_Position - 90.0f * sf::Vector2f(self_Rotation_SinCos[1], self_Rotation_SinCos[0]), now_Time, 30, self_Rotation_SinCos[0], self_Rotation_SinCos[1], 50.f);
 	self_Path.compute(now_Time);
 }
@@ -531,6 +534,7 @@ void Fighter::draw(sf::RenderTarget& target, sf::RenderStates states) const
 	target.draw(box);
 #endif
 
+	target.draw(self_Path, states);
 	target.draw(self_Path, states);
 }
 
