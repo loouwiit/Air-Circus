@@ -63,7 +63,7 @@ protected:
 	static Boom* self_Boom_Ptr;
 
 private:
-	unsigned error_Times = 0;
+	static unsigned error_Times = 0;
 };
 
 class Buoy : public Collideable, public sf::Drawable
