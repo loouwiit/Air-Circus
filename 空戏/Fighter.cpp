@@ -402,7 +402,7 @@ void Fighter::compute(float delta_Time, int now_Time)
 		if (is_Key(Key::Back, now_Time, Type::Click, Type::Click, Type::Click) && now_Time > self_Next_Back_Time)
 		{
 			//Èý»÷
-			set_Velocity(-self_Velocity);
+			set_Velocity(abs(self_Velocity) * sf::Vector2f(self_Rotation_SinCos[1], self_Rotation_SinCos[0]));
 			//printf("Fighter::compute: triple back\n");
 			self_Next_Back_Time = now_Time + self_Back_Time_Limit;
 		}
