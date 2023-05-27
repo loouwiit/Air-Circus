@@ -19,7 +19,7 @@ Fighter::Fighter()
 	rotate(-PIf / 2);
 	self_Mass = 60;
 
-	self_Path[0].init(100);
+	self_Path[0].init(210);
 	self_Path[1].init(1);
 }
 

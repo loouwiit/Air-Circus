@@ -107,7 +107,7 @@ private:
 	sf::Sprite self_Sprite{};
 	Path_Line self_Path[2];
 	bool self_Path_Is_Double = false;
-	unsigned self_Path_Continue_Time = 30000;
+	unsigned self_Path_Continue_Time = 30;
 
 	bool self_Key[Key_Number] = { false };
 	bool self_Key_Old[Key_Number] = { false }; //辨别长按中的每一次
