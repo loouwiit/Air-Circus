@@ -5,6 +5,7 @@ constexpr float PIf = (float)(3.14159265358979323846);
 
 sf::RenderTexture Boom::Default_Collide_Texture[Default_Collide_Texture_Number];
 Boom* Collideable::self_Boom_Ptr = nullptr;
+unsigned Collideable::error_Times = 0;
 sf::Color Buoy::Default_Color = sf::Color::Green;
 sf::Color Buoy::Active_Color = sf::Color::Yellow;
 Camera* Buoy::self_Camera = nullptr;
