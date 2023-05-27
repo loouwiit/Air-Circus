@@ -13,7 +13,7 @@ class Path_Line : public sf::Drawable
 {
 public:
 	~Path_Line();
-	void init(unsigned char line_Number);
+	void init(unsigned short line_Number);
 	void set_Color(sf::Color color);
 	void add_Path(sf::Vector2f position, int now_Time, int continue_Time, float sin, float cos, float thickness);
 	void compute(int now_Time);
@@ -32,8 +32,8 @@ private:
 		sf::Vertex v4;
 	};
 
-	unsigned char self_Number = 0;
-	unsigned char self_Now_Index = 0;
+	unsigned short self_Number = 0;
+	unsigned short self_Now_Index = 0;
 	int* self_Time = nullptr;
 	Quad* self_Vertex;
 	Quad* self_Last_Vertex;

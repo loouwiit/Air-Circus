@@ -198,7 +198,7 @@ void Fighter::move(float delta_Time, int now_Time)
 	self_Velocity_old = self_Velocity;
 
 	self_Sprite.setPosition(self_Position);
-	self_Path.add_Path(self_Position - 90.0f * sf::Vector2f(self_Rotation_SinCos[1], self_Rotation_SinCos[0]), now_Time, 30, self_Rotation_SinCos[0], self_Rotation_SinCos[1], 90.f);
+	self_Path.add_Path(self_Position - 90.0f * sf::Vector2f(self_Rotation_SinCos[1], self_Rotation_SinCos[0]), now_Time, 30, self_Rotation_SinCos[0], self_Rotation_SinCos[1], 50.f);
 	self_Path.compute(now_Time);
 }
 
@@ -547,7 +547,7 @@ Path_Line::~Path_Line()
 	}
 }
 
-void Path_Line::init(unsigned char line_Number)
+void Path_Line::init(unsigned short line_Number)
 {
 	if (self_Number != 0)
 	{
@@ -598,7 +598,7 @@ void Path_Line::add_Path(sf::Vector2f position, int now_Time, int continue_Time,
 
 void Path_Line::compute(int now_Time)
 {
-	for (unsigned char i = 0; i < self_Number; i ++)
+	for (unsigned short i = 0; i < self_Number; i ++)
 	{
 		if (self_Time[i] > now_Time) continue;
 
