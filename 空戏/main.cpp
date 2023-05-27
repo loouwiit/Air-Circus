@@ -19,6 +19,7 @@ Buoy buoy[Buoy_Number];
 Point position_Point[Position_Point_X_Number * Position_Point_Y_Number];
 sf::RectangleShape map_Side;
 Boom boom;
+Particle particle;
 
 int main(int argc, char* argv[]);
 void init();
@@ -54,9 +55,11 @@ void init()
 	camera.set_Position(sf::Vector2f(-240 / 2 * Meter, -140 / 2 * Meter), sf::Vector2f(240 / 2 * Meter, 140 / 2 * Meter));
 	camera.set_Target(&window);
 
-	boom.init(10);
+	boom.init(2);
+	particle.init(2);
 
 	Collideable::set_Boom(&boom);
+	Collideable::set_Particle(&particle);
 
 	players[0].set_Position(-10 * Meter, 0 * Meter);
 	players[0].set_Color(sf::Color::Red);
@@ -112,6 +115,7 @@ void compute()
 	compute_Player();
 	compute_Camera();
 	boom.compute(Time::now_Time.asMilliseconds());
+	particle.compute(Time::now_Time.asMilliseconds());
 }
 
 void draw()
@@ -123,6 +127,7 @@ void draw()
 	for (char i = 0; i < 4; i++) window.draw(buoy[i]);
 	for (char i = 0; i < Player_Number; i++) window.draw(players[i]);
 	window.draw(boom);
+	window.draw(particle);
 
 	window.display();
 }

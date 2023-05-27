@@ -330,7 +330,7 @@ void Fighter::be_Collided(Collideable& A, int now_Time, bool is_Self_Determiner)
 			}
 		}
 
-		if (is_Self_Determiner) self_Boom_Ptr->add_Boom((self_Position + buoy.get_Position()) * 0.5f, &Boom::get_Rand_Collide_Texture(), now_Time, 1000, sf::Vector2f(5, 5));
+		if (is_Self_Determiner) self_Particle_Ptr->add_Particle((self_Position + buoy.get_Position()) * 0.5f, now_Time, 1000);
 
 		break;
 	}
@@ -360,7 +360,7 @@ void Fighter::be_Collided(Collideable& A, int now_Time, bool is_Self_Determiner)
 				self_Boom_Ptr->add_Boom(self_Position, &get_Default_Texture(), now_Time, 1000, sf::Vector2f(3, 3), self_Rotation / PIf * 180, self_Sprite.getColor());
 			}
 		}
-		if (is_Self_Determiner) self_Boom_Ptr->add_Boom((self_Position + fighter.get_Position()) * 0.5f, &Boom::get_Rand_Collide_Texture(), now_Time, 1000, sf::Vector2f(5, 5));
+		if (is_Self_Determiner) self_Particle_Ptr->add_Particle((self_Position + fighter.get_Position()) * 0.5f,  now_Time, 1000);
 		break;
 	}
 	default:

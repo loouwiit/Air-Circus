@@ -3,8 +3,8 @@
 
 constexpr float PIf = (float)(3.14159265358979323846);
 
-sf::RenderTexture Boom::Default_Collide_Texture[Default_Collide_Texture_Number];
 Boom* Collideable::self_Boom_Ptr = nullptr;
+Particle* Collideable::self_Particle_Ptr = nullptr;
 unsigned Collideable::error_Times = 0;
 sf::Color Buoy::Default_Color = sf::Color::Green;
 sf::Color Buoy::Active_Color = sf::Color::Yellow;
@@ -141,6 +141,11 @@ bool Collideable::is_Collide(Collideable& B)
 void Collideable::set_Boom(Boom* boom)
 {
 	self_Boom_Ptr = boom;
+}
+
+void Collideable::set_Particle(Particle* particle)
+{
+	self_Particle_Ptr = particle;
 }
 
 Buoy::Buoy()
@@ -323,16 +328,7 @@ void Boom::init(unsigned Default_Sprite_Number)
 		self_Boom_Actived[j] = false;
 	}
 
-	if (Default_Collide_Texture[0].getSize().x == 0)
-	{
-		for (char i = 0; i < Default_Collide_Texture_Number; i++)
-		{
-			Default_Collide_Texture[i].create(256, 256);
-			Default_Collide_Texture[i].setSmooth(true);
-		}
-	}
-
-	std::cout << "Boom::Boom: boom buffer size = " << self_Sprites_Number << '\n';
+	std::cout << "Boom::init: boom buffer size = " << self_Sprites_Number << '\n';
 }
 
 Boom::~Boom()
@@ -411,32 +407,6 @@ void Boom::compute(int now_Time)
 	}
 }
 
-const sf::Texture& Boom::get_Rand_Collide_Texture()
-{
-	//std::cout << "Boom::get_Rand_Collide_Texture: texture Randing\n";
-
-	constexpr char Line_Number = 20;
-	static char texture_Index = 0;
-	sf::RectangleShape line;
-
-	if (texture_Index >= Default_Collide_Texture_Number) texture_Index = 0;
-
-	Default_Collide_Texture[texture_Index].clear(sf::Color::Transparent);
-	
-	line.setFillColor(sf::Color::Yellow);
-
-	for (char i = 0; i < Line_Number; i++)
-	{
-		//line.setFillColor(sf::Color(rand() % 64 + 192, rand() % 64 + 192, rand() % 64 + 192, rand() % 50 + 100));
-		line.setPosition((float)(rand() % 256), (float)(rand() % 256));
-		line.setSize(sf::Vector2f((float)(rand() % 50), (float)(2 + rand() % 10)));
-		line.setRotation((float)(rand() % 360));
-		Default_Collide_Texture[texture_Index].draw(line);
-	}
-	texture_Index++;
-	return Default_Collide_Texture[texture_Index-1].getTexture();
-}
-
 void Boom::draw(sf::RenderTarget& target, sf::RenderStates states) const
 {
 	for (unsigned i = 0; i < self_Sprites_Number; i++)
@@ -454,5 +424,164 @@ void Boom::draw(sf::RenderTarget& target, sf::RenderStates states) const
 			target.draw(box);
 		}
 #endif
+	}
+}
+
+void Particle::init(unsigned Particle_Number)
+{
+	if (self_Number != 0)
+	{
+		self_Number = 0;
+
+		for (unsigned char i = 0; i < self_Number; i++)
+			if (self_Triangle[i] != nullptr) delete[] self_Triangle[i];
+		delete[] self_Triangle;
+		delete[] self_Transform;
+		delete[] self_Triangle_Number;
+
+		delete[] self_End_Time;
+		delete[] self_Actived;
+	}
+
+	self_Number = Particle_Number;
+
+	self_Triangle = new Triangle*[self_Number];
+	self_Transform = new sf::Transformable[self_Number];
+	self_Triangle_Number = new unsigned short[self_Number];
+	self_End_Time = new int[self_Number];
+	self_Actived = new bool[self_Number];
+
+	std::fill(self_Triangle, self_Triangle + self_Number, nullptr);
+	std::fill(self_Triangle_Number, self_Triangle_Number + self_Number, 0);
+	std::fill(self_End_Time, self_End_Time + self_Number, 0);
+	std::fill(self_Actived, self_Actived + self_Number, false);
+
+	std::cout << "Particle::init: particle buffer size = " << (int)self_Number << '\n';
+}
+
+Particle::~Particle()
+{
+	if (self_Number != 0)
+	{
+		self_Number = 0;
+
+		for (unsigned char i = 0; i < self_Number; i++)
+			if (self_Triangle[i] != nullptr) delete[] self_Triangle[i];
+		delete[] self_Triangle;
+		delete[] self_Transform;
+		delete[] self_Triangle_Number;
+
+		delete[] self_End_Time;
+		delete[] self_Actived;
+	}
+}
+
+void Particle::add_Particle(sf::Vector2f Position, int now_Time, unsigned continue_Time,sf::Vector2f size, sf::Color color,  unsigned short Particle_Number)
+{
+	unsigned index = 0;
+	while (index < self_Number)
+	{
+		if (!self_Actived[index]) break;
+		index++;
+	}
+
+	if (index == self_Number)
+	{
+		//不足，需要补充内存
+
+		Triangle** triangle = new Triangle * [self_Number + 1];
+		sf::Transformable* transform = new sf::Transformable[self_Number + 1];
+		unsigned short* vertex_Number = new unsigned short[self_Number + 1];
+		int* end_Time = new int[self_Number + 1];
+		bool* actived = new bool[self_Number + 1];
+
+		for (unsigned i = 0; i < self_Number; i++)
+		{
+			triangle[i] = self_Triangle[i];
+			transform[i] = self_Transform[i];
+			vertex_Number[i] = self_Triangle_Number[i];
+			end_Time[i] = self_End_Time[i];
+			actived[i] = self_Actived[i];
+		}
+
+		vertex_Number[index] = 0;
+
+		delete[] self_Triangle;
+		delete[] self_Transform;
+		delete[] self_Triangle_Number;
+		delete[] self_End_Time;
+		delete[] self_Actived;
+
+		self_Triangle = triangle;
+		self_Transform = transform;
+		self_Triangle_Number = vertex_Number;
+		self_End_Time = end_Time;
+		self_Actived = actived;
+		self_Number++;
+
+		std::cout << "Particle::add_Particle: particle buffer size = " << (int)self_Number << '\n';
+	}
+
+	self_Transform[index].setOrigin(size * 0.5f);
+	self_Transform[index].setPosition(Position);
+	self_End_Time[index] = now_Time + continue_Time;
+	self_Actived[index] = true;
+
+	if (self_Triangle_Number[index] != Particle_Number)
+	{
+		if (self_Triangle_Number[index] != 0) delete[] self_Triangle[index];
+		self_Triangle_Number[index] = Particle_Number;
+		self_Triangle[index] = new Triangle[Particle_Number];
+	}
+
+	Triangle*& triangle = self_Triangle[index];
+	unsigned short& number = self_Triangle_Number[index];
+
+	for (unsigned short i = 0; i < number; i++)
+	{
+		triangle[i].v1.color = color;
+		triangle[i].v1.position.x = ((float)rand() / (float)RAND_MAX) * size.x;
+		triangle[i].v1.position.y = ((float)rand() / (float)RAND_MAX) * size.y;
+
+		triangle[i].v2.color = color;
+		triangle[i].v2.position.x = ((float)rand() / (float)RAND_MAX) * size.x;
+		triangle[i].v2.position.y = ((float)rand() / (float)RAND_MAX) * size.y;
+
+		triangle[i].v3.color = color;
+		triangle[i].v3.position.x = ((float)rand() / (float)RAND_MAX) * size.x;
+		triangle[i].v3.position.y = ((float)rand() / (float)RAND_MAX) * size.y;
+	}
+}
+
+void Particle::compute(int now_Time)
+{
+	for (unsigned index = 0; index < self_Number; index++)
+	{
+		if (!self_Actived[index]) continue; //跳过
+
+		if (self_End_Time[index] < now_Time)
+		{
+			//减少alpha
+			for (unsigned short i = 0; i < self_Triangle_Number[index]; i++)
+			{
+				self_Triangle[index][i].v1.color.a -= 10;
+				self_Triangle[index][i].v2.color.a -= 10;
+				self_Triangle[index][i].v3.color.a -= 10;
+			}
+
+			if (self_Triangle[index]->v1.color.a <= 10) self_Actived[index] = false;
+		}
+	}
+}
+
+void Particle::draw(sf::RenderTarget& target, sf::RenderStates states) const
+{
+	sf::RenderStates state;
+	for (unsigned i = 0; i < self_Number; i++)
+	{
+		if (!self_Actived[i]) continue;
+		state = states;
+		state.transform *= self_Transform->getTransform();
+		target.draw((sf::Vertex*)self_Triangle[i], self_Triangle_Number[i] * 3, sf::Triangles, state);
 	}
 }

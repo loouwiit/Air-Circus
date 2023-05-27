@@ -17,19 +17,40 @@ public:
 	void add_Boom(sf::Vector2f Position, const sf::Texture* texture, int now_Time, unsigned continue_Time, sf::Vector2f scale = sf::Vector2f(1, 1), float rotation = 0.f, sf::Color color = sf::Color::White);
 	void compute(int now_Time);
 
-	static const sf::Texture& get_Rand_Collide_Texture();
+protected:
+	void draw(sf::RenderTarget& target, sf::RenderStates states) const;
+
+private:
+	unsigned self_Sprites_Number = 0;
+	sf::Sprite* self_Sprite = nullptr;
+	int* self_Boom_End_Time = nullptr;
+	bool* self_Boom_Actived = nullptr;
+};
+
+class Particle : public sf::Drawable
+{
+public:
+	~Particle();
+	void init(unsigned Particle_Number);
+	void add_Particle(sf::Vector2f Position, int now_Time, unsigned continue_Time, sf::Vector2f size = sf::Vector2f(2000, 2000), sf::Color color = sf::Color(sf::Color::Yellow.r, sf::Color::Yellow.g, sf::Color::Yellow.b, 50), unsigned short Particle_Number = 10);
+	void compute(int now_Time);
 
 protected:
 	void draw(sf::RenderTarget& target, sf::RenderStates states) const;
 
 private:
-	static constexpr char Default_Collide_Texture_Number = 6;
-	static sf::RenderTexture Default_Collide_Texture[Default_Collide_Texture_Number];
-
-	unsigned self_Sprites_Number = 0;
-	sf::Sprite* self_Sprite = nullptr;
-	int* self_Boom_End_Time = nullptr;
-	bool* self_Boom_Actived = nullptr;
+	struct Triangle
+	{
+		sf::Vertex v1;
+		sf::Vertex v2;
+		sf::Vertex v3;
+	};
+	unsigned char self_Number = 0;
+	sf::Transformable* self_Transform = nullptr;
+	Triangle** self_Triangle = nullptr;
+	unsigned short* self_Triangle_Number = nullptr;
+	int* self_End_Time = nullptr;
+	bool* self_Actived = nullptr;
 };
 
 class Collideable
@@ -50,6 +71,7 @@ public:
 	bool is_Collide(Collideable& B);
 
 	static void set_Boom(Boom* boom);
+	static void set_Particle(Particle* particle);
 
 	virtual sf::Vector2f get_Position() = 0;
 	virtual sf::Vector2f get_Velocity() = 0;
@@ -61,6 +83,7 @@ protected:
 	virtual void be_Collided(Collideable& A, int now_Time, bool is_Self_Determiner) = 0;
 	float self_Mass = 0;
 	static Boom* self_Boom_Ptr;
+	static Particle* self_Particle_Ptr;
 
 private:
 	static unsigned error_Times;
