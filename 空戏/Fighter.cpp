@@ -10,6 +10,7 @@ sf::Texture Fighter::Default_Texture{};
 sf::Texture Fighter::Default_Touched_Texture{};
 float(*&Fighter::sin)(float) = SinCos::sin;
 float(*&Fighter::cos)(float) = SinCos::cos;
+float(*&Fighter::atan2)(float, float) = SinCos::atan2;
 
 Fighter::Fighter()
 {
@@ -313,15 +314,15 @@ void Fighter::be_Collided(Collideable& A, int now_Time, bool is_Self_Determiner)
 {
 	//if (A.get_My_Child_Class() != Child_Class::Buoy) return;
 	//printf("Fighter::be_Collided: delta: %f, rotation: %f sub: %f\n",
-	//	atan2f(self_Position.y - A.get_Position().y , self_Position.x - A.get_Position().x),
-	//	self_Rotation, abs(atan2f((self_Position.y - A.get_Position().y), (self_Position.x - A.get_Position().x)) -
+	//	atan2(self_Position.y - A.get_Position().y , self_Position.x - A.get_Position().x),
+	//	self_Rotation, abs(atan2((self_Position.y - A.get_Position().y), (self_Position.x - A.get_Position().x)) -
 	//		self_Rotation));
 	switch (A.get_My_Child_Class())
 	{
 	case Collideable::Child_Class::Buoy:
 	{
 		Buoy& buoy = *((Buoy*)&A);
-		if (abs(abs(atan2f((self_Position.y - A.get_Position().y), (self_Position.x - A.get_Position().x)) -
+		if (abs(abs(atan2((self_Position.y - A.get_Position().y), (self_Position.x - A.get_Position().x)) -
 			self_Rotation) - PIf) < 0.5)
 		{
 			//Í·Åö
@@ -354,7 +355,7 @@ void Fighter::be_Collided(Collideable& A, int now_Time, bool is_Self_Determiner)
 		if (abs(fighter.get_Rotation() - self_Rotation) < 0.7)
 		{
 			//Í¬Ïò
-			float delta_Rotation = self_Rotation - atan2f(fighter.get_Position().y - self_Position.y, fighter.get_Position().x - self_Position.x);
+			float delta_Rotation = self_Rotation - atan2(fighter.get_Position().y - self_Position.y, fighter.get_Position().x - self_Position.x);
 
 			if (delta_Rotation > PIf)
 				delta_Rotation -= (int)((delta_Rotation + PIf) / TAUf) * TAUf;

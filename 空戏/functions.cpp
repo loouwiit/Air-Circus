@@ -2,10 +2,9 @@
 
 namespace SinCos
 {
-	float fsin(float x);
-	float fcos(float x);
 	float(*sin)(float) = fsin;
 	float(*cos)(float) = fcos;
+	float(*atan2)(float, float) = satan2; //atan2性能提升好像不大，还是用标准库吧
 }
 
 #ifdef _DEBUG
@@ -68,6 +67,28 @@ void debug()
 	//players[0].froce(force_old);
 	//players[0].froce(players[0].get_Position() * -1.0f, Time::delta_Time.asMilliseconds() / 1000.f);
 	//force_old = players[0].get_Position() * 1.0f;
+
+	//float x = 0;
+	//float y = 0;
+	//float s = 0;
+	//float f = 0;
+	//sf::Clock clock;
+	//clock.restart();
+	//for (int i = 0; i < 1000000; i++)
+	//{
+	//	x = rand(); y = rand();
+	//	f += SinCos::fatan2(y, x);
+	//}
+	//std::cout << "[debug]f: " << clock.restart().asMilliseconds() << "ms = " << f << endl;
+
+	//clock.restart();
+	//for (int i = 0; i < 1000000; i++)
+	//{
+	//	x = rand(); y = rand();
+	//	s += SinCos::satan2(y, x);
+	//}
+	//std::cout << "[debug]s: " << clock.restart().asMilliseconds() << "ms = " << s << endl;
+	//std::cin.get();
 }
 
 //float fsin_d(float x)
@@ -107,18 +128,35 @@ float SinCos::fcos(float x)
 	return fsin(x + PIf2);
 }
 
-void SinCos::using_Stand()
+float SinCos::fatan2(float y, float x)
 {
-	using namespace SinCos;
-	sin = ssin;
-	cos = scos;
+	float ax = std::abs(x), ay = std::abs(y);
+	float a = std::min(ax, ay) / (std::max(ax, ay) + (float)DBL_EPSILON);
+	float s = a * a;
+	float r = ((-0.0464964749f * s + 0.15931422f) * s - 0.327622764f) * s * a + a;
+	if (ay > ax) r = 1.57079637f - r;
+	if (x < 0) r = 3.14159274f - r;
+	if (y < 0) r = -r;
+	return r;
 }
 
-void SinCos::using_Fast()
+void SinCos::Change_Function(Func f, bool is_Fast)
 {
 	using namespace SinCos;
-	sin = fsin;
-	cos = fcos;
+	switch (f)
+	{
+	case SinCos::Func::Sin:
+		sin = is_Fast ? fsin : ssin;
+		break;
+	case SinCos::Func::Cos:
+		cos = is_Fast ? fcos : scos;
+		break;
+	case SinCos::Func::Tan2:
+		atan2 = is_Fast ? fatan2 : satan2;
+		break;
+	default:
+		break;
+	}
 }
 
 void Event::event(Event& event)

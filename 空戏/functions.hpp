@@ -49,13 +49,20 @@ namespace SinCos
 {
 	float fsin(float x);
 	float fcos(float x);
+	float fatan2(float y, float x);
 	constexpr float (*ssin)(float) = ::sinf;
 	constexpr float (*scos)(float) = ::cosf;
+	constexpr float (*satan2)(float, float) = ::atan2f;
 	extern float(*sin)(float);
 	extern float(*cos)(float);
+	extern float(*atan2)(float, float);
 
-	void using_Stand();
-	void using_Fast();
+	enum class Func :signed char
+	{
+		Sin,Cos,Tan2
+	};
+
+	void Change_Function(Func f, bool is_Fast);
 }
 
 namespace Event

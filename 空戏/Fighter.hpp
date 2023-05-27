@@ -7,6 +7,7 @@ namespace SinCos
 {
 	extern float(*sin)(float);
 	extern float(*cos)(float);
+	extern float(*atan2)(float, float);
 }
 
 class Path_Line : public sf::Drawable
@@ -92,6 +93,7 @@ protected:
 private:
 	static float(*&sin)(float);
 	static float(*&cos)(float);
+	static float(*&atan2)(float, float);
 
 	constexpr static char Key_Number = 8;
 	constexpr static int Default_Back_Time_Limit = 1000;
