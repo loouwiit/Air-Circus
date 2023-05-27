@@ -18,11 +18,15 @@ Fighter::Fighter()
 	self_Sprite.setScale(3.0f, 3.0f);
 	rotate(-PIf / 2);
 	self_Mass = 60;
+
+	self_Path.init(200);
 }
 
 void Fighter::set_Color(sf::Color Color)
 {
 	self_Sprite.setColor(Color);
+	Color.a -= 60;
+	self_Path.set_Color(Color);
 }
 
 int Fighter::get_Score()
@@ -194,6 +198,8 @@ void Fighter::move(float delta_Time, int now_Time)
 	self_Velocity_old = self_Velocity;
 
 	self_Sprite.setPosition(self_Position);
+	self_Path.add_Path(self_Position - 90.0f * sf::Vector2f(self_Rotation_SinCos[1], self_Rotation_SinCos[0]), now_Time, 30, self_Rotation_SinCos[0], self_Rotation_SinCos[1], 90.f);
+	self_Path.compute(now_Time);
 }
 
 void Fighter::change_Velocity(sf::Vector2f delta_Velocity, float time)
@@ -524,4 +530,96 @@ void Fighter::draw(sf::RenderTarget& target, sf::RenderStates states) const
 	box.setOutlineThickness(20);
 	target.draw(box);
 #endif
+
+	target.draw(self_Path, states);
+}
+
+Path_Line::~Path_Line()
+{
+	if (self_Number != 0)
+	{
+		self_Number = 0;
+		delete[] self_Time;
+		delete[] self_Vertex;
+		self_Time = nullptr;
+		self_Vertex = nullptr;
+		self_Last_Vertex = nullptr;
+	}
+}
+
+void Path_Line::init(unsigned char line_Number)
+{
+	if (self_Number != 0)
+	{
+		delete[] self_Time;
+		delete[] self_Vertex;
+		self_Time = nullptr;
+		self_Vertex = nullptr;
+		self_Last_Vertex = nullptr;
+	}
+
+	self_Now_Index = 0;
+	self_Number = line_Number;
+	self_Time = new int[self_Number];
+	self_Vertex = new Quad[self_Number];
+	self_Last_Vertex = self_Vertex;
+
+	std::fill(self_Time, self_Time + self_Number, 0);
+	std::fill((sf::Vertex*)self_Vertex, (sf::Vertex*)(self_Vertex + self_Number), sf::Vertex(sf::Vector2f(0, 0), sf::Color::Transparent));
+}
+
+void Path_Line::set_Color(sf::Color color)
+{
+	self_Color = color;
+}
+
+void Path_Line::add_Path(sf::Vector2f position, int now_Time, int continue_Time, float sin, float cos, float thickness)
+{
+#ifdef _DEBUG
+	if (self_Vertex[self_Now_Index].v3.color.a != 0) printf("Path_Line::add_Path: warning, buffer size is too small, alpha is %d\n", self_Vertex[self_Now_Index].v3.color.a);
+#endif
+	
+	self_Time[self_Now_Index] = now_Time + continue_Time;
+
+	self_Vertex[self_Now_Index].v1 = self_Last_Vertex->v4;
+	self_Vertex[self_Now_Index].v2 = self_Last_Vertex->v3; //复制上一次的点
+	self_Vertex[self_Now_Index].v3.position.x = position.x - sin * thickness;
+	self_Vertex[self_Now_Index].v3.position.y = position.y + cos * thickness;
+	self_Vertex[self_Now_Index].v4.position.x = position.x + sin * thickness;
+	self_Vertex[self_Now_Index].v4.position.y = position.y - cos * thickness;
+
+	self_Vertex[self_Now_Index].v3.color = self_Color;
+	self_Vertex[self_Now_Index].v4.color = self_Color;
+
+	self_Last_Vertex = self_Vertex + self_Now_Index; //标记此次位置
+	self_Now_Index++;
+	if (self_Now_Index >= self_Number) self_Now_Index = 0;
+}
+
+void Path_Line::compute(int now_Time)
+{
+	for (unsigned char i = 0; i < self_Number; i ++)
+	{
+		if (self_Time[i] > now_Time) continue;
+
+		if (self_Vertex[i].v3.color.a < Sub_Speed)
+		{
+			self_Vertex[i].v1.color.a = 0;
+			self_Vertex[i].v2.color.a = 0;
+			self_Vertex[i].v3.color.a = 0;
+			self_Vertex[i].v4.color.a = 0;
+		}
+		else
+		{
+			self_Vertex[i].v1.color.a -= Sub_Speed;
+			self_Vertex[i].v2.color.a -= Sub_Speed;
+			self_Vertex[i].v3.color.a -= Sub_Speed;
+			self_Vertex[i].v4.color.a -= Sub_Speed;
+		}
+	}
+}
+
+void Path_Line::draw(sf::RenderTarget& target, sf::RenderStates states) const
+{
+	target.draw((sf::Vertex*)self_Vertex, (short)self_Number * 4, sf::Quads, states);
 }

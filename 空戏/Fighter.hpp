@@ -9,6 +9,37 @@ namespace SinCos
 	extern float(*cos)(float);
 }
 
+class Path_Line : public sf::Drawable
+{
+public:
+	~Path_Line();
+	void init(unsigned char line_Number);
+	void set_Color(sf::Color color);
+	void add_Path(sf::Vector2f position, int now_Time, int continue_Time, float sin, float cos, float thickness);
+	void compute(int now_Time);
+
+protected:
+	virtual void draw(sf::RenderTarget& target, sf::RenderStates states) const override;
+
+private:
+	constexpr static unsigned char Sub_Speed = 1;
+
+	struct Quad
+	{
+		sf::Vertex v1;
+		sf::Vertex v2;
+		sf::Vertex v3;
+		sf::Vertex v4;
+	};
+
+	unsigned char self_Number = 0;
+	unsigned char self_Now_Index = 0;
+	int* self_Time = nullptr;
+	Quad* self_Vertex;
+	Quad* self_Last_Vertex;
+	sf::Color self_Color = sf::Color::Black;
+};
+
 class Fighter : public Collideable, public sf::Drawable
 {
 public:
@@ -74,6 +105,7 @@ private:
 	static sf::Texture Default_Touched_Texture;
 
 	sf::Sprite self_Sprite{};
+	Path_Line self_Path;
 
 	bool self_Key[Key_Number] = { false };
 	bool self_Key_Old[Key_Number] = { false }; //辨别长按中的每一次
