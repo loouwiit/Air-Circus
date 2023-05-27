@@ -280,30 +280,47 @@ Buoy::Child_Class Buoy::get_My_Child_Class()
 void Buoy::be_Collided(Collideable& A, int now_Time, bool is_Self_Determiner)
 {}
 
-Point::Point()
+Point::~Point()
 {
-	self_Renctangle.setSize(sf::Vector2f(20, 20));
-	self_Renctangle.setOrigin(10, 10);
+	if (self_Number != 0)
+	{
+		delete[] self_Vertex;
+		self_Number = 0;
+	}
 }
 
-void Point::set_Position(float x, float y)
+void Point::init(sf::Vector2f start_Position, sf::Vector2f delta_Position, sf::Vector2u delta_Times, sf::Vector2f offset, sf::Color color)
 {
-	self_Renctangle.setPosition(x, y);
-}
+	if (self_Number != 0)
+	{
+		delete[] self_Vertex;
+		self_Number = 0;
+	}
+	
+	self_Number = delta_Times.x * delta_Times.y;
+	self_Vertex = new Quad[self_Number];
 
-void Point::set_Color(unsigned int Color)
-{
-	self_Renctangle.setFillColor(sf::Color(Color));
-}
+	unsigned short index = 0;
 
-void Point::set_Color(sf::Color Color)
-{
-	self_Renctangle.setFillColor(Color);
+	for (unsigned short i = 0; i < delta_Times.x; i++) for (unsigned short j = 0; j < delta_Times.y; j++)
+	{
+		index = i * delta_Times.y + j;
+
+		self_Vertex[index].v1.color = color;
+		self_Vertex[index].v2.color = color;
+		self_Vertex[index].v3.color = color;
+		self_Vertex[index].v4.color = color;
+
+		self_Vertex[index].v1.position = start_Position + delta_Position * sf::Vector2f(i, j) + offset * sf::Vector2f(+1, +1);
+		self_Vertex[index].v2.position = start_Position + delta_Position * sf::Vector2f(i, j) + offset * sf::Vector2f(+1, -1);
+		self_Vertex[index].v3.position = start_Position + delta_Position * sf::Vector2f(i, j) + offset * sf::Vector2f(-1, -1);
+		self_Vertex[index].v4.position = start_Position + delta_Position * sf::Vector2f(i, j) + offset * sf::Vector2f(-1, +1);
+	}
 }
 
 void Point::draw(sf::RenderTarget& target, sf::RenderStates states) const
 {
-	target.draw(self_Renctangle);
+	target.draw((sf::Vertex*)self_Vertex, self_Number * 4, sf::Quads, states);
 }
 
 void Boom::init(unsigned Default_Sprite_Number)

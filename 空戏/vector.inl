@@ -2,12 +2,12 @@
 #include <SFML/System/Vector2.hpp>
 
 
-//inline sf::Vector2f& operator*(float& n, sf::Vector2f& v)
-//{
-//	v.x *= n;
-//	v.y *= n;
-//	return v;
-//}
+inline sf::Vector2f operator*(sf::Vector2f v1, sf::Vector2f v2)
+{
+	v1.x *= v2.x;
+	v1.y *= v2.y;
+	return v1;
+}
 
 inline float abss(sf::Vector2f V)
 {

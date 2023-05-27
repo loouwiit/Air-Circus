@@ -16,7 +16,7 @@ sf::RenderWindow window;
 Camera camera;
 Fighter players[Player_Number];
 Buoy buoy[Buoy_Number];
-Point position_Point[Position_Point_X_Number * Position_Point_Y_Number];
+Point position_Point[2];
 sf::RectangleShape map_Side;
 Boom boom;
 Particle particle;
@@ -80,11 +80,8 @@ void init()
 	buoy[0].set_Active(true);
 	for (char i = 1; i < 4; i++) buoy[i].set_Active(false);
 
-	for (int i = 0; i < Position_Point_Y_Number; i++) for (int j = 0; j < Position_Point_X_Number; j++)
-	{
-		position_Point[i * Position_Point_X_Number + j].set_Color(sf::Color::Black);
-		position_Point[i * Position_Point_X_Number + j].set_Position(((float)(j - Position_Point_X_Number / 2) * 10 * Meter), (float)((i - Position_Point_Y_Number / 2) * 10 * Meter));
-	}
+	position_Point[0].init(sf::Vector2f(-110 * Meter, -60 * Meter), sf::Vector2f(10 * Meter, 10 * Meter), sf::Vector2u(23, 13), sf::Vector2f(10, 10), sf::Color::Black);
+	position_Point[1].init(sf::Vector2f(-110 * Meter, -60 * Meter), sf::Vector2f(10 * Meter, 10 * Meter), sf::Vector2u(23, 13), sf::Vector2f(10, 10), sf::Color(0x00000033));
 
 	map_Side.setFillColor(sf::Color::Transparent);
 	map_Side.setOutlineColor(sf::Color::Black);
@@ -122,8 +119,8 @@ void draw()
 {
 	window.clear(sf::Color::White);
 
-	if (!camera.is_Full()) for (unsigned short i = 0; i < Position_Point_X_Number * Position_Point_Y_Number; i++) window.draw(position_Point[i]);
-	else window.draw(map_Side);
+	window.draw(position_Point[camera.is_Full() ? 1 : 0]);
+	window.draw(map_Side);
 	for (char i = 0; i < 4; i++) window.draw(buoy[i]);
 	for (char i = 0; i < Player_Number; i++) window.draw(players[i]);
 	window.draw(boom);

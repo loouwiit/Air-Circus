@@ -131,15 +131,21 @@ private:
 class Point : public sf::Drawable
 {
 public:
-	Point();
-
-	void set_Position(float x, float y);
-	void set_Color(unsigned int Color);
-	void set_Color(sf::Color Color);
+	~Point();
+	void init(sf::Vector2f start_Position, sf::Vector2f delta_Position, sf::Vector2u delta_Times, sf::Vector2f offset, sf::Color color);
 
 private:
 	void draw(sf::RenderTarget& target, sf::RenderStates states) const;
 
 private:
-	sf::RectangleShape self_Renctangle;
+	struct Quad
+	{
+		sf::Vertex v1;
+		sf::Vertex v2;
+		sf::Vertex v3;
+		sf::Vertex v4;
+	};
+
+	Quad* self_Vertex;
+	unsigned short self_Number = 0;
 };
