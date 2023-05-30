@@ -97,6 +97,7 @@ private:
 
 	constexpr static char Key_Number = 8;
 	constexpr static int Default_Back_Time_Limit = 1000;
+	constexpr static int Default_Forward_Time_Limit = 1000;
 
 	enum class Key_Type : Key_Base
 	{
@@ -126,6 +127,10 @@ private:
 
 	int self_Back_Time_Limit = Default_Back_Time_Limit;
 	int self_Next_Back_Time = 0;
+	int self_Forward_Time_Limit = Default_Forward_Time_Limit;
+	int self_Next_Forward_Time = 0;
+
+
 	float self_Rotation = 0;
 	float self_Rotation_SinCos[2] = { 0.0f,1.0f };
 

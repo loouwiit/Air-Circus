@@ -395,7 +395,22 @@ void Fighter::compute(float delta_Time, int now_Time)
 
 	if (is_Key(Key::Forward))
 	{
-		froce(+120000.f * self_Rotation_SinCos[1], +120000.f * self_Rotation_SinCos[0], delta_Time);
+		if (is_Key(Key::Forward, now_Time, Type::Click, Type::Click) && now_Time > self_Next_Forward_Time)
+		{
+			sf::Color color = get_Color();
+			color.a -= 60;
+
+			//froce(+240000.f * self_Rotation_SinCos[1], +240000.f * self_Rotation_SinCos[0], delta_Time);
+			change_Velocity(sf::Vector2f(self_Rotation_SinCos[1], self_Rotation_SinCos[0]) * 1000.f, delta_Time);
+
+			self_Particle_Ptr->add_Particle(self_Position - 90.0f * sf::Vector2f(self_Rotation_SinCos[1], self_Rotation_SinCos[0]), now_Time, 1000, sf::Vector2f(1000, 100), color, self_Rotation + PIf2);
+
+			self_Next_Forward_Time = now_Time + self_Forward_Time_Limit;
+		}
+		else
+		{
+			froce(+120000.f * self_Rotation_SinCos[1], +120000.f * self_Rotation_SinCos[0], delta_Time);
+		}
 	}
 
 	if (is_Key(Key::Back))
