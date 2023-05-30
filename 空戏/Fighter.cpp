@@ -165,8 +165,8 @@ void Fighter::froce(sf::Vector2f acceleration, float time)
 	float ts = time * time * 0.5f;
 
 	//self_Acceleration += acceleration;
-	self_Position += acceleration * ts;
-	self_Velocity += acceleration * time;
+	self_Position += acceleration / self_Mass * ts;
+	self_Velocity += acceleration / self_Mass * time;
 }
 
 void Fighter::froce(float x, float y, float time)
@@ -175,11 +175,11 @@ void Fighter::froce(float x, float y, float time)
 
 	//self_Acceleration.x += x;
 	//self_Acceleration.y += y;
-	self_Position.x += x * ts;
-	self_Position.y += y * ts;
+	self_Position.x += x / self_Mass * ts;
+	self_Position.y += y / self_Mass * ts;
 
-	self_Velocity.x += x * time;
-	self_Velocity.y += y * time;
+	self_Velocity.x += x / self_Mass * time;
+	self_Velocity.y += y / self_Mass * time;
 }
 
 void Fighter::move(float delta_Time, int now_Time)
@@ -191,10 +191,10 @@ void Fighter::move(float delta_Time, int now_Time)
 		//printf("Fighter::Move: |Speed| = %f\n", abss(self_Velocity));
 	}
 
-	if (self_Position.x > +120 * Meter) froce(sf::Vector2f(-50.f * (self_Position.x - 120 * Meter), 0), delta_Time);
-	if (self_Position.x < -120 * Meter) froce(sf::Vector2f(-50.f * (self_Position.x + 120 * Meter), 0), delta_Time);
-	if (self_Position.y > +70 * Meter) froce(sf::Vector2f(0, -50.f * (self_Position.y - 70 * Meter)), delta_Time);
-	if (self_Position.y < -70 * Meter) froce(sf::Vector2f(0, -50.f * (self_Position.y + 70 * Meter)), delta_Time);
+	if (self_Position.x > +120 * Meter) froce(sf::Vector2f(-3000.f * (self_Position.x - 120 * Meter), 0), delta_Time);
+	if (self_Position.x < -120 * Meter) froce(sf::Vector2f(-3000.f * (self_Position.x + 120 * Meter), 0), delta_Time);
+	if (self_Position.y > +70 * Meter) froce(sf::Vector2f(0, -3000.f * (self_Position.y - 70 * Meter)), delta_Time);
+	if (self_Position.y < -70 * Meter) froce(sf::Vector2f(0, -3000.f * (self_Position.y + 70 * Meter)), delta_Time);
 
 	self_Position += self_Velocity_old * delta_Time;
 	//self_Velocity += self_Acceleration * delta_Time;
@@ -395,7 +395,7 @@ void Fighter::compute(float delta_Time, int now_Time)
 
 	if (is_Key(Key::Forward))
 	{
-		froce(+2000 * self_Rotation_SinCos[1], +2000 * self_Rotation_SinCos[0], delta_Time);
+		froce(+120000.f * self_Rotation_SinCos[1], +120000.f * self_Rotation_SinCos[0], delta_Time);
 	}
 
 	if (is_Key(Key::Back))
@@ -411,13 +411,13 @@ void Fighter::compute(float delta_Time, int now_Time)
 		else if (is_Key(Key::Back, now_Time, Type::Pass, Type::Click))
 		{
 			//上次是点 减速
-			froce(self_Velocity * -5.0f, delta_Time);
+			froce(self_Velocity * -300.0f, delta_Time);
 			//printf("Fighter::compute: double back\n");
 		}
 		else
 		{
 			//其他 后退
-			froce(-500 * self_Rotation_SinCos[1], -500 * self_Rotation_SinCos[0], delta_Time);
+			froce(-30000 * self_Rotation_SinCos[1], -30000 * self_Rotation_SinCos[0], delta_Time);
 		}
 	}
 
@@ -433,12 +433,12 @@ void Fighter::compute(float delta_Time, int now_Time)
 
 	if (self_Key[(Key_Base)Key::Left])
 	{
-		froce(+500 * self_Rotation_SinCos[0], -500 * self_Rotation_SinCos[1], delta_Time);
+		froce(+30000 * self_Rotation_SinCos[0], -30000 * self_Rotation_SinCos[1], delta_Time);
 	}
 
 	if (self_Key[(Key_Base)Key::Right])
 	{
-		froce(-500 * self_Rotation_SinCos[0], +500 * self_Rotation_SinCos[1], delta_Time);
+		froce(-30000 * self_Rotation_SinCos[0], +30000 * self_Rotation_SinCos[1], delta_Time);
 	}
 
 
