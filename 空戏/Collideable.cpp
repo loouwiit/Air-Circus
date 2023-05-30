@@ -493,7 +493,7 @@ Particle::~Particle()
 	}
 }
 
-void Particle::add_Particle(sf::Vector2f Position, int now_Time, unsigned continue_Time,sf::Vector2f size, sf::Color color,  unsigned short Particle_Number)
+void Particle::add_Particle(sf::Vector2f Position, int now_Time, unsigned continue_Time, sf::Vector2f size, sf::Color color, float rotation, unsigned short Particle_Number)
 {
 	unsigned index = 0;
 	while (index < self_Number)
@@ -540,6 +540,7 @@ void Particle::add_Particle(sf::Vector2f Position, int now_Time, unsigned contin
 	}
 
 	self_Transform[index].setOrigin(size * 0.5f);
+	self_Transform[index].setRotation(rotation / PIf * 180);
 	self_Transform[index].setPosition(Position);
 	self_End_Time[index] = now_Time + continue_Time;
 	self_Actived[index] = true;

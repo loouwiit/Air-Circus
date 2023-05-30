@@ -403,8 +403,18 @@ void Fighter::compute(float delta_Time, int now_Time)
 		if (is_Key(Key::Back, now_Time, Type::Click, Type::Click, Type::Click) && now_Time > self_Next_Back_Time)
 		{
 			//Èý»÷
-			if (abs(self_Rotation - atan2(get_Velocity().y, get_Velocity().x))<0.7) set_Velocity(-get_Velocity());
-			else set_Velocity(abs(self_Velocity) * sf::Vector2f(self_Rotation_SinCos[1], self_Rotation_SinCos[0]));
+			if (abs(self_Rotation - atan2(get_Velocity().y, get_Velocity().x)) < 0.7)
+			{
+				set_Rotation(self_Rotation + PIf);
+				set_Velocity(-get_Velocity());
+			}
+			else
+			{
+				set_Velocity(abs(self_Velocity) * sf::Vector2f(self_Rotation_SinCos[1], self_Rotation_SinCos[0]));
+			}
+			sf::Color color = get_Color();
+			color.a -= 60;
+			self_Particle_Ptr->add_Particle(self_Position - 90.0f * sf::Vector2f(self_Rotation_SinCos[1], self_Rotation_SinCos[0]), now_Time, 1000, sf::Vector2f(1000, 100), color, self_Rotation + PIf2);
 			//printf("Fighter::compute: triple back\n");
 			self_Next_Back_Time = now_Time + self_Back_Time_Limit;
 		}

@@ -32,7 +32,7 @@ class Particle : public sf::Drawable
 public:
 	~Particle();
 	void init(unsigned Particle_Number);
-	void add_Particle(sf::Vector2f Position, int now_Time, unsigned continue_Time, sf::Vector2f size = sf::Vector2f(2000, 2000), sf::Color color = sf::Color(sf::Color::Yellow.r, sf::Color::Yellow.g, sf::Color::Yellow.b, 50), unsigned short Particle_Number = 10);
+	void add_Particle(sf::Vector2f Position, int now_Time, unsigned continue_Time, sf::Vector2f size = sf::Vector2f(2000, 2000), sf::Color color = sf::Color(sf::Color::Yellow.r, sf::Color::Yellow.g, sf::Color::Yellow.b, 50), float rotation = 0, unsigned short Particle_Number = 10);
 	void compute(int now_Time);
 
 protected:
