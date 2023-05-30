@@ -599,7 +599,7 @@ void Particle::draw(sf::RenderTarget& target, sf::RenderStates states) const
 	{
 		if (!self_Actived[i]) continue;
 		state = states;
-		state.transform *= self_Transform->getTransform();
+		state.transform *= self_Transform[i].getTransform();
 		target.draw((sf::Vertex*)self_Triangle[i], self_Triangle_Number[i] * 3, sf::Triangles, state);
 	}
 }
