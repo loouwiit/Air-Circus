@@ -326,9 +326,9 @@ void Fighter::be_Collided(Collideable& A, int now_Time, bool is_Self_Determiner)
 			self_Rotation) - PIf) < 0.5)
 		{
 			//头碰
-			if (is_Key(Key::Forward))
+			if (is_Key(Key::Forward) || self_Auto_Forward)
 			{
-				//W按下 右转PIf2
+				//W按下或者自动前进 右转PIf2
 				self_Velocity = ::rotate(self_Velocity, -1, 0);
 				self_Velocity_old = ::rotate(self_Velocity_old, -1, 0);
 				rotate(PIf2);
@@ -395,6 +395,9 @@ void Fighter::compute(float delta_Time, int now_Time)
 
 	if (is_Key(Key::Forward))
 	{
+		if (is_Key(Key::Forward, now_Time, Type::Press, Type::Click, Type::Click)) self_Auto_Forward = true;
+		else self_Auto_Forward = false;
+
 		if (is_Key(Key::Forward, now_Time, Type::Click, Type::Click) && now_Time > self_Next_Forward_Time)
 		{
 			sf::Color color = get_Color();
@@ -407,14 +410,12 @@ void Fighter::compute(float delta_Time, int now_Time)
 
 			self_Next_Forward_Time = now_Time + self_Forward_Time_Limit;
 		}
-		else
-		{
-			froce(+120000.f * self_Rotation_SinCos[1], +120000.f * self_Rotation_SinCos[0], delta_Time);
-		}
 	}
 
 	if (is_Key(Key::Back))
 	{
+		self_Auto_Forward = false;
+
 		if (is_Key(Key::Back, now_Time, Type::Click, Type::Click, Type::Click) && now_Time > self_Next_Back_Time)
 		{
 			//三击
@@ -466,7 +467,10 @@ void Fighter::compute(float delta_Time, int now_Time)
 		froce(-30000 * self_Rotation_SinCos[0], +30000 * self_Rotation_SinCos[1], delta_Time);
 	}
 
-
+	if (self_Key[(Key_Base)Key::Forward] || self_Auto_Forward)
+	{
+		froce(+120000.f * self_Rotation_SinCos[1], +120000.f * self_Rotation_SinCos[0], delta_Time);
+	}
 	std::fill(self_Key_Filp, self_Key_Filp + Key_Number, false);
 }
 

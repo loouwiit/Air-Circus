@@ -130,6 +130,7 @@ private:
 	int self_Forward_Time_Limit = Default_Forward_Time_Limit;
 	int self_Next_Forward_Time = 0;
 
+	bool self_Auto_Forward = false;
 
 	float self_Rotation = 0;
 	float self_Rotation_SinCos[2] = { 0.0f,1.0f };
