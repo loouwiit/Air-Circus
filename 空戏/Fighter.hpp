@@ -141,5 +141,5 @@ private:
 	sf::Vector2f self_Position{};
 
 	void compute(float delta_Time, int now_Time);
-	bool is_Key(Key key, int now_Time = 0, Key_Type T1 = Key_Type::On, Key_Type T2 = Key_Type::None, Key_Type T3 = Key_Type::None);
+	bool is_Key(Key key, Key_Type T1 = Key_Type::On, Key_Type T2 = Key_Type::None, Key_Type T3 = Key_Type::None);
 };

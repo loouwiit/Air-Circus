@@ -395,10 +395,10 @@ void Fighter::compute(float delta_Time, int now_Time)
 
 	if (is_Key(Key::Forward))
 	{
-		if (is_Key(Key::Forward, now_Time, Type::Press, Type::Click, Type::Click)) self_Auto_Forward = true;
+		if (is_Key(Key::Forward, Type::Press, Type::Click, Type::Click)) self_Auto_Forward = true;
 		else self_Auto_Forward = false;
 
-		if (is_Key(Key::Forward, now_Time, Type::Click, Type::Click) && now_Time > self_Next_Forward_Time)
+		if (is_Key(Key::Forward, Type::Click, Type::Click) && now_Time > self_Next_Forward_Time)
 		{
 			sf::Color color = get_Color();
 			color.a -= 60;
@@ -416,7 +416,7 @@ void Fighter::compute(float delta_Time, int now_Time)
 	{
 		self_Auto_Forward = false;
 
-		if (is_Key(Key::Back, now_Time, Type::Click, Type::Click, Type::Click) && now_Time > self_Next_Back_Time)
+		if (is_Key(Key::Back, Type::Click, Type::Click, Type::Click) && now_Time > self_Next_Back_Time)
 		{
 			//三击
 			if (abs(self_Rotation - atan2(get_Velocity().y, get_Velocity().x)) < 0.7)
@@ -434,7 +434,7 @@ void Fighter::compute(float delta_Time, int now_Time)
 			//printf("Fighter::compute: triple back\n");
 			self_Next_Back_Time = now_Time + self_Back_Time_Limit;
 		}
-		else if (is_Key(Key::Back, now_Time, Type::Pass, Type::Click))
+		else if (is_Key(Key::Back, Type::Pass, Type::Click))
 		{
 			//上次是点 减速
 			froce(self_Velocity * -300.0f, delta_Time);
@@ -474,18 +474,18 @@ void Fighter::compute(float delta_Time, int now_Time)
 	std::fill(self_Key_Filp, self_Key_Filp + Key_Number, false);
 }
 
-bool Fighter::is_Key(Key key,int now_Time, Key_Type T1, Key_Type T2, Key_Type T3)
+bool Fighter::is_Key(Key key, Key_Type T1, Key_Type T2, Key_Type T3)
 {
 	switch (T1)
 	{
 	case Fighter::Key_Type::Press:
 		if (self_Key[(Key_Base)key] == false) return false;
-		if (now_Time - self_Key_Now_Start_Time[(Key_Base)key] < 400) return false;//非长按
+		if (self_Key_Filp[(Key_Base)key]) return false; //非长按
 		break;
 
 	case Fighter::Key_Type::Click:
 		if (self_Key[(Key_Base)key] == false) return false;
-		if (now_Time - self_Key_Now_Start_Time[(Key_Base)key] > 400) return false;//非点按
+		if (!self_Key_Filp[(Key_Base)key]) return false; //非点按
 		break;
 
 	case Fighter::Key_Type::On:
