@@ -96,8 +96,7 @@ private:
 	static float(*&atan2)(float, float);
 
 	constexpr static char Key_Number = 8;
-	constexpr static int Default_Back_Time_Limit = 1000;
-	constexpr static int Default_Forward_Time_Limit = 1000;
+	constexpr static int Default_Change_Time_Limit = 1000;
 
 	enum class Key_Type : Key_Base
 	{
@@ -125,10 +124,8 @@ private:
 	int self_Score = 0;
 	int self_Touch_Score = 10;
 
-	int self_Back_Time_Limit = Default_Back_Time_Limit;
-	int self_Next_Back_Time = 0;
-	int self_Forward_Time_Limit = Default_Forward_Time_Limit;
-	int self_Next_Forward_Time = 0;
+	int self_Change_Time_Limit = Default_Change_Time_Limit;
+	int self_Next_Change_Time = 0;
 
 	bool self_Auto_Forward = false;
 

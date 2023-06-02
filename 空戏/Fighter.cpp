@@ -398,7 +398,7 @@ void Fighter::compute(float delta_Time, int now_Time)
 		if (is_Key(Key::Forward, Type::Press, Type::Click, Type::Click)) self_Auto_Forward = true;
 		else self_Auto_Forward = false;
 
-		if (is_Key(Key::Forward, Type::Click, Type::Click) && now_Time > self_Next_Forward_Time)
+		if (is_Key(Key::Forward, Type::Click, Type::Click) && now_Time > self_Next_Change_Time)
 		{
 			sf::Color color = get_Color();
 			color.a -= 60;
@@ -408,7 +408,7 @@ void Fighter::compute(float delta_Time, int now_Time)
 
 			self_Particle_Ptr->add_Particle(self_Position - 90.0f * sf::Vector2f(self_Rotation_SinCos[1], self_Rotation_SinCos[0]), now_Time, 1000, sf::Vector2f(1000, 100), color, self_Rotation + PIf2);
 
-			self_Next_Forward_Time = now_Time + self_Forward_Time_Limit;
+			self_Next_Change_Time = now_Time + self_Change_Time_Limit;
 		}
 	}
 
@@ -416,7 +416,7 @@ void Fighter::compute(float delta_Time, int now_Time)
 	{
 		self_Auto_Forward = false;
 
-		if (is_Key(Key::Back, Type::Click, Type::Click, Type::Click) && now_Time > self_Next_Back_Time)
+		if (is_Key(Key::Back, Type::Click, Type::Click, Type::Click) && now_Time > self_Next_Change_Time)
 		{
 			//Èý»÷
 			if (abs(self_Rotation - atan2(get_Velocity().y, get_Velocity().x)) < 0.7)
@@ -432,7 +432,7 @@ void Fighter::compute(float delta_Time, int now_Time)
 			color.a -= 60;
 			self_Particle_Ptr->add_Particle(self_Position - 90.0f * sf::Vector2f(self_Rotation_SinCos[1], self_Rotation_SinCos[0]), now_Time, 1000, sf::Vector2f(1000, 100), color, self_Rotation + PIf2);
 			//printf("Fighter::compute: triple back\n");
-			self_Next_Back_Time = now_Time + self_Back_Time_Limit;
+			self_Next_Change_Time = now_Time + self_Change_Time_Limit;
 		}
 		else if (is_Key(Key::Back, Type::Pass, Type::Click))
 		{
@@ -459,11 +459,33 @@ void Fighter::compute(float delta_Time, int now_Time)
 
 	if (self_Key[(Key_Base)Key::Left])
 	{
+		if (is_Key(Key::Left, Type::Click, Type::Click) && now_Time > self_Next_Change_Time)
+		{
+			sf::Color color = get_Color();
+			color.a -= 60;
+
+			change_Velocity(sf::Vector2f(+500 * self_Rotation_SinCos[0], -500 * self_Rotation_SinCos[1]), delta_Time);
+
+			self_Particle_Ptr->add_Particle(self_Position - sf::Vector2f(180.0f * self_Rotation_SinCos[0], -180.f * self_Rotation_SinCos[1]), now_Time, 1000, sf::Vector2f(500, 100), color, self_Rotation);
+
+			self_Next_Change_Time = now_Time + self_Change_Time_Limit;
+		}
 		froce(+30000 * self_Rotation_SinCos[0], -30000 * self_Rotation_SinCos[1], delta_Time);
 	}
 
 	if (self_Key[(Key_Base)Key::Right])
 	{
+		if (is_Key(Key::Right, Type::Click, Type::Click) && now_Time > self_Next_Change_Time)
+		{
+			sf::Color color = get_Color();
+			color.a -= 60;
+
+			change_Velocity(sf::Vector2f(-500 * self_Rotation_SinCos[0], +500 * self_Rotation_SinCos[1]), delta_Time);
+
+			self_Particle_Ptr->add_Particle(self_Position + sf::Vector2f(-180.0f * self_Rotation_SinCos[0], 180 * self_Rotation_SinCos[1]), now_Time, 1000, sf::Vector2f(500, 100), color, self_Rotation);
+
+			self_Next_Change_Time = now_Time + self_Change_Time_Limit;
+		}
 		froce(-30000 * self_Rotation_SinCos[0], +30000 * self_Rotation_SinCos[1], delta_Time);
 	}
 
