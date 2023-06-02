@@ -55,8 +55,8 @@ void init()
 	camera.set_Position(sf::Vector2f(-240 / 2 * Meter, -140 / 2 * Meter), sf::Vector2f(240 / 2 * Meter, 140 / 2 * Meter));
 	camera.set_Target(&window);
 
-	boom.init(2);
-	particle.init(2);
+	boom.init(4);
+	particle.init(8);
 
 	Collideable::set_Boom(&boom);
 	Collideable::set_Particle(&particle);
