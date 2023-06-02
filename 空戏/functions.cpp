@@ -288,6 +288,7 @@ void Event::event_Keyboard(Event::KeyEvent& key, bool is_Press)
 	{
 		players[0].set_Position(-10 * Meter, 0 * Meter);
 		players[1].set_Position(10 * Meter, 0 * Meter);
+		for (char i = 0; i < Player_Number; i++) players[i].set_Rotation(-PIf2);
 		break;
 	}
 	case Key::G:
