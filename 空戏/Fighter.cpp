@@ -21,7 +21,7 @@ Fighter::Fighter()
 	self_Mass = 60;
 
 	self_Path[0].init(210);
-	self_Path[1].init(1);
+	if (self_Path_Is_Double || self_Path_Is_Twice)self_Path[1].init(210);
 }
 
 void Fighter::set_Color(sf::Color Color)
@@ -218,15 +218,16 @@ void Fighter::move(float delta_Time, int now_Time)
 		//Ë«º½¼£ÔÆ
 		self_Path[0].add_Path(self_Position - 90.0f * sf::Vector2f(self_Rotation_SinCos[1], self_Rotation_SinCos[0]) + sf::Vector2f(-self_Rotation_SinCos[0], self_Rotation_SinCos[1]) * 60.0f, now_Time, self_Path_Continue_Time, self_Rotation_SinCos[0], self_Rotation_SinCos[1], 15.0f);
 		self_Path[1].add_Path(self_Position - 90.0f * sf::Vector2f(self_Rotation_SinCos[1], self_Rotation_SinCos[0]) - sf::Vector2f(-self_Rotation_SinCos[0], self_Rotation_SinCos[1]) * 60.0f, now_Time, self_Path_Continue_Time, self_Rotation_SinCos[0], self_Rotation_SinCos[1], 15.0f);
-		self_Path[0].compute(now_Time);
-		self_Path[1].compute(now_Time);
 	}
 	else
 	{
 		//µ¥º½¼£ÔÆ
-		self_Path->add_Path(self_Position - 90.0f * sf::Vector2f(self_Rotation_SinCos[1], self_Rotation_SinCos[0]), now_Time, self_Path_Continue_Time, self_Rotation_SinCos[0], self_Rotation_SinCos[1], 50.f);
-		self_Path->compute(now_Time);
+		self_Path[0].add_Path(self_Position - 90.0f * sf::Vector2f(self_Rotation_SinCos[1], self_Rotation_SinCos[0]), now_Time, self_Path_Continue_Time, self_Rotation_SinCos[0], self_Rotation_SinCos[1], 50.f);
+		if (self_Path_Is_Twice)
+			self_Path[1].add_Path(self_Position - 90.0f * sf::Vector2f(self_Rotation_SinCos[1], self_Rotation_SinCos[0]), now_Time, self_Path_Continue_Time, self_Rotation_SinCos[1], -self_Rotation_SinCos[0], 50.f);
 	}
+	self_Path[0].compute(now_Time);
+	if (self_Path_Is_Twice || self_Path_Is_Double) self_Path[1].compute(now_Time);
 }
 
 void Fighter::change_Velocity(sf::Vector2f delta_Velocity, float time)
@@ -635,7 +636,8 @@ void Fighter::draw(sf::RenderTarget& target, sf::RenderStates states) const
 #endif
 
 	target.draw(self_Path[0], states);
-	if (self_Path_Is_Double) target.draw(self_Path[1], states);
+	if (self_Path_Is_Twice || self_Path_Is_Double)
+		target.draw(self_Path[1], states);
 }
 
 Path_Line::~Path_Line()
@@ -670,6 +672,8 @@ void Path_Line::init(unsigned short line_Number)
 
 	std::fill(self_Time, self_Time + self_Number, 0);
 	std::fill((sf::Vertex*)self_Vertex, (sf::Vertex*)(self_Vertex + self_Number), sf::Vertex(sf::Vector2f(0, 0), sf::Color::Transparent));
+
+	printf("Path_Line::init: Path buffer size = %d\n", self_Number);
 }
 
 void Path_Line::set_Color(sf::Color color)

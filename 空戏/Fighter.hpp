@@ -113,6 +113,7 @@ private:
 	sf::Sprite self_Sprite{};
 	Path_Line self_Path[2];
 	bool self_Path_Is_Double = false;
+	bool self_Path_Is_Twice = true;
 	unsigned self_Path_Continue_Time = 30;
 
 	bool self_Key[Key_Number] = { false };
