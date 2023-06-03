@@ -140,6 +140,11 @@ sf::Vector2f Fighter::get_Velocity()
 	return self_Velocity;
 }
 
+float Fighter::get_Angular()
+{
+	return self_Angular;
+}
+
 sf::Vector2f Fighter::get_Position()
 {
 	return self_Position;
@@ -158,6 +163,11 @@ void Fighter::set_Velocity(float x, float y)
 	self_Velocity.y = self_Velocity_old.y = y;
 	//self_Acceleration.x = 0;
 	//self_Acceleration.y = 0;
+}
+
+void Fighter::set_Angular(float Angular)
+{
+	self_Angular = Angular;
 }
 
 void Fighter::froce(sf::Vector2f acceleration, float time)
@@ -190,6 +200,8 @@ void Fighter::move(float delta_Time, int now_Time)
 		change_Velocity(self_Velocity * -0.01f);
 		//printf("Fighter::Move: |Speed| = %f\n", abss(self_Velocity));
 	}
+
+	if (self_Angular != 0) rotate(self_Angular * delta_Time);
 
 	if (self_Position.x > +120 * Meter) froce(sf::Vector2f(-3000.f * (self_Position.x - 120 * Meter), 0), delta_Time);
 	if (self_Position.x < -120 * Meter) froce(sf::Vector2f(-3000.f * (self_Position.x + 120 * Meter), 0), delta_Time);
@@ -226,6 +238,19 @@ void Fighter::change_Velocity(sf::Vector2f delta_Velocity, float time)
 	self_Position.y += delta_Velocity.y * time;
 
 	self_Sprite.setPosition(self_Position);
+}
+
+void Fighter::change_Angular(float delta_Angular, float time)
+{
+	self_Angular += delta_Angular;
+	rotate(self_Angular * time);
+}
+
+void Fighter::angular(float f, float time)
+{
+	f /= self_Mass;
+	self_Angular += f;
+	rotate(f * time * 0.5f);
 }
 
 const sf::Texture& Fighter::get_Default_Texture()
@@ -438,6 +463,7 @@ void Fighter::compute(float delta_Time, int now_Time)
 		{
 			//上次是点 减速
 			froce(self_Velocity * -300.0f, delta_Time);
+			if (self_Angular != 0) angular(self_Angular>0?-5.0f:5.0f, delta_Time);
 			//printf("Fighter::compute: double back\n");
 		}
 		else
@@ -449,12 +475,22 @@ void Fighter::compute(float delta_Time, int now_Time)
 
 	if (self_Key[(Key_Base)Key::Turn_Left])
 	{
-		rotate(-2.0f * delta_Time);
+		if (self_Angular > 0)
+		{
+			if (self_Angular > 1e-1f) angular(-5.0f, delta_Time);
+			else if (self_Angular < 1e-1f) set_Angular(0);
+		}
+		else rotate(-2.0f * delta_Time);
 	}
 
 	if (self_Key[(Key_Base)Key::Turn_Right])
 	{
-		rotate(+2.0f * delta_Time);
+		if (self_Angular < 0)
+		{
+			if (self_Angular < -1e-1f) angular(5.0f);
+			else if (self_Angular > -1e-1f) set_Angular(0);
+		}
+		else rotate(+2.0f * delta_Time);
 	}
 
 	if (self_Key[(Key_Base)Key::Left])

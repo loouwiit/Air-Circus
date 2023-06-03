@@ -293,7 +293,11 @@ void Event::event_Keyboard(Event::KeyEvent& key, bool is_Press)
 	}
 	case Key::G:
 	{
-		if (is_Press) for (char i = 0; i < Player_Number; i++) players[i].set_Velocity(0, 0);
+		if (is_Press) for (char i = 0; i < Player_Number; i++)
+		{
+			players[i].set_Velocity(0, 0);
+			players[i].set_Angular(0);
+		}
 		break;
 	}
 	case Key::C:

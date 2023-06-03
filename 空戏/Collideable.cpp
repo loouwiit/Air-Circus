@@ -47,68 +47,79 @@ void Collideable::collide(Collideable& B, float delta_Time, int now_Time)
 	sf::Vector2f a_New{}; //最终的速度
 	sf::Vector2f b_New{};
 
-	//SinCos
+	//速度
 	{
-		sf::Vector2f delta_Position = get_Position() - B.get_Position();
-		float theta = atanf(-delta_Position.y / delta_Position.x);
-		sin = ::sin(theta);
-		cos = ::cos(theta);
+		//SinCos
+		{
+			sf::Vector2f delta_Position = get_Position() - B.get_Position();
+			float theta = atanf(-delta_Position.y / delta_Position.x);
+			sin = ::sin(theta);
+			cos = ::cos(theta);
 
-		//printf("Collieable::colliede:P at (%f,%f) and (%f,%f)\n", get_Position().x, get_Position().y, B.get_Position().x, B.get_Position().y);
-		//printf("\t theta is %f, %f in degree\n", theta, theta * 180 / PIf);
-		//printf("\t sin is %f, cos is %f\n", sin, cos);
+			//printf("Collieable::colliede:P at (%f,%f) and (%f,%f)\n", get_Position().x, get_Position().y, B.get_Position().x, B.get_Position().y);
+			//printf("\t theta is %f, %f in degree\n", theta, theta * 180 / PIf);
+			//printf("\t sin is %f, cos is %f\n", sin, cos);
+		}
+
+		//base
+		{
+			a_Base_Velocity = rotate(a_Velocity, sin, cos);
+			b_Base_Velocity = rotate(b_Velocity, sin, cos);
+		}
+
+		a_New_Base.y = a_Base_Velocity.y;
+		b_New_Base.y = b_Base_Velocity.y;
+
+		if (a_Mass != 0 && b_Mass != 0)
+		{
+			//均有限质量
+			float totol_Mass = a_Mass + b_Mass;
+
+			a_New_Base.x = (a_Mass - b_Mass) / totol_Mass * a_Base_Velocity.x + 2 * b_Mass / totol_Mass * b_Base_Velocity.x;
+			b_New_Base.x = (b_Mass - a_Mass) / totol_Mass * b_Base_Velocity.x + 2 * a_Mass / totol_Mass * a_Base_Velocity.x;
+
+			//a_New_Base.x = a_Base_Velocity.x;
+			//b_New_Base.x = b_Base_Velocity.x;
+
+			//a_New_Base.x = b_Base_Velocity.x;
+			//b_New_Base.x = a_Base_Velocity.x;
+		}
+		else if (a_Mass == 0 && b_Mass != 0)
+		{
+			//自己无穷大
+			a_New_Base.x = a_Base_Velocity.x;
+			b_New_Base.x = -b_Base_Velocity.x;
+		}
+		else if (a_Mass != 0 && b_Mass == 0)
+		{
+			//对面无穷大
+			a_New_Base.x = -a_Base_Velocity.x;
+			b_New_Base.x = b_Base_Velocity.x;
+		}
+		else if (a_Mass == 0 && b_Mass == 0)
+		{
+			//都无穷大
+			a_New_Base.x = -a_Base_Velocity.x;
+			b_New_Base.x = -b_Base_Velocity.x;
+		}
+
+		//New
+		{
+			a_New = rotate(a_New_Base, -sin, cos);
+			b_New = rotate(b_New_Base, -sin, cos);
+		}
+
+		change_Velocity(a_New - a_Velocity,delta_Time);
+		B.change_Velocity(b_New - b_Velocity, delta_Time);
 	}
 
-	//base
+	//角动量
 	{
-		a_Base_Velocity = rotate(a_Velocity, sin, cos);
-		b_Base_Velocity = rotate(b_Velocity, sin, cos);
+		sf::Vector2f delta_Velocity = a_Base_Velocity - b_Base_Velocity;
+		this->change_Angular(delta_Velocity.y / 1000.0f);
+		B.change_Angular(delta_Velocity.y / 1000.0f);
+		//printf("[debug]Augnlar = %f\n", delta_Velocity.y);
 	}
-
-	a_New_Base.y = a_Base_Velocity.y;
-	b_New_Base.y = b_Base_Velocity.y;
-
-	if (a_Mass != 0 && b_Mass != 0)
-	{
-		//均有限质量
-		float totol_Mass = a_Mass + b_Mass;
-
-		a_New_Base.x = (a_Mass - b_Mass) / totol_Mass * a_Base_Velocity.x + 2 * b_Mass / totol_Mass * b_Base_Velocity.x;
-		b_New_Base.x = (b_Mass - a_Mass) / totol_Mass * b_Base_Velocity.x + 2 * a_Mass / totol_Mass * a_Base_Velocity.x;
-
-		//a_New_Base.x = a_Base_Velocity.x;
-		//b_New_Base.x = b_Base_Velocity.x;
-
-		//a_New_Base.x = b_Base_Velocity.x;
-		//b_New_Base.x = a_Base_Velocity.x;
-	}
-	else if (a_Mass == 0 && b_Mass != 0)
-	{
-		//自己无穷大
-		a_New_Base.x = a_Base_Velocity.x;
-		b_New_Base.x = -b_Base_Velocity.x;
-	}
-	else if (a_Mass != 0 && b_Mass == 0)
-	{
-		//对面无穷大
-		a_New_Base.x = -a_Base_Velocity.x;
-		b_New_Base.x = b_Base_Velocity.x;
-	}
-	else if (a_Mass == 0 && b_Mass == 0)
-	{
-		//都无穷大
-		a_New_Base.x = -a_Base_Velocity.x;
-		b_New_Base.x = -b_Base_Velocity.x;
-	}
-
-	//New
-	{
-		a_New = rotate(a_New_Base, -sin, cos);
-		b_New = rotate(b_New_Base, -sin, cos);
-	}
-
-	change_Velocity(a_New - a_Velocity,delta_Time);
-	B.change_Velocity(b_New - b_Velocity, delta_Time);
 
 	this->be_Collided(B, now_Time, true);
 	B.be_Collided(*this, now_Time, false);
@@ -190,6 +201,9 @@ sf::FloatRect Buoy::get_Collision_Box()
 }
 
 void Buoy::change_Velocity(sf::Vector2f delta_Velocity, float time)
+{}
+
+void Buoy::change_Angular(float delta_Angular, float time)
 {}
 
 void Buoy::set_Next_Buoy(Buoy* next)

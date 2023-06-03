@@ -77,6 +77,7 @@ public:
 	virtual sf::Vector2f get_Velocity() = 0;
 	virtual sf::FloatRect get_Collision_Box() = 0;
 	virtual void change_Velocity(sf::Vector2f delta_Velocity, float time = 0) = 0;
+	virtual void change_Angular(float delta_Angular, float time = 0) = 0;
 	virtual Child_Class get_My_Child_Class() = 0;
 
 protected:
@@ -101,6 +102,7 @@ public:
 	sf::Vector2f get_Velocity();
 	sf::FloatRect get_Collision_Box();
 	void change_Velocity(sf::Vector2f delta_Velocity, float time = 0);
+	void change_Angular(float delta_Angular, float time = 0);
 
 	void set_Next_Buoy(Buoy* next);
 	void set_Active(bool flag);

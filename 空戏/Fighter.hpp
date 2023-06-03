@@ -71,11 +71,15 @@ public:
 	
 	sf::Vector2f get_Position();
 	sf::Vector2f get_Velocity();
+	float get_Angular();
 
 	void set_Position(float x, float y);
 	void set_Velocity(sf::Vector2f velocity);
 	void set_Velocity(float x, float y);
+	void set_Angular(float Angular);
 	void change_Velocity(sf::Vector2f delta_Velocity, float time = 0);
+	void change_Angular(float delta_Angular, float time = 0);
+	void angular(float f, float time = 0);
 	void froce(sf::Vector2f acceleration, float time = 0);
 	void froce(float x, float y, float time = 0);
 	void move(float delta_Time, int now_Time);
@@ -129,6 +133,7 @@ private:
 
 	bool self_Auto_Forward = false;
 
+	float self_Angular = 0;
 	float self_Rotation = 0;
 	float self_Rotation_SinCos[2] = { 0.0f,1.0f };
 
