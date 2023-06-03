@@ -115,9 +115,9 @@ void Collideable::collide(Collideable& B, float delta_Time, int now_Time)
 
 	//½Ç¶¯Á¿
 	{
-		sf::Vector2f delta_Velocity = a_Base_Velocity - b_Base_Velocity;
-		this->change_Angular(delta_Velocity.y / 1000.0f);
-		B.change_Angular(delta_Velocity.y / 1000.0f);
+		float delta_Velocity = b_Base_Velocity.y - a_Base_Velocity.y;
+		this->change_Angular(delta_Velocity / 1000.0f);
+		B.change_Angular(delta_Velocity / 1000.0f);
 		//printf("[debug]Augnlar = %f\n", delta_Velocity.y);
 	}
 
