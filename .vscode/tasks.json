@@ -1,0 +1,102 @@
+{
+    "tasks": [
+        {
+            "type": "cppbuild",
+            "label": "C/C++: g++ 编译 linux (debug)",
+            "command": "/usr/bin/g++",
+            "args": [
+                "-D_DEBUG=true",
+                "-fdiagnostics-color=always",
+                "-fPIC",
+                "-g",
+                "${workspaceFolder}/air circus/main.cpp",
+                "${workspaceFolder}/air circus/functions.cpp",
+                "${workspaceFolder}/air circus/fighter.cpp",
+                "${workspaceFolder}/air circus/collideable.cpp",
+                "${workspaceFolder}/air circus/camera.cpp",
+                //"-I/home/lo/File/Develop/C++/lib/SFML-2.5.0/include",
+                //"-L/home/lo/File/Develop/C++/lib/SFML-2.5.0/lib",
+                "-lsfml-system",
+                "-lsfml-window",
+                "-lsfml-graphics",
+                "-o",
+                "${workspaceFolder}/build/air circus"
+            ],
+            "options": {
+                "cwd": "${workspaceFolder}"
+            },
+            "problemMatcher": [
+                "$gcc"
+            ],
+            "group": {
+                "kind": "build",
+                "isDefault": true
+            },
+            "detail": "调试器生成的任务。"
+        },{
+            "type": "cppbuild",
+            "label": "C/C++: g++ 编译 linux",
+            "command": "/usr/bin/g++",
+            "args": [
+                "-fdiagnostics-color=always",
+                "-fPIC",
+                "-g",
+                "${workspaceFolder}/air circus/main.cpp",
+                "${workspaceFolder}/air circus/functions.cpp",
+                "${workspaceFolder}/air circus/fighter.cpp",
+                "${workspaceFolder}/air circus/collideable.cpp",
+                "${workspaceFolder}/air circus/camera.cpp",
+                //"-I/home/lo/File/Develop/C++/lib/SFML-2.5.0/include",
+                //"-L/home/lo/File/Develop/C++/lib/SFML-2.5.0/lib",
+                "-lsfml-system",
+                "-lsfml-window",
+                "-lsfml-graphics",
+                "-o",
+                "${workspaceFolder}/build/air circus"
+            ],
+            "options": {
+                "cwd": "${workspaceFolder}"
+            },
+            "problemMatcher": [
+                "$gcc"
+            ],
+            "group": {
+                "kind": "build",
+                "isDefault": true
+            },
+            "detail": "调试器生成的任务。"
+        },
+        {
+            "type": "cppbuild",
+            "label": "C/C++: g++ 编译 window",
+            "command": "/usr/bin/x86_64-w64-mingw32-g++",
+            "args": [
+                "-fdiagnostics-color=always",
+                //"-static",
+                //"-DSFML_STATIC=1",
+                "-mwindows", //隐藏控制台
+                "-g",
+                "${workspaceFolder}/air circus/*.cpp",
+                "-I/home/lo/File/Develop/C++/lib/SFML-2.5.0-windows/include",
+                "-L/home/lo/File/Develop/C++/lib/SFML-2.5.0-windows/lib",
+                "-lsfml-system",
+                "-lsfml-window",
+                "-lsfml-graphics",
+                "-o",
+                "${workspaceFolder}/build/air circus.exe"
+            ],
+            "options": {
+                "cwd": "${workspaceFolder}"
+            },
+            "problemMatcher": [
+                "$gcc"
+            ],
+            "group": {
+                "kind": "build",
+                "isDefault": true
+            },
+            "detail": "调试器生成的任务。"
+        }
+    ],
+    "version": "2.0.0"
+}
