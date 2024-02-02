@@ -2,6 +2,7 @@
 #include <iostream>
 #include <SFML/Graphics.hpp>
 #include "collideable.hpp"
+#include "score.hpp"
 
 namespace SinCos
 {
@@ -131,7 +132,7 @@ private:
 	//[Keynumber]:erveryKey
 	//[2]:start_Time and end_Time
 
-	int self_Score = 0;
+	Score self_Score;
 	int self_Touch_Score = 10;
 
 	int self_Change_Time_Limit = Default_Change_Time_Limit;

@@ -34,12 +34,12 @@ void Fighter::set_Color(sf::Color Color)
 
 int Fighter::get_Score()
 {
-	return self_Score;
+	return self_Score.get_Score();
 }
 
 void Fighter::set_Score(int score)
 {
-	self_Score = score;
+	self_Score.set_Score(score);
 }
 
 sf::Color Fighter::get_Color()
@@ -360,14 +360,14 @@ void Fighter::be_Collided(Collideable& A, int now_Time, bool is_Self_Determiner)
 				rotate(PIf2);
 			}
 
-			if (buoy.be_Touched()) self_Score += buoy.get_Touch_Score();
+			if (buoy.be_Touched()) self_Score.add(buoy.get_Touch_Score());
 		}
 		else
 		{
 			//非头碰 但是慢
 			if (abss(self_Velocity) < 600000)
 			{
-				if (buoy.be_Touched()) self_Score += buoy.get_Touch_Score();
+				if (buoy.be_Touched()) self_Score.add(buoy.get_Touch_Score());
 			}
 		}
 
@@ -393,7 +393,7 @@ void Fighter::be_Collided(Collideable& A, int now_Time, bool is_Self_Determiner)
 			if (abs(delta_Rotation) < 0.7)
 			{
 				//头尾碰
-				self_Score += fighter.get_Touch_Score();
+				self_Score.add(fighter.get_Touch_Score());
 				//printf("Fighter::be_Collided: color %s score = %d\n", (get_Color().r == 255 ? "rad" : "blue"), self_Score);
 
 				self_Boom_Ptr->add_Boom(fighter.get_Position(), &get_Default_Touched_Texture(), now_Time, 1000, sf::Vector2f(10, 10), fighter.get_Rotation() / PIf * 180, fighter.get_Color());
@@ -640,6 +640,7 @@ bool Fighter::is_Key(Key key, Key_Type T1, Key_Type T2, Key_Type T3)
 void Fighter::draw(sf::RenderTarget& target, sf::RenderStates states) const
 {
 	target.draw(self_Sprite, states);
+
 #ifdef _DEBUG
 	static sf::RectangleShape box;
 	box.setPosition(self_Sprite.getGlobalBounds().left, self_Sprite.getGlobalBounds().top);
@@ -653,6 +654,9 @@ void Fighter::draw(sf::RenderTarget& target, sf::RenderStates states) const
 	target.draw(self_Path[0], states);
 	if (self_Path_Is_Twice || self_Path_Is_Double)
 		target.draw(self_Path[1], states);
+	
+	states.transform *= self_Sprite.getTransform();
+	target.draw(self_Score, states);
 }
 
 Path_Line::~Path_Line()
