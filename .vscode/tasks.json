@@ -6,6 +6,7 @@
             "command": "/usr/bin/g++",
             "args": [
                 "-D_DEBUG=true",
+                "-DLINUX=true",
                 "-fdiagnostics-color=always",
                 "-fPIC",
                 "-g",
@@ -39,6 +40,7 @@
             "command": "/usr/bin/g++",
             "args": [
                 "-fdiagnostics-color=always",
+                "-DLINUX=true",
                 "-fPIC",
                 "-g",
                 "${workspaceFolder}/air circus/main.cpp",
@@ -72,6 +74,7 @@
             "command": "/usr/bin/x86_64-w64-mingw32-g++",
             "args": [
                 "-fdiagnostics-color=always",
+                "-DWINDOWS=true",
                 //"-static",
                 //"-DSFML_STATIC=1",
                 "-mwindows", //隐藏控制台

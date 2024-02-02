@@ -302,8 +302,13 @@ void Event::event_Keyboard(Event::KeyEvent& key, bool is_Press)
 	}
 	case Key::C:
 	{
+		#if LINUX
+		system("clear");
+		cout << "[debug]清除控制台" << endl;
+		#elif WINDOWS
 		system("cls");
 		cout << "[debug]清除控制台" << endl;
+		#endif
 		break;
 	}
 	case Key::F1:

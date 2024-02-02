@@ -47,6 +47,18 @@ void init()
 {
 	cout << "init::init" << endl;
 
+#if LINUX
+	cout << "linux" << endl;
+#elif WINDOWS
+	cout << "windows" << endl;
+#else
+	cout << "unknow platform" << endl;
+#endif
+
+#ifdef _DEBUG
+	cout << "debug version" << endl;
+#endif
+
 	srand((int)::time(nullptr));
 
 	window.create(sf::VideoMode(1500, 900), Window_Name);
