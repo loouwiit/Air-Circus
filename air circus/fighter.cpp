@@ -256,7 +256,7 @@ void Fighter::angular(float f, float time)
 
 const sf::Texture& Fighter::get_Default_Texture()
 {
-	if (Default_Texture.getSize().x!= 0)
+	if (Default_Texture.getSize().x != 0)
 		return Default_Texture;
 
 	{
@@ -273,7 +273,7 @@ const sf::Texture& Fighter::get_Default_Texture()
 
 		constexpr char Point_Number = 3;
 		constexpr Point Points[Point_Number] = { {0.f,63.f},{0.f,0.f},{63.f,31.f} };
-		
+
 		//constexpr char Point_Number = 4;
 		//constexpr Point Points[Point_Number] = { {0.f,63.f},{0.f,0.f},{63.f,63.f},{63.f,0.f} };
 
@@ -401,7 +401,7 @@ void Fighter::be_Collided(Collideable& A, int now_Time, bool is_Self_Determiner)
 				self_Boom_Ptr->add_Boom(self_Position, &get_Default_Texture(), now_Time, 1000, sf::Vector2f(3, 3), self_Rotation / PIf * 180, self_Sprite.getColor());
 			}
 		}
-		if (is_Self_Determiner) self_Particle_Ptr->add_Particle((self_Position + fighter.get_Position()) * 0.5f,  now_Time, 1000);
+		if (is_Self_Determiner) self_Particle_Ptr->add_Particle((self_Position + fighter.get_Position()) * 0.5f, now_Time, 1000);
 		break;
 	}
 	default:
@@ -464,7 +464,7 @@ void Fighter::compute(float delta_Time, int now_Time)
 		{
 			//上次是点 减速
 			froce(self_Velocity * -300.0f, delta_Time);
-			if (self_Angular != 0) angular(self_Angular>0?-5.0f:5.0f, delta_Time);
+			if (self_Angular != 0) angular(self_Angular > 0 ? -5.0f : 5.0f, delta_Time);
 			//printf("Fighter::compute: double back\n");
 		}
 		else
@@ -481,7 +481,14 @@ void Fighter::compute(float delta_Time, int now_Time)
 			if (self_Angular > 1e-1f) angular(-5.0f, delta_Time);
 			else if (self_Angular < 1e-1f) set_Angular(0);
 		}
-		else rotate(-2.0f * delta_Time);
+		else if (is_Key(Key::Turn_Left, Type::Press, Type::Click))
+		{
+			rotate(-QuickTurnSpeed * delta_Time);
+		}
+		else
+		{
+			rotate(-TurnSpeed * delta_Time);
+		}
 	}
 
 	if (self_Key[(Key_Base)Key::Turn_Right])
@@ -491,7 +498,14 @@ void Fighter::compute(float delta_Time, int now_Time)
 			if (self_Angular < -1e-1f) angular(5.0f);
 			else if (self_Angular > -1e-1f) set_Angular(0);
 		}
-		else rotate(+2.0f * delta_Time);
+		else if (is_Key(Key::Turn_Right, Type::Press, Type::Click))
+		{
+			rotate(+QuickTurnSpeed * delta_Time);
+		}
+		else
+		{
+			rotate(+TurnSpeed * delta_Time);
+		}
 	}
 
 	if (self_Key[(Key_Base)Key::Left])
@@ -713,7 +727,7 @@ void Path_Line::add_Path(sf::Vector2f position, int now_Time, unsigned continue_
 		self_Number += alpha;
 		printf("Path_Line::add_Path: new vertex size is %d\n", self_Number);
 	}
-	
+
 	self_Time[self_Now_Index] = now_Time + continue_Time;
 
 	self_Vertex[self_Now_Index].v1 = self_Last_Vertex->v4;
@@ -733,7 +747,7 @@ void Path_Line::add_Path(sf::Vector2f position, int now_Time, unsigned continue_
 
 void Path_Line::compute(int now_Time)
 {
-	for (unsigned short i = 0; i < self_Number; i ++)
+	for (unsigned short i = 0; i < self_Number; i++)
 	{
 		if (self_Time[i] > now_Time) continue;
 

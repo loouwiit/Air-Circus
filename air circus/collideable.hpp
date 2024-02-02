@@ -62,6 +62,8 @@ public:
 	};
 
 	constexpr static int Collide_Clam_Time = 50;
+	constexpr static float TurnSpeed = 2.0f;
+	constexpr static float QuickTurnSpeed = 4.0f;
 
 	float get_Mass();
 	void set_Mass(float Mass);
