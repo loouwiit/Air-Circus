@@ -132,7 +132,7 @@ private:
 	sf::CircleShape* self_Track;
 	bool is_Active = false;
 	Buoy* self_Next_Buoy = nullptr; //draw 是 const 函数，不能对自己进行更改。所以使用指针
-	int self_Touch_Score = 10;
+	int self_Touch_Score = 2;
 };
 
 class Point : public sf::Drawable
