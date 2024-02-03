@@ -33,14 +33,20 @@ void Collideable::collide(Collideable& B, float delta_Time, int now_Time)
 	self_next_Collide_Time = now_Time + Collide_Clam_Time;
 	B.self_next_Collide_Time = now_Time + Collide_Clam_Time;
 
-	sf::Vector2f a_Velocity = get_Velocity();
-	sf::Vector2f b_Velocity = B.get_Velocity();
-
 	float a_Mass = get_Mass();
 	float b_Mass = B.get_Mass();
 
 	float sin = 0;
 	float cos = 0;
+
+	sf::Vector2f a_Position = get_Position();
+	sf::Vector2f b_Position = B.get_Position();
+
+	float a_Base_Position{}; //转换后的位移
+	float b_Base_Position{};
+
+	sf::Vector2f a_Velocity = get_Velocity();
+	sf::Vector2f b_Velocity = B.get_Velocity();
 
 	sf::Vector2f a_Base_Velocity{}; //转换后的速度
 	sf::Vector2f b_Base_Velocity{};
@@ -51,24 +57,37 @@ void Collideable::collide(Collideable& B, float delta_Time, int now_Time)
 	sf::Vector2f a_New{}; //最终的速度
 	sf::Vector2f b_New{};
 
+	//SinCos
+	{
+		sf::Vector2f delta_Position = get_Position() - B.get_Position();
+		float theta = atanf(-delta_Position.y / delta_Position.x);
+		sin = ::sin(theta);
+		cos = ::cos(theta);
+
+		//printf("Collieable::colliede:P at (%f,%f) and (%f,%f)\n", get_Position().x, get_Position().y, B.get_Position().x, B.get_Position().y);
+		//printf("\t theta is %f, %f in degree\n", theta, theta * 180 / PIf);
+		//printf("\t sin is %f, cos is %f\n", sin, cos);
+	}
+
+	//位移
+	{
+			a_Base_Position = rotate(a_Position, sin, cos).x;
+			b_Base_Position = rotate(b_Position, sin, cos).x;
+	}
+
 	//速度
 	{
-		//SinCos
-		{
-			sf::Vector2f delta_Position = get_Position() - B.get_Position();
-			float theta = atanf(-delta_Position.y / delta_Position.x);
-			sin = ::sin(theta);
-			cos = ::cos(theta);
-
-			//printf("Collieable::colliede:P at (%f,%f) and (%f,%f)\n", get_Position().x, get_Position().y, B.get_Position().x, B.get_Position().y);
-			//printf("\t theta is %f, %f in degree\n", theta, theta * 180 / PIf);
-			//printf("\t sin is %f, cos is %f\n", sin, cos);
-		}
-
 		//base
 		{
 			a_Base_Velocity = rotate(a_Velocity, sin, cos);
 			b_Base_Velocity = rotate(b_Velocity, sin, cos);
+		}
+
+		//异向返回
+		if ((a_Base_Position - b_Base_Position) *( a_Base_Velocity.x - b_Base_Velocity.x) > 0)
+		{
+			std::cout << "a and b are separating\n";
+			return;
 		}
 
 		a_New_Base.y = a_Base_Velocity.y;
