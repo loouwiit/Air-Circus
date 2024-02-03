@@ -38,7 +38,11 @@ Score::Score()
 void Score::set_Score(int score)
 {
 	self_Score = score;
-	if (self_Score <= 999)
+	if (self_Score < 0)
+	{
+		setString("---");
+	}
+	else if (self_Score <= 999)
 	{
 		sprintf(self_Buffer, "%03d", self_Score);
 		setString(self_Buffer);
@@ -52,7 +56,11 @@ void Score::set_Score(int score)
 void Score::add(int delta)
 {
 	self_Score += delta;
-	if (self_Score <= 999)
+	if (self_Score < 0)
+	{
+		setString("---");
+	}
+	else if (self_Score <= 999)
 	{
 		sprintf(self_Buffer, "%03d", self_Score);
 		setString(self_Buffer);
