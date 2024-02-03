@@ -81,7 +81,12 @@
                 //"-DSFML_STATIC=1",
                 "-mwindows", //隐藏控制台
                 "-g",
-                "${workspaceFolder}/air circus/*.cpp",
+                "${workspaceFolder}/air circus/main.cpp",
+                "${workspaceFolder}/air circus/functions.cpp",
+                "${workspaceFolder}/air circus/fighter.cpp",
+                "${workspaceFolder}/air circus/collideable.cpp",
+                "${workspaceFolder}/air circus/camera.cpp",
+                "${workspaceFolder}/air circus/score.cpp",
                 "-I/home/lo/File/Develop/C++/lib/SFML-2.5.0-windows/include",
                 "-L/home/lo/File/Develop/C++/lib/SFML-2.5.0-windows/lib",
                 "-lsfml-system",

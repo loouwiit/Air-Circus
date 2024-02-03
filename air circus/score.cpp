@@ -26,7 +26,7 @@ Score::Score()
 {
 	setCharacterSize(25);
 	setString(self_Buffer);
-	sf::Rect bound = getGlobalBounds();
+	sf::FloatRect bound = getGlobalBounds();
 	setOrigin(bound.width / 2.0f, bound.height / 2.0f);
 	setPosition(20,30);
 	setRotation(90.0f);
