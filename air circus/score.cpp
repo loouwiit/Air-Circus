@@ -28,7 +28,7 @@ Score::Score()
 	setString(self_Buffer);
 	sf::FloatRect bound = getGlobalBounds();
 	setOrigin(bound.width / 2.0f, bound.height / 2.0f);
-	setPosition(20,30);
+	setPosition(20, 30);
 	setRotation(90.0f);
 	sf::Color color = sf::Color(0xFFFFFF66);
 	setFillColor(color);
@@ -38,15 +38,29 @@ Score::Score()
 void Score::set_Score(int score)
 {
 	self_Score = score;
-	sprintf(self_Buffer, "%03d", self_Score);
-	setString(self_Buffer);
+	if (self_Score <= 999)
+	{
+		sprintf(self_Buffer, "%03d", self_Score);
+		setString(self_Buffer);
+	}
+	else
+	{
+		setString("999");
+	}
 }
 
 void Score::add(int delta)
 {
 	self_Score += delta;
-	sprintf(self_Buffer, "%03d", self_Score);
-	setString(self_Buffer);
+	if (self_Score <= 999)
+	{
+		sprintf(self_Buffer, "%03d", self_Score);
+		setString(self_Buffer);
+	}
+	else
+	{
+		setString("999");
+	}
 }
 
 int Score::get_Score()
