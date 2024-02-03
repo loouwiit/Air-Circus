@@ -103,8 +103,8 @@ bool Camera::is_Full()
 
 void Camera::compute_Target()
 {
-	self_Target_Size.x = self_RightBotton.x - self_LeftTop.x + 1000;
-	self_Target_Size.y = self_RightBotton.y - self_LeftTop.y + 1000;
+	self_Target_Size.x = self_RightBotton.x - self_LeftTop.x + 1500;
+	self_Target_Size.y = self_RightBotton.y - self_LeftTop.y + 1500;
 	self_Target_Center = (self_RightBotton + self_LeftTop) * 0.5f;
 
 	if (self_Target_Size.y / self_Target_Size.x > self_Proportion)
