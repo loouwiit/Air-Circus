@@ -55,6 +55,7 @@
                 "-lsfml-system",
                 "-lsfml-window",
                 "-lsfml-graphics",
+                "-O2",
                 "-o",
                 "${workspaceFolder}/build/air circus"
             ],
@@ -92,6 +93,7 @@
                 "-lsfml-system",
                 "-lsfml-window",
                 "-lsfml-graphics",
+                "-O2",
                 "-o",
                 "${workspaceFolder}/build/air circus.exe"
             ],
