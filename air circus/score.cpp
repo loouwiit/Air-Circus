@@ -30,6 +30,9 @@ Score::Score()
 	setOrigin(bound.width / 2.0f, bound.height / 2.0f);
 	setPosition(20,30);
 	setRotation(90.0f);
+	sf::Color color = sf::Color(0xFFFFFF66);
+	setFillColor(color);
+	setOutlineColor(sf::Color::Black);
 }
 
 void Score::set_Score(int score)
