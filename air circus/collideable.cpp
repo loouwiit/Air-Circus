@@ -132,7 +132,7 @@ void Collideable::collide(Collideable& B, float delta_Time, int now_Time)
 	{
 		error_Times++;
 		printf("collideable::collide: error %u, collide after collided\n", error_Times);
-		sf::sleep(sf::milliseconds(1000));
+		//sf::sleep(sf::milliseconds(1000));
 	}
 
 	//printf("\tP^2 %f to %f\n", a_Mass * a_Mass * test(a_Velocity) + b_Mass * b_Mass * test(b_Velocity), a_Mass * a_Mass * test(a_New) + b_Mass * b_Mass * test(b_New));
