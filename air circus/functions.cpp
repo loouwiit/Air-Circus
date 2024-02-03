@@ -417,6 +417,15 @@ void Compute::compute_Player()
 		}
 }
 
+void Compute::compute_Buoy()
+{
+	using Time::delta_Time;
+	using Time::now_Time;
+
+	for (unsigned i =0;i<Buoy_Number;i++)
+		buoy[i].compute(Time::delta_Time.asMilliseconds() / 1000.f);
+}
+
 void Compute::compute_Camera()
 {
 	bool is_normal = true;

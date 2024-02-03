@@ -109,6 +109,8 @@ public:
 	void change_Velocity(sf::Vector2f delta_Velocity, float time = 0);
 	void change_Angular(float delta_Angular, float time = 0);
 
+	void compute(float delta_Time);
+
 	void set_Next_Buoy(Buoy* next);
 	void set_Active(bool flag);
 	void set_Touch_Score(int score);
@@ -124,9 +126,14 @@ protected:
 	void be_Collided(Collideable& A, int now_Time, bool is_Self_Determiner);
 
 private:
+	constexpr static float Mass = 600;
+
 	static sf::Color Default_Color;
 	static sf::Color Active_Color;
 	static Camera* self_Camera;
+
+	sf::Vector2f self_Target_Position = { 0, 0 };
+	sf::Vector2f self_Velocity = { 0, 0 };
 
 	sf::CircleShape self_Circle;
 	sf::CircleShape* self_Track;

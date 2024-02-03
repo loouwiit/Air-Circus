@@ -125,6 +125,7 @@ void compute()
 	using namespace Compute;
 
 	compute_Player();
+	compute_Buoy();
 	compute_Camera();
 	boom.compute(Time::now_Time.asMilliseconds());
 	particle.compute(Time::now_Time.asMilliseconds());

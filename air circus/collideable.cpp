@@ -169,7 +169,7 @@ Buoy::Buoy()
 	self_Circle.setFillColor(Default_Color);
 	self_Circle.setPointCount(20);
 	self_Circle.setOrigin(self_Circle.getRadius(), self_Circle.getRadius());
-	self_Mass = 0;
+	self_Mass = Mass;
 
 	self_Track = new sf::CircleShape;
 	self_Track->setRadius(35);
@@ -186,6 +186,8 @@ Buoy::~Buoy()
 
 void Buoy::set_Position(float x, float y)
 {
+	self_Target_Position.x = x;
+	self_Target_Position.y = y;
 	self_Circle.setPosition(x, y);
 }
 
@@ -196,7 +198,7 @@ sf::Vector2f Buoy::get_Position()
 
 sf::Vector2f Buoy::get_Velocity()
 {
-	return sf::Vector2f(0, 0);
+	return self_Velocity;
 }
 
 sf::FloatRect Buoy::get_Collision_Box()
@@ -205,10 +207,28 @@ sf::FloatRect Buoy::get_Collision_Box()
 }
 
 void Buoy::change_Velocity(sf::Vector2f delta_Velocity, float time)
-{}
+{
+	self_Velocity += delta_Velocity;
+
+	self_Circle.move(delta_Velocity * time);
+}
 
 void Buoy::change_Angular(float delta_Angular, float time)
 {}
+
+void Buoy::compute(float delta_Time)
+{
+	//回复力
+	sf::Vector2f force = (self_Circle.getPosition() - self_Target_Position) * -1.0f;
+
+	//阻力
+	force += self_Velocity * -0.5f;
+
+	self_Velocity += force * delta_Time;
+	self_Circle.move(force * delta_Time * delta_Time * 0.5f);
+
+	self_Circle.move(self_Velocity * delta_Time);
+}
 
 void Buoy::set_Next_Buoy(Buoy* next)
 {

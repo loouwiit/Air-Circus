@@ -76,5 +76,6 @@ namespace Event
 namespace Compute
 {
 	void compute_Player();
+	void compute_Buoy();
 	void compute_Camera();
 }
