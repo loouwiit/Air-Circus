@@ -533,7 +533,7 @@ void Fighter::compute(float delta_Time, int now_Time)
 
 			change_Velocity(sf::Vector2f(-FighterConst::SideVelocityChange * self_Rotation_SinCos[0], +FighterConst::SideVelocityChange * self_Rotation_SinCos[1]), delta_Time);
 
-			self_Particle_Ptr->add_Particle(self_Position + sf::Vector2f(-180.0f * self_Rotation_SinCos[0], 180 * self_Rotation_SinCos[1]), now_Time, 1000, sf::Vector2f(500, 100), color, self_Rotation);
+			self_Particle_Ptr->add_Particle(self_Position - sf::Vector2f(-180.0f * self_Rotation_SinCos[0], 180 * self_Rotation_SinCos[1]), now_Time, 1000, sf::Vector2f(500, 100), color, self_Rotation);
 
 			self_Next_Change_Time = now_Time + self_Change_Time_Limit;
 		}
