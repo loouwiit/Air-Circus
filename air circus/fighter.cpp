@@ -352,7 +352,7 @@ void Fighter::be_Collided(Collideable& A, int now_Time, bool is_Self_Determiner)
 			self_Rotation) - PIf) < 0.5)
 		{
 			//头碰
-			if (is_Key(Key::Forward) || self_Auto_Forward)
+			if (is_Key(Key::Forward, now_Time) || self_Auto_Forward)
 			{
 				//W按下或者自动前进 右转PIf2
 				self_Velocity = ::rotate(self_Velocity, -1, 0);
@@ -419,12 +419,12 @@ void Fighter::compute(float delta_Time, int now_Time)
 {
 	using Type = Key_Type;
 
-	if (is_Key(Key::Forward))
+	if (is_Key(Key::Forward, now_Time))
 	{
-		if (is_Key(Key::Forward, Type::Press, Type::Click, Type::Click)) self_Auto_Forward = true;
+		if (is_Key(Key::Forward, now_Time, Type::Press, Type::Click, Type::Click)) self_Auto_Forward = true;
 		else self_Auto_Forward = false;
 
-		if (is_Key(Key::Forward, Type::Click, Type::Click) && now_Time > self_Next_Change_Time)
+		if (is_Key(Key::Forward, now_Time, Type::Single, Type::Click) && now_Time > self_Next_Change_Time)
 		{
 			sf::Color color = get_Color();
 			color.a -= 60;
@@ -438,11 +438,11 @@ void Fighter::compute(float delta_Time, int now_Time)
 		}
 	}
 
-	if (is_Key(Key::Back))
+	if (is_Key(Key::Back, now_Time))
 	{
 		self_Auto_Forward = false;
 
-		if (is_Key(Key::Back, Type::Click, Type::Click, Type::Click) && now_Time > self_Next_Change_Time)
+		if (is_Key(Key::Back, now_Time, Type::Single, Type::Click, Type::Click) && now_Time > self_Next_Change_Time)
 		{
 			//三击
 			if (abs(self_Rotation - atan2(get_Velocity().y, get_Velocity().x)) < 0.7)
@@ -460,7 +460,7 @@ void Fighter::compute(float delta_Time, int now_Time)
 			//printf("Fighter::compute: triple back\n");
 			self_Next_Change_Time = now_Time + self_Change_Time_Limit;
 		}
-		else if (is_Key(Key::Back, Type::Pass, Type::Click))
+		else if (is_Key(Key::Back, now_Time, Type::On, Type::Click))
 		{
 			//上次是点 减速
 			froce(self_Velocity * -300.0f, delta_Time);
@@ -481,7 +481,7 @@ void Fighter::compute(float delta_Time, int now_Time)
 			if (self_Angular > 1e-1f) angular(-5.0f, delta_Time);
 			else if (self_Angular < 1e-1f) set_Angular(0);
 		}
-		else if (is_Key(Key::Turn_Left, Type::Press, Type::Click))
+		else if (is_Key(Key::Turn_Left, now_Time, Type::Press))
 		{
 			rotate(-QuickTurnSpeed * delta_Time);
 		}
@@ -498,7 +498,7 @@ void Fighter::compute(float delta_Time, int now_Time)
 			if (self_Angular < -1e-1f) angular(5.0f);
 			else if (self_Angular > -1e-1f) set_Angular(0);
 		}
-		else if (is_Key(Key::Turn_Right, Type::Press, Type::Click))
+		else if (is_Key(Key::Turn_Right, now_Time, Type::Press))
 		{
 			rotate(+QuickTurnSpeed * delta_Time);
 		}
@@ -510,7 +510,7 @@ void Fighter::compute(float delta_Time, int now_Time)
 
 	if (self_Key[(Key_Base)Key::Left])
 	{
-		if (is_Key(Key::Left, Type::Click, Type::Click) && now_Time > self_Next_Change_Time)
+		if (is_Key(Key::Left, now_Time, Type::Single, Type::Click) && now_Time > self_Next_Change_Time)
 		{
 			sf::Color color = get_Color();
 			color.a -= 60;
@@ -526,7 +526,7 @@ void Fighter::compute(float delta_Time, int now_Time)
 
 	if (self_Key[(Key_Base)Key::Right])
 	{
-		if (is_Key(Key::Right, Type::Click, Type::Click) && now_Time > self_Next_Change_Time)
+		if (is_Key(Key::Right, now_Time, Type::Single, Type::Click) && now_Time > self_Next_Change_Time)
 		{
 			sf::Color color = get_Color();
 			color.a -= 60;
@@ -548,18 +548,23 @@ void Fighter::compute(float delta_Time, int now_Time)
 	std::fill(self_Key_Filp, self_Key_Filp + Key_Number, false);
 }
 
-bool Fighter::is_Key(Key key, Key_Type T1, Key_Type T2, Key_Type T3)
+bool Fighter::is_Key(Key key, int now_Time, Key_Type T1, Key_Type T2, Key_Type T3)
 {
 	switch (T1)
 	{
 	case Fighter::Key_Type::Press:
 		if (self_Key[(Key_Base)key] == false) return false;
-		if (self_Key_Filp[(Key_Base)key]) return false; //非长按
+		if (now_Time - self_Key_Now_Start_Time[(Key_Base)key] < 400) return false;//非长按
 		break;
 
 	case Fighter::Key_Type::Click:
 		if (self_Key[(Key_Base)key] == false) return false;
-		if (!self_Key_Filp[(Key_Base)key]) return false; //非点按
+		if (now_Time - self_Key_Now_Start_Time[(Key_Base)key] >= 400) return false;//非点按
+		break;
+
+	case Fighter::Key_Type::Single:
+		if (self_Key[(Key_Base)key] == false) return false;
+		if (!self_Key_Filp[(Key_Base)key]) return false; //非单次
 		break;
 
 	case Fighter::Key_Type::On:
@@ -571,6 +576,9 @@ bool Fighter::is_Key(Key key, Key_Type T1, Key_Type T2, Key_Type T3)
 		else return false; //既然off了就不用后续判断了
 
 	default:
+#ifdef _DEBUG
+		printf("is_Key: ERROR TYPE : %d\n", (int)T1);
+#endif
 	case Fighter::Key_Type::None:
 		return true; //既然none了就不用后续判断了 此时函数恒成立
 
@@ -581,17 +589,18 @@ bool Fighter::is_Key(Key key, Key_Type T1, Key_Type T2, Key_Type T3)
 	switch (T2)
 	{
 	case Fighter::Key_Type::Press:
-		if (self_Key_Now_Start_Time[(Key_Base)key] - self_Key_Last_Time[0][(Key_Base)key][1] > 1000) return false; //超时
+		if (self_Key_Now_Start_Time[(Key_Base)key] - self_Key_Last_Time[0][(Key_Base)key][1] >= 1000) return false; //超时
 		if (self_Key_Last_Time[0][(Key_Base)key][1] - self_Key_Last_Time[0][(Key_Base)key][0] < 400) return false;//非长按
 		break;
 
 	case Fighter::Key_Type::Click:
-		if (self_Key_Now_Start_Time[(Key_Base)key] - self_Key_Last_Time[0][(Key_Base)key][1] > 1000) return false; //超时
-		if (self_Key_Last_Time[0][(Key_Base)key][1] - self_Key_Last_Time[0][(Key_Base)key][0] > 400) return false;//非点按
+	case Fighter::Key_Type::Single:
+		if (self_Key_Now_Start_Time[(Key_Base)key] - self_Key_Last_Time[0][(Key_Base)key][1] >= 1000) return false; //超时
+		if (self_Key_Last_Time[0][(Key_Base)key][1] - self_Key_Last_Time[0][(Key_Base)key][0] >= 400) return false;//非点按
 		break;
 
 	case Fighter::Key_Type::On:
-		if (self_Key_Now_Start_Time[(Key_Base)key] - self_Key_Last_Time[0][(Key_Base)key][1] > 1000) return false; //超时
+		if (self_Key_Now_Start_Time[(Key_Base)key] - self_Key_Last_Time[0][(Key_Base)key][1] >= 1000) return false; //超时
 		break;
 
 	case Fighter::Key_Type::Off:
@@ -599,6 +608,9 @@ bool Fighter::is_Key(Key key, Key_Type T1, Key_Type T2, Key_Type T3)
 		else return true;
 
 	default:
+#ifdef _DEBUG
+		printf("is_Key: ERROR TYPE : %d\n", (int)T2);
+#endif
 	case Fighter::Key_Type::None:
 		return true;
 
@@ -609,17 +621,18 @@ bool Fighter::is_Key(Key key, Key_Type T1, Key_Type T2, Key_Type T3)
 	switch (T3)
 	{
 	case Fighter::Key_Type::Press:
-		if (self_Key_Last_Time[0][(Key_Base)key][0] - self_Key_Last_Time[1][(Key_Base)key][1] > 1000)return false; //超时
-		if (self_Key_Last_Time[1][(Key_Base)key][1] - self_Key_Last_Time[1][(Key_Base)key][0] > 400) return false;//非点按
+		if (self_Key_Last_Time[0][(Key_Base)key][0] - self_Key_Last_Time[1][(Key_Base)key][1] >= 1000)return false; //超时
+		if (self_Key_Last_Time[1][(Key_Base)key][1] - self_Key_Last_Time[1][(Key_Base)key][0] >= 400) return false;//非点按
 		break;
 
 	case Fighter::Key_Type::Click:
-		if (self_Key_Last_Time[0][(Key_Base)key][0] - self_Key_Last_Time[1][(Key_Base)key][1] > 1000)return false; //超时
-		if (self_Key_Last_Time[1][(Key_Base)key][1] - self_Key_Last_Time[1][(Key_Base)key][0] > 400) return false;//非点按
+	case Fighter::Key_Type::Single:
+		if (self_Key_Last_Time[0][(Key_Base)key][0] - self_Key_Last_Time[1][(Key_Base)key][1] >= 1000)return false; //超时
+		if (self_Key_Last_Time[1][(Key_Base)key][1] - self_Key_Last_Time[1][(Key_Base)key][0] >= 400) return false;//非点按
 		break;
 
 	case Fighter::Key_Type::On:
-		if (self_Key_Last_Time[0][(Key_Base)key][0] - self_Key_Last_Time[1][(Key_Base)key][1] > 1000)return false; //超时
+		if (self_Key_Last_Time[0][(Key_Base)key][0] - self_Key_Last_Time[1][(Key_Base)key][1] >= 1000)return false; //超时
 		break;
 
 	case Fighter::Key_Type::Off:
@@ -627,6 +640,9 @@ bool Fighter::is_Key(Key key, Key_Type T1, Key_Type T2, Key_Type T3)
 		else return true;
 
 	default:
+#ifdef _DEBUG
+		printf("is_Key: ERROR TYPE : %d\n", (int)T3);
+#endif
 	case Fighter::Key_Type::None:
 		return true;
 
@@ -654,7 +670,7 @@ void Fighter::draw(sf::RenderTarget& target, sf::RenderStates states) const
 	target.draw(self_Path[0], states);
 	if (self_Path_Is_Twice || self_Path_Is_Double)
 		target.draw(self_Path[1], states);
-	
+
 	states.transform *= self_Sprite.getTransform();
 	target.draw(self_Score, states);
 }
