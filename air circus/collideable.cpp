@@ -29,10 +29,6 @@ void Collideable::collide(Collideable& B, float delta_Time, int now_Time)
 {
 	if (!is_Collide(B)) return;
 
-	if (now_Time <= self_next_Collide_Time || now_Time <= B.self_next_Collide_Time) return;
-	self_next_Collide_Time = now_Time + Collide_Clam_Time;
-	B.self_next_Collide_Time = now_Time + Collide_Clam_Time;
-
 	float a_Mass = get_Mass();
 	float b_Mass = B.get_Mass();
 

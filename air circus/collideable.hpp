@@ -87,7 +87,6 @@ public:
 protected:
 	virtual void be_Collided(Collideable& A, int now_Time, bool is_Self_Determiner) = 0;
 	float self_Mass = 0;
-	int self_next_Collide_Time; //限制连续碰撞
 	static Boom* self_Boom_Ptr;
 	static Particle* self_Particle_Ptr;
 
